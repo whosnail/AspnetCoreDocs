@@ -3,7 +3,7 @@ Introduction to ASP.NET Core
 
 By `Daniel Roth`_
 
-ASP.NET Core is a significant redesign of ASP.NET. This topic introduces the new concepts in ASP.NET Core and explains how they help you develop modern web apps.
+ASP.NET Core는 ASP.NET을 새롭게 재설계 하였다. 이번 항목은 ASP.NET Core의 새로운 개념을 소개하고, 현대적인 웹앱을 개발하는데 이런 개념이 어떤 도움이 되는지 설명할 것이다.
 
 .. contents:: Sections:
   :local:
