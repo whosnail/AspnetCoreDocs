@@ -10,12 +10,12 @@ ASP.NET Core는 ASP.NET을 새롭게 재설계 하였다. 이번 항목은 ASP.N
   :depth: 1
   
 ASP.NET Core란 무엇인가?
----------------------
-
-ASP.NET Core is a new open-source and cross-platform framework for building modern cloud-based Web applications using .NET. We built it from the ground up to provide an optimized development framework for apps that are either deployed to the cloud or run on-premises. It consists of modular components with minimal overhead, so you retain flexibility while constructing your solutions. You can develop and run your ASP.NET Core applications cross-platform on Windows, Mac and Linux. ASP.NET Core is fully open source on `GitHub <https://github.com/aspnet/home>`_.
-
-ASP.NET Core를 왜 만들었는가?
 -----------------------
+
+ASP.NET Core는 .NET을 이용하여 현대적인 클라우드 기반 웹 응용 프로그램을 개발하기 위해 오픈소스로 새롭게 개발된 크로스 플랫폼 프레임워크다. ASP.NET 개발팀은 클라우드뿐 아니라 온프레미스 환경에도 배포하여 수행할 수 있는 앱을 개발하기 위한 최적화된 개발 프레임워크를 제공하기 위해서 완전히 새롭게 개발을 진행하였다. 이 프레임워크는 오버헤드를 최소화한 모듈화된 컴퍼넌트로 구성되어 있어서, 솔루션 구성시에 유연성을 유지할 수 있다. 이를 이용하면 사용자는 윈도우, 맥, 리눅스에서 수행할 수 있는 ASP.NET Core 응용 프로그램을 개발할 수 있다. ASP.NET Core는 `GitHub <https://github.com/aspnet/home>`_ 를 통해 완전히 오픈 소스의 형태로 개발되고 있다.  
+
+ASP.NET Core는 왜 만들었는가?
+----------------------------
 
 The first preview release of ASP.NET came out almost 15 years ago as part of the .NET Framework.  Since then millions of developers have used it to build and run great web applications, and over the years we have added and evolved many, many capabilities to it.
 
