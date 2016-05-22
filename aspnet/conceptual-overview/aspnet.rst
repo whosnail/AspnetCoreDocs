@@ -14,7 +14,7 @@ ASP.NET Core 소개
 
 By `Daniel Roth`_
 
-ASP.NET Core를 설계 관점에서 한 마디로 설명하자면 ASP.NET의 심각한 재설계(significant redesign)라고 할 수 있다. 이 글은 ASP.NET Core의 새로운 개념을 소개하고 그 것들이 어떻게 모던 웹앱을 개발하는데 도움이 되는지 설명한다.
+ASP.NET Core를 설계 관점에서 한 마디로 설명하자면 ASP.NET의 심도깊은 재설계(significant redesign)라고 할 수 있다. 이 글은 ASP.NET Core의 새로운 개념을 소개하고 그 것들이 어떻게 모던 웹앱을 개발하는데 도움이 되는지 설명한다.
 
 What is ASP.NET Core?
 ---------------------
