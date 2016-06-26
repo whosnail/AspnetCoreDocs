@@ -5,29 +5,21 @@
 
 By `Steve Smith`_
 
-ASP.NET Core provides complete control of how individual requests are handled by your application. The ``Startup`` class is the entry point to the application, setting up configuration and wiring up services the application will use. Developers configure a request pipeline in the ``Startup`` class that is used to handle all requests made to the application.
-
-ASP.NET Core 를 통해 여러분의 어플리케이션에서 처리해야 하는 각각의 요청을 완전하게 제어할 수 있습니다. ``Startup`` 클래스는 어플리케이션의 진입점으로서, 환경설정을 지정하고 어플리케이션에서 사용할 서비스에 연결하는 작업을 할 수 있는 클래스 입니다. 즉 개발자들은 ``Startup`` 클래스 내에서 어플리케이션에 전달되는 모든 요청에 대한 처리경로를 설정할 수 있습니다.   
+ASP.NET Core 를 통해 여러분의 어플리케이션에서 처리해야 하는 각각의 요청을 완전하게 제어할 수 있습니다. ``Startup`` 클래스는 어플리케이션의 진입점으로서, 환경설정을 지정하고 어플리케이션에서 사용할 서비스에 연결하는 작업을 할 수 있는 클래스 입니다. 즉, 개발자들은 ``Startup`` 클래스 내에서 어플리케이션에 전달되는 모든 요청에 대한 처리경로를 설정할 수 있습니다.   
 
 .. contents:: Sections:
   :local:
   :depth: 1
 
-The Startup class
------------------
 Startup 클래스
 -----------------
 
-In ASP.NET Core, the ``Startup`` class provides the entry point for an application, and is required for all applications. It's possible to have environment-specific startup classes and methods (see :doc:`environments`), but regardless, one ``Startup`` class will serve as the entry point for the application. ASP.NET searches the primary assembly for a class named ``Startup`` (in any namespace). You can specify a different assembly to search using the `Hosting:Application` configuration key. It doesn't matter whether the class is defined as ``public``; ASP.NET will still load it if it conforms to the naming convention. If there are multiple ``Startup`` classes, this will not trigger an exception. ASP.NET will select one based on its namespace (matching the project's root namespace first, otherwise using the class in the alphabetically first namespace).
-
-ASP.NET Core 에서 ``Startup`` 클래스는 어플리케이션에 대한 진입점으로서, 모든 어플리케이션에 필수적입니다. 여러 환경에 따라 맞춰 여러 개의 시작점 클래스와 메서드를 사용할 수 있지만 (참고 :doc:`environments`), 어플리케이션의 진입점으로서는 하나의 ``Startup`` 클래스 만 사용할 수 있습니다. ASP.NET 은 (전체 네임스페이스에서) ``Startup`` 이라는 이름의 클래스를 포함하는 첫 번째 어셈블리를 찾습니다. `Hosting:Application` 이라는 설정 키로 특정한 어셈블리를 ``Startup`` 클래스를 찾아볼 어셈블리로 지정할 수 있습니다. 그 클래스를 ``public`` 으로 정의했는지는 상관없습니다. ASP.NET 은 명명규칙에 합당한 이름이면 클래스를 읽어들일 수 있습니다. 여러 개의 ``Startup`` 클래스가 있다하더라도, 예외가 발생하지 않습니다. ASP.NET 은 네임스페이스로 유추하여 하나를 선택할 것입니다. (우선 프로젝트의 루트 네임스페이스와 비교해서 일치하는 것이 있다면 그 클래스를 선택합니다. 맞는 것이 없다면 네임스페이스를 알파벳순으로 나열하고 그 중 첫 번째 클래스를 선택합니다.)
+ASP.NET Core 에서 ``Startup`` 클래스는 어플리케이션에 대한 진입점으로서, 모든 어플리케이션에 필수적입니다. 여러 환경에 맞춰 여러가지 시작용 클래스와 메서드를 사용할 수 있지만 (참고 :doc:`environments`), 어플리케이션의 진입점으로서는 하나의 ``Startup`` 클래스 만 사용할 수 있습니다. ASP.NET 은 (전체 네임스페이스에서) ``Startup`` 이라는 이름의 클래스를 포함하는 첫 번째 어셈블리를 찾아봅니다. `Hosting:Application` 이라는 설정 키로 특정한 어셈블리를 ``Startup`` 클래스를 찾아볼 어셈블리로 지정할 수도 있습니다. 그 클래스를 ``public`` 으로 정의했는지는 상관없습니다. ASP.NET 은 명명규칙에 합당한 이름이기만 하면 클래스를 읽어들일 수 있습니다. 여러 개의 ``Startup`` 클래스가 있다하더라도, 예외를 발생시키지 않습니다. ASP.NET 은 네임스페이스에서 유추하여 하나를 선택할 것입니다. (우선 프로젝트의 루트 네임스페이스와 비교해서 일치하는 것이 있다면 그 클래스를 선택합니다. 일치하는 것이 없다면, 네임스페이스를 알파벳순으로 나열하고 그 중 첫 번째 클래스를 선택합니다.)
 
 The ``Startup`` class can optionally accept dependencies in its constructor that are provided through :doc:`dependency injection <dependency-injection>`.  Typically, the way an application will be configured is defined within its Startup class's constructor (see :doc:`configuration`). The Startup class must define a ``Configure`` method, and may optionally also define a ``ConfigureServices`` method, which will be called when the application is started.
 
-``Startup`` 클래스의 생성자에서 :doc:`의존성 주입 <dependency-injection>` 을 사용하여 의존성을 선택적으로 지정할 수 있습니다. 일반적으로 어플리케이션을 설정하는 방식은 Startup 클래스에서 정의합니다. (참고 :doc:`configuration`) 이를 위해 Startup 클래스에서 ``Configure`` 메서드를 정의해야 하고, ``ConfigureServices`` 메서드는 선택적으로 정의할 수 있습니다. 이 두 가지 메서드는 어플리케이션이 시작될 때 호출됩니다. 
+``Startup`` 클래스의 생성자에서 :doc:`의존성 주입 <dependency-injection>` 을 사용하여 의존성을 선택적으로 지정할 수 있습니다. 일반적으로 어플리케이션을 설정하는 방식은 Startup 클래스의 생성자에서 정의합니다. (참고 :doc:`configuration`) 그 외에 Startup 클래스에서 ``Configure`` 메서드를 정의해야 하고, ``ConfigureServices`` 메서드를 정의할지는 선택할 수 있습니다. 이 두 가지 메서드는 어플리케이션이 시작될 때 호출됩니다. 
 
-The Configure method
---------------------
 Configure 메서드
 --------------------
 
@@ -54,8 +46,6 @@ You can learn all about middleware and using IApplicationBuilder_ to define your
 
 여러분은 :doc:`middleware` 주제에서 미들웨어와 요청 처리경로를 정의하기 위해 IApplicationBuilder_ 를 사용하는 방법에 대해 알 수 있습니다.
 
-The ConfigureServices method
-----------------------------
 ConfigureServices 메서드
 ----------------------------
 
@@ -82,9 +72,7 @@ The ``ConfigureServices`` method is also where you should add configuration opti
 
 또한 ``ConfigureServices`` 메서드는 위의 예제 상의 ``AppSettings`` 와 같은 설정용 클래스를 추가해야 위치입니다. 설정에 대해 더 많은 부분을 확인하려면 :doc:'configuration' 주제를 확인하세요.
 
-Services Available in Startup
------------------------------
-Startup 에서 가능한 서비스들
+Startup 클래스에서 사용할 수 있는 서비스들
 -----------------------------
 ASP.NET Core provides certain application services and objects during your application's startup. You can request certain sets of these services by simply including the appropriate interface as a parameter on your ``Startup`` class's constructor or one of its ``Configure`` or ``ConfigureServices`` methods. The services available to each method in the ``Startup`` class are described below. The framework services and objects include:
 
@@ -132,9 +120,7 @@ Configure
 - ``IHostingEnvironment``
 - ``ILoggerFactory``
 
-.. note:: Although ``ILoggerFactory`` is available in the constructor, it is typically configured in the ``Configure`` method. Learn more about :doc:`logging`.
-
-.. note:: ``ILoggerFactory`` 는 생성자에서 사용할 수 있지만, 일반적으로 ``Configure`` 메서드에서 설정합니다. :doc:`logging` 에서 자세한 내용을 확인하십시오.
+.. note:: ``ILoggerFactory`` 는 생성자에서 설정할 수도 있지만, 일반적으로 ``Configure`` 메서드에서 설정합니다. :doc:`logging` 에서 자세한 내용을 확인하십시오.
 
 추가 자료
 --------------------
