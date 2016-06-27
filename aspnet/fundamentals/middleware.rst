@@ -1,6 +1,6 @@
 .. _fundamentals-middleware:
 
-Middleware
+미들웨어
 ==========
 By `Steve Smith`_ and `Rick Anderson`_
 
@@ -10,16 +10,18 @@ By `Steve Smith`_ and `Rick Anderson`_
 
 `View or download sample code <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/middleware/sample>`__
 
-What is middleware
+미들웨어란 무엇인가
 ------------------
 
-Middleware are software components that are assembled into an application pipeline to handle requests and responses. Each component chooses whether to pass the request on to the next component in the pipeline, and can perform certain actions before and after the next component is invoked in the pipeline. Request delegates are used to build the request pipeline. The request delegates handle each HTTP request.
+미들웨어는 소프트웨어 컴포넌트들의 모음으로서, 여러분은 각각의 컴포넌트를 조합하여 요청과 응답을 처리하는 어플리케이션 처리경로 (pipeline) 를 구성할 수 있습니다. 각 컴포넌트에서 처리경로 상의 다음 컴포넌트로 요청을 전달할지 결정합니다. 또한 처리경로 상의 다음 컴포넌트를 호출하기 전에 혹은 호출한 후에 특정 동작을 수행하도록 할 수 있습니다. 요청 대리자 (request delegate) 를 사용하여 요청 처리경로를 구성합니다. 요청 대리자에서 각각의 HTTP 요청을 처리합니다.
 
-Request delegates are configured using `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__, `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html?highlight=microsoft.aspnet.builder.mapextensions#Microsoft.AspNet.Builder.MapExtensions.Map>`__, and `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html?highlight=microsoft.aspnet.builder.useextensions#Microsoft.AspNet.Builder.UseExtensions.Use>`__ extension methods on the `IApplicationBuilder <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/IApplicationBuilder/index.html>`_ type that is passed into the ``Configure`` method in the ``Startup`` class. An individual request delegate can be specified in-line as an anonymous method, or it can be defined in a reusable class. These reusable classes  are `middleware`, or `middleware components`. Each middleware component in the request pipeline is responsible for invoking the next component in the pipeline, or short-circuiting the chain if appropriate.
+``Startup`` 클래스의 ``Configure`` 메서드에 전달되는 `IApplicationBuilder <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/IApplicationBuilder/index.html>`_ 형에 대한 `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__ 과 `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html?highlight=microsoft.aspnet.builder.mapextensions#Microsoft.AspNet.Builder.MapExtensions.Map>`__, `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html?highlight=microsoft.aspnet.builder.useextensions#Microsoft.AspNet.Builder.UseExtensions.Use>`__ 확장 메서드를 사용하여 요청 대리자를 설정합니다. 각각의 요청 대리자는 익명 매서드를 사용하여 인라인 형태로 지정할 수도 있고, 재사용 가능하도록 클래스로 정의하여 지정할 수도 있습니다. 이런 재사용 가능한 클래스가 `미들웨어` 혹은 `미들웨어 컴포넌트` 입니다. 요청 처리경로 상의 각각의 미들웨어 컴포넌트는 처리경로 상의 다음 컴포넌트를 호출하거나 처리경로를 적절하게 끝내야 합니다.
 
 :doc:`/migration/http-modules` explains the difference between request pipelines in ASP.NET Core and the previous versions and provides more middleware samples.
 
-Creating a middleware pipeline with IApplicationBuilder
+:doc:`/migration/http-modules` 에서 ASP.NET Core 의 요청 처리경로와 이전 버전에서의 요청 처리경로 간의 차이를 확인할 수 있습니다. 또한 미들웨어 에 대한 더 많은 예제도 확인할 수 있습니다.
+
+IApplicationBuilder 로 미들웨어로 이루어진 처리경로 만들기
 -------------------------------------------------------
 
 The ASP.NET request pipeline consists of a sequence of request delegates, called one after the next, as this diagram shows (the thread of execution follows the black arrows):
@@ -86,7 +88,7 @@ In the above example, the call to ``await next.Invoke()`` will call into the nex
 
 ..  _middleware-run-map-use:
 
-Run, Map, and Use
+Run 과 Map 그리고 Use
 ^^^^^^^^^^^^^^^^^
 
 You configure the HTTP pipeline using `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__, `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__,  and `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__. The ``Run`` method short circuits the pipeline (that is, it will not call a ``next`` request delegate). Thus, ``Run`` should only be called at the end of your pipeline. ``Run`` is a convention, and some middleware components may expose their own Run[Middleware] methods that should only run at the end of the pipeline. The following two middleware are equivalent as the ``Use`` version doesn't use the ``next`` parameter:
@@ -134,17 +136,17 @@ You can also nest Maps:
        });
    });
    
-Built-in middleware
+내장된 미들웨어
 -------------------
 
-ASP.NET ships with the following middleware components:
+ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니다.:
 
 
-.. list-table:: Middleware
+.. list-table:: 미들웨어
   :header-rows: 1
 
-  *  - Middleware
-     - Description
+  *  - 미들웨어
+     - 설명
   *  - :doc:`Authentication </security/authentication/index>`
      - Provides authentication support.
   *  - :doc:`CORS </security/cors>`
@@ -160,7 +162,7 @@ ASP.NET ships with the following middleware components:
 
 .. _middleware-writing-middleware:
 
-Writing middleware
+미들웨어 작성하기
 ------------------
 
 The `CodeLabs middleware tutorial <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__ provides a good introduction to writing middleware.
@@ -197,7 +199,7 @@ Testing the middleware (by setting the ``Hosting:Environment`` environment varia
 
 .. note:: The `UseStaticFiles <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/StaticFileExtensions/index.html#meth-Microsoft.AspNet.Builder.StaticFileExtensions.UseStaticFiles>`_ extension method (which creates the `StaticFileMiddleware <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/StaticFiles/StaticFileMiddleware/index.html>`_) also uses ``UseMiddleware<T>``. In this case, the ``StaticFileOptions`` parameter is passed in, but other constructor parameters are supplied by ``UseMiddleware<T>`` and dependency injection.
 
-Additional Resources
+추가 자료
 --------------------
 
 - `CodeLabs middleware tutorial <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__
