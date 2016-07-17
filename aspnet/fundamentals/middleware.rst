@@ -25,17 +25,25 @@ IApplicationBuilder 로 미들웨어로 이루어진 처리경로 만들기
 -------------------------------------------------------
 
 The ASP.NET request pipeline consists of a sequence of request delegates, called one after the next, as this diagram shows (the thread of execution follows the black arrows):
+ASP.NET 의 요청 처리경로는 일련의 요청 대리자들로 구성됩니다. 다음 도표와 같이 차례대로 호출됩니다. (실행되는 순서는 검정 화살표의 흐름과 같습니다.) 
 
 .. image:: middleware/_static/request-delegate-pipeline.png
 
 Each delegate has the opportunity to perform operations before and after the next delegate. Any delegate can choose to stop passing the request on to the next delegate, and instead handle the request itself. This is referred to as short-circuiting the request pipeline, and is desirable because it allows unnecessary work to be avoided. For example, an authorization middleware might only call the next delegate if the request is authenticated; otherwise it could short-circuit the pipeline and return a "Not Authorized" response. Exception handling delegates need to be called early on in the pipeline, so they are able to catch exceptions that occur in deeper calls within the pipeline.
+각각의 대리자는 다음 대리자를 호출하기 전과 호출한 후에 작업을 수행할 수 있습니다. 어떤 대리자도 요청을 직접 처리하고 다음 대리자에게 요청을 전달하는 절차는 중단할 수 있다. 이를 요청 처리경로의 단락 (short-circuit) 이라고 부르며, 단락을 함으로써 다음 대리자를 실행하지 않으므로 불필요한 작업을 하지 않을 수 있어 바람직합니다. 예를 들어, 인가 (authorization) 미들웨어에서 요청이 인증되었을 때만 다음 대리자를 호출하도록 할 수 있습니다. 즉, 요청이 인증되지 않았다면 처리경로를 단락하고 "인가되지 않음" 이라는 응답을 반환할 수 있습니다. 예외 처리 대리자들의 경우에 처리경로 초기에 호출되어야만, 처리경로 상의 후기에 발생하는 예외들을 처리할 수 있습니다.
 
 You can see an example of setting up the request pipeline in the default web site template that ships with Visual Studio 2015. The ``Configure`` method adds the following middleware components:
+여러분은 Visual Studio 2015 에 포함된 기본 웹사이트 템플릿에서 요청 처리경로를 설정하는 방법을 확인할 수 있습니다. ``Configure`` 메서드에서 다음과 같은 미들웨어 컴포넌트를 추가합니다.
 
 #. Error handling (for both development and non-development environments)
+#. 오류 처리 (개발 환경과 비개발 환경 모두에 대응)
 #. IIS HttpPlatformHandler reverse proxy module. This module handles forwarded Windows Authentication, request schemes, remote IPs, and so on.
+#. IIS HttpPlatformHandler 역프록시 모듈. 이 모듈에서 전달된 윈도우 인증이나 요청 스키마, 원격 IP 등을 처리합니다.
 #. Static file server
+#. 정적 파일 서버
 #. Authentication
+#. 인증
+#. MVC
 #. MVC
 
 .. literalinclude:: /../common/samples/WebApplication1/src/WebApplication1/Startup.cs
@@ -44,7 +52,8 @@ You can see an example of setting up the request pipeline in the default web sit
   :dedent: 8
   :emphasize-lines: 8-10,14,17,19,23
 
-In the code above (in non-development environments), `UseExceptionHandler <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/ExceptionHandlerExtensions/index.html>`__ is the first middleware added to the pipeline, therefore will catch any exceptions that occur in later calls. 
+In the code above (in non-development environments), `UseExceptionHandler <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/ExceptionHandlerExtensions/index.html>`__ is the first middleware added to the pipeline, therefore will catch any exceptions that occur in later calls.
+위 코드 중 비개발 환경인 경우, `UseExceptionHandler <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/ExceptionHandlerExtensions/index.html>`__ 는 처리경로에 추가된 첫 번째 미들웨어로서, 이후의 호출에서 발생하는 모든 예외를 처리할 것입니다. 
 
 The `static file module <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/StaticFileExtensions/index.html>`__ provides no authorization checks. Any files served by it, including those under *wwwroot* are publicly available. If you want to serve files based on authorization:
 
