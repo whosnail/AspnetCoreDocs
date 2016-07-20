@@ -112,6 +112,7 @@ Run 과 Map 그리고 Use
 ^^^^^^^^^^^^^^^^^
 
 You configure the HTTP pipeline using `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__, `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__,  and `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__. The ``Run`` method short circuits the pipeline (that is, it will not call a ``next`` request delegate). Thus, ``Run`` should only be called at the end of your pipeline. ``Run`` is a convention, and some middleware components may expose their own Run[Middleware] methods that should only run at the end of the pipeline. The following two middleware are equivalent as the ``Use`` version doesn't use the ``next`` parameter:
+여러분은 `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__ 과 `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__ 그리고 `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__ 를 사용하여 HTTP 처리경로를 설정할 수 있습니다. `Run` 메서드는 처리경로를 단락시킵니다. (즉 ``next`` 매개변수로 전달되는 요청 대리자를 호출하지 않습니다.) 따라서, ``Run`` 메서드를 처리경로의 마지막에만 호출해야 합니다. ``Run`` 메서드는 관례로서, 
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -167,18 +168,18 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 
   *  - 미들웨어
      - 설명
-  *  - :doc:`Authentication </security/authentication/index>`
-     - Provides authentication support.
+  *  - :doc:`인증 </security/authentication/index>`
+     - 인증 기능을 제공합니다.
   *  - :doc:`CORS </security/cors>`
-     - Configures Cross-Origin Resource Sharing.
-  *  - :doc:`Diagnostics <diagnostics>`
-     - Includes support for error pages and runtime information.
-  *  - :doc:`Routing <routing>`
-     - Define and constrain request routes.
-  *  - :ref:`Session <session>`
-     - Provides support for managing user sessions.
-  *  - :doc:`Static Files <static-files>`
-     - Provides support for serving static files, and directory browsing.
+     - 크로스 출처 자원 공유 (Cross-Origin Resource Sharing) 를 설정할 수 있습니다.
+  *  - :doc:`진단 <diagnostics>`
+     - 오류 페이지와 런타임 정보에 대한 지원을 제공합니다.
+  *  - :doc:`라우팅 <routing>`
+     - 요청 경로의 정의와 제한 방법을 제공합니다.
+  *  - :ref:`세션 <session>`
+     - 사용자 세션를 관리하기 위한 기능을 제공합니다.
+  *  - :doc:`정적 파일 <static-files>`
+     - 정적 파일을 노출과 디렉토리 브라우징에 대한 기능을 제공합니다.
 
 .. _middleware-writing-middleware:
 
