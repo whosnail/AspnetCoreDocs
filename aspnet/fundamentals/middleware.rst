@@ -112,7 +112,7 @@ Run 과 Map 그리고 Use
 ^^^^^^^^^^^^^^^^^
 
 You configure the HTTP pipeline using `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__, `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__,  and `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__. The ``Run`` method short circuits the pipeline (that is, it will not call a ``next`` request delegate). Thus, ``Run`` should only be called at the end of your pipeline. ``Run`` is a convention, and some middleware components may expose their own Run[Middleware] methods that should only run at the end of the pipeline. The following two middleware are equivalent as the ``Use`` version doesn't use the ``next`` parameter:
-여러분은 `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__ 과 `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__ 그리고 `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__ 를 사용하여 HTTP 처리경로를 설정할 수 있습니다. `Run` 메서드는 처리경로를 단락시킵니다. (즉 ``next`` 매개변수로 전달되는 요청 대리자를 호출하지 않습니다.) 따라서, ``Run`` 메서드를 처리경로의 마지막에만 호출해야 합니다. ``Run`` 메서드는 관례로서, 
+여러분은 `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__ 과 `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__ 그리고 `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__ 를 사용하여 HTTP 처리경로를 설정할 수 있습니다. 우선, `Run` 메서드는 처리경로를 단락시킵니다. (즉 ``next`` 매개변수로 전달되는 요청 대리자를 호출하지 않습니다.) 따라서, ``Run`` 메서드는 처리경로의 마지막에 호출해야 합니다. ``Run`` 메서드는 모든 미들웨어에 공통적인 관례입니다. 그런 이유로 어떤 미들웨어 컴포넌트들의 경우에는 자신만의 Run[미들웨어의 이름] 메서드를 노출하고, 해당 메서드를 처리경로의 마지막에 호출해야 하도록 할 수 있습니다. 다음의 2가지 미들웨어는 동일한 응답을 반환합니다. ``Use`` 메서드를 사용하는 미들웨어에서 ``next`` 매개변수를 사용하지 않기 때문입니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -121,8 +121,10 @@ You configure the HTTP pipeline using `Run <https://docs.asp.net/projects/api/en
 	:dedent: 8
 
 .. note:: The `IApplicationBuilder  <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/IApplicationBuilder/index.html>`__ interface exposes a single ``Use`` method, so technically they're not all *extension* methods.
+.. note:: `IApplicationBuilder  <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/IApplicationBuilder/index.html>`__ 인터페이스는 ``Use`` 메서드 하나만을 노출하고 있습니다. 따라서 기술적으로 위 3가지 메서드가 모두 *확장* 메서드는 아닙니다.
 
 We've already seen several examples of how to build a request pipeline with ``Use``. ``Map*`` extensions are used as a convention for branching the pipeline. The current implementation supports branching based on the request's path, or using a predicate. The ``Map`` extension method is used to match request delegates based on a request's path. ``Map`` simply accepts a path and a function that configures a separate middleware pipeline. In the following example, any request with the base path of ``/maptest`` will be handled by the pipeline configured in the ``HandleMapTest`` method.
+여러분은 이미 ``Use`` 메서드를 사용하여 요청 처리경로를 구성하는 방법에 대한 몇 가지 예시를 확인하였습니다. ``Map*`` 확장 메서드들의 경우 처리경로를 분기처리하기 위해 관례적으로 사용합니다. 현재의 ASP.NET 구현에서는 요청의 URL 경로나 *predicate* 을 통한 분기를 지원합니다. ``Map`` 확장 메서드는 요청의 경로에 따라 요청 대리자를 선택하기 위해 사용합니다. ``Map`` 메서드는 경로와 그 경로를 위한 별도의 미들웨어 처리경로를 설정하는 함수를 매개변수로 받습니다. 다음의 예시에서는 ``/maptest`` 로 시작하는 경로에 해당하는 모든 요청을 ``HandleMapTest`` 메서드에서 설정하는 처리경로에서 처리합니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -131,8 +133,10 @@ We've already seen several examples of how to build a request pipeline with ``Us
 	:dedent: 8
 
 .. note:: When ``Map`` is used, the matched path segment(s) are removed from ``HttpRequest.Path`` and appended to ``HttpRequest.PathBase`` for each request.
+.. note:: ``Map`` 메서드를 사용하게 되면, 요청의 경로에서 찾은 일치하는 부분을 각 요청의 ``HttpRequest.Path`` 속성에서 잘라내어 ``HttpRequest.PathBase`` 속성에 붙입니다.
 
 In addition to path-based mapping, the ``MapWhen`` method supports predicate-based middleware branching, allowing separate pipelines to be constructed in a very flexible fashion. Any predicate of type ``Func<HttpContext, bool>`` can be used to map requests to a new branch of the pipeline. In the following example, a simple predicate is used to detect the presence of a query string variable ``branch``:
+경로 기반의 매핑과는 별도로, ``MapWhen`` 메서드를 통해 predicate 기반의 미들웨어 분기처리를 지원합니다. 이를 통해 매우 유연한 형태로 각각의 처리경로를 구성할 수 있습니다. ``Func<HttpContext, bool>`` 형인 predicate 으로 처리경로 상의 새로운 분기를 요청에 매핑할 수 있습니다. 다음 예시에서는 ``branch`` 라는 문자열이 질의 문자열 (query string) 에 존재하는지 확인하는 간단한 predicate 을 사용하고 있습니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -141,8 +145,10 @@ In addition to path-based mapping, the ``MapWhen`` method supports predicate-bas
 	:dedent: 8
 
 Using the configuration shown above, any request that includes a query string value for ``branch`` will use the pipeline defined in the ``HandleBranch`` method (in this case, a response of "Branch used."). All other requests (that do not define a query string value for ``branch``) will be handled by the delegate defined on line 17.
+위와 같이 설정하였으므로 ``branch`` 를 포함하는 질의 문자열을 포함하는 요청은 모두 ``HandleBranch`` 메서드에서 정의한 처리경로를 사용할 것입니다. (즉 "Branch used." 라는 응답을 반환합니다.) 다른 모든 요청의 경우 (즉 ``branch`` 를 질의 문자열에 포함하지 않는 경우) 17줄에 정의된 대리자를 통해 처리될 것입니다.
 
 You can also nest Maps:
+여러분은 다음과 같이 Map 을 중첩하여 사용할 수도 있습니다.:  
 
 .. code-block:: javascript  
 
@@ -187,8 +193,10 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 ------------------
 
 The `CodeLabs middleware tutorial <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__ provides a good introduction to writing middleware.
+`CodeLabs 미들웨어 튜터리얼 <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__ 에서 미들웨어를 작성하는 방법에 대한 설명을 확인할 수 있습니다. 
 
 For more complex request handling functionality, the ASP.NET team recommends implementing the middleware in its own class, and exposing an ``IApplicationBuilder`` extension method that can be called from the ``Configure`` method. The simple logging middleware shown in the previous example can be converted into a middleware class that takes in the next ``RequestDelegate`` in its constructor and supports an ``Invoke`` method as shown:
+더 복잡한 요청을 처리하기 위한 기능을 확인하고자 할 경우, ASP.NET 팀에서는 별도의 클래스로 미들웨어를 구현하고 ``Configure`` 메서드에서 호출될 수 있는 ``IApplicationBuilder`` 확장 메서드를 노출하는 방법을 권장합니다. 이전 예시에서 확인했던 간단한 로깅 미들웨어를 다음과 같이 변경할 수 있습니다. 생성자에서 다음 ``RequestDelegate`` 를 받고 ``Invoke`` 메서드를 지원하고 있습니다.: 
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/RequestLoggerMiddleware.cs
 	:language: c#
