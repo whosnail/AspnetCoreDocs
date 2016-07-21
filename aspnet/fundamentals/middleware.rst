@@ -8,7 +8,7 @@ By `Steve Smith`_ and `Rick Anderson`_
   :local:
   :depth: 1
 
-`View or download sample code <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/middleware/sample>`__
+`샘플 코드 확인하거나 다운로드 받기 <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/middleware/sample>`__
 
 미들웨어란 무엇인가
 ------------------
