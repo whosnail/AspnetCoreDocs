@@ -204,6 +204,7 @@ For more complex request handling functionality, the ASP.NET team recommends imp
 	:emphasize-lines: 13, 19
 
 The middleware follows the `Explicit Dependencies Principle <http://deviq.com/explicit-dependencies-principle/>`_ and exposes all of its dependencies in its constructor. Middleware can take advantage of the `UseMiddleware<T>`_ extension to inject services directly into their constructors, as shown in the example below. Dependency injected services are automatically filled, and the extension takes a ``params`` array of arguments to be used for non-injected parameters.
+미들웨어는 `명시적 의존석 원칙 (Explicit Dependencies Principle) <http://deviq.com/explicit-dependencies-principle/>`_ 을 따릅니다. 미들웨어의 생성자에서 의존성을 명시하고 있습니다. 아래의 예시에서 보는 바와 같이 미들웨어는 `UseMiddleware<T>`_ 확장 메서드를 사용하여 자신의 생성자에서 서비스들에 대한 의존성을 직접 주입할 수 있습니다. `UseMiddleware<T>'_ 확장 메서드의 매개변수로서 의존성으로서 주입된 서비스들은 자동으로 삽입되고 그 외에 의존성으로서 주입되지 않은 매개변수의 경우에는 ``params`` 인자 배열을 사용합니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/RequestLoggerExtensions.cs
 	:language: c#
@@ -213,6 +214,7 @@ The middleware follows the `Explicit Dependencies Principle <http://deviq.com/ex
 	:dedent: 4
 
 Using the extension method and associated middleware class, the ``Configure`` method becomes very simple and readable.
+확장 메서드와 관련된 미들웨어 클래스를 사용하면 ``Configure`` 메서드가 매우 간결해지고 가독성이 높아집니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -221,18 +223,21 @@ Using the extension method and associated middleware class, the ``Configure`` me
 	:dedent: 8
 
 Although ``RequestLoggerMiddleware`` requires an ``ILoggerFactory`` parameter in its constructor, neither the ``Startup`` class nor the ``UseRequestLogger`` extension method need to explicitly supply it. Instead, it is automatically provided through dependency injection performed within ``UseMiddleware<T>``.
+``RequestLoggerMiddleware`` 는 생성자에서 ``ILoggerFactory`` 를 매개변수로 받지만, ``Startup`` 클래스나 ``UseRequestLogger`` 확장 메서드의 경우에는 명시적으로 매개변수로서 받을 필요는 없습니다. 대신 ``UseMiddleware<T>`` 에 의존성을 주입하여 자동으로 사용할 수 있습니다.
 
 Testing the middleware (by setting the ``Hosting:Environment`` environment variable to ``LogMiddleware``) should result in output like the following (when using WebListener):
+미들웨어를 테스트해보면 다음과 같이 출력해야 합니다. (``Hostring:Environment`` 환경 변수에 ``LogMiddleware`` 를 설정하고 WebListener 를 사용합니다.):
 
 .. image:: middleware/_static/console-logmiddleware.png
 
 .. note:: The `UseStaticFiles <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/StaticFileExtensions/index.html#meth-Microsoft.AspNet.Builder.StaticFileExtensions.UseStaticFiles>`_ extension method (which creates the `StaticFileMiddleware <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/StaticFiles/StaticFileMiddleware/index.html>`_) also uses ``UseMiddleware<T>``. In this case, the ``StaticFileOptions`` parameter is passed in, but other constructor parameters are supplied by ``UseMiddleware<T>`` and dependency injection.
+.. note:: `UseStaticFiles <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/StaticFileExtensions/index.html#meth-Microsoft.AspNet.Builder.StaticFileExtensions.UseStaticFiles>`_ 확장 메서드 (`StaticFileMiddleware <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/StaticFiles/StaticFileMiddleware/index.html>`_ 를 생성합니다.) 에서도 ``UseMiddleware<T>`` 를 사용합니다. 이 경우 ``StaticFileOptions`` 매개변수는 전달되지만, 생성자의 다른 매개변수들은 ``UseMiddleware<T>`` 에 대한 의존성 주입을 통해 전달됩니다.
 
 추가 자료
 --------------------
 
-- `CodeLabs middleware tutorial <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__
-- `Sample code used in this doc <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/middleware/sample>`_
+- `CodeLabs 미들웨어 튜터리얼 <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__
+- `이 문서에서 사용된 샘플 코드 <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/middleware/sample>`_
 - :doc:`/migration/http-modules`
 - :doc:`startup`
 - :doc:`request-features`
