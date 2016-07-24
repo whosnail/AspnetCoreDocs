@@ -44,7 +44,7 @@ ASP.NET 의 요청 처리경로는 일련의 요청 대리자들로 구성됩니
 
 위 코드 중 비개발 환경에 대한 경로에서는 `UseExceptionHandler <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/ExceptionHandlerExtensions/index.html>`__ 를 첫 번째 미들웨어로서 처리경로에 추가하므로, 이후의 다른 대리자들에 대한 호출에서 발생하는 모든 예외를 처리할 수 있습니다. 
 
-`정적 파일 모듈 <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/StaticFileExtensions/index.html>` 에서는 인가 (authorization) 확인을 하지 않습니다. 해당 모듈이 서비스하는 모든 파일들은 (*wwwroot* 에 있는 파일들까지도 포함합니다.) 공개적으로 접근 가능합니다. 인가 절차를 거친 후 파일에 접근할 수 있도록 하기 위해서는 다음과 같이 하세요.:
+`정적 파일 모듈 <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/StaticFileExtensions/index.html>`__ 에서는 인가 (authorization) 확인을 하지 않습니다. 해당 모듈이 서비스하는 모든 파일들은 (*wwwroot* 에 있는 파일들까지도 포함합니다.) 공개적으로 접근 가능합니다. 인가 절차를 거친 후 파일에 접근할 수 있도록 하기 위해서는 다음과 같이 하세요.:
 
 #. 정적 파일 모듈에서 접근 가능한 *wwwroot* 이나 어떠한 디렉토리가 아닌 다른 위치에 파일들을 저장하세요.   
 #. 파일들을 컨트롤러 동작을 통해 전달하세요. 인가 절차를 적용한 `FileResult <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/FileResult/index.html>`__ 을 반환하는 동작을 통해 가능합니다.
@@ -68,7 +68,7 @@ ASP.NET 어플리케이션을 가장 간단하게 구성하는 경우, 모든 �
 	:emphasize-lines: 5
 	:dedent: 8
 
-여러 개의 요청 대리자를 엮을 수 있습니다.; ``next`` 매개변수로 처리경로 상의 다음 대리자가 전달됩니다. 처리경로를 종료, 즉 단락시키기 위해서는 `next` 매개변수를 호출하지 않으면 됩니다. 보통 다음 대리자를 호출하기 전과 호출한 후에 원하는 동작들을 수행할 수 있습니다. 다음 예시에서 확인할 수 있습니다.:
+여러 개의 요청 대리자를 엮을 수 있습니다. 이를 위해 ``next`` 매개변수에 처리경로 상의 다음 대리자가 전달됩니다. 처리경로를 종료, 즉 단락시키기 위해서는 이 `next` 매개변수에 대해 호출하지 않으면 됩니다. 또한 다음 대리자를 호출하기 전과 호출한 후에 원하는 동작들을 수행할 수도 있습니다. 다음 예시에서 확인할 수 있습니다.:
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -78,7 +78,7 @@ ASP.NET 어플리케이션을 가장 간단하게 구성하는 경우, 모든 �
 
 .. warning:: 처리경로 상의 이후에 설정된 컴포넌트에서 응답을 변경하여 클라이언트에게 전달하고자 할 수 있으므로, 다음 컴포넌트를 호출한 후에 ``HttpResponse`` 를 수정하지 않도록 하십시오.  
 
-.. note:: 이 ``ConfigureLogInline`` 메서드는 ``LogInline`` 환경설정 항목을 설정한 어플리케이션을 실행할 경우 호출됩니다. :doc:`environments`에서 자세한 사항을 확인할 수 있습니다. 이후의 내용에서 다양한 옵션을 확인해보기 위해 여러가지 ``Configure[환경설정]``를 사용할 것입니다. Visual Studio 에서 예제들을 실행하는 가장 쉬운 방법은 ``web`` 명령어를 사용하는 것으로써, *project.json* 에서 설정할 수 있습니다. :doc:`startup` 을 확인하세요.
+.. note:: 이 ``ConfigureLogInline`` 메서드는 ``LogInline`` 환경설정 항목을 설정한 어플리케이션을 실행할 경우 호출됩니다. :doc:`environments` 에서 자세한 사항을 확인할 수 있습니다. 이후의 내용에서 다양한 옵션을 확인해보기 위해 여러가지 ``Configure[환경설정]`` 를 사용할 것입니다. Visual Studio 에서 예제들을 실행하는 가장 쉬운 방법은 ``web`` 명령어를 사용하는 것으로써, *project.json* 에서 설정할 수 있습니다. :doc:`startup` 을 확인하세요.
 
 위의 예시에서 ``await next.Invoke()`` 를 호출하여 다음 대리자인 ``await context.Response.WriteAsync("Hello from " + _environment);`` 를 호출하였습니다. 클라이언트에게는 예상하는 바와 같이 ("Hello from LogInline") 응답을 전달할 것이고, 서버의 콘솔 출력에는 호출 직전의 메시지와 호출 직후의 메시지가 나타날 것입니다.
 
@@ -89,7 +89,7 @@ ASP.NET 어플리케이션을 가장 간단하게 구성하는 경우, 모든 �
 Run 과 Map 그리고 Use
 ^^^^^^^^^^^^^^^^^
 
-여러분은 `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__ 과 `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__ 그리고 `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__ 를 사용하여 HTTP 처리경로를 설정할 수 있습니다. 우선, `Run` 메서드는 처리경로를 단락시킵니다. (즉 ``next`` 매개변수로 전달되는 요청 대리자를 호출하지 않습니다.) 따라서, ``Run`` 메서드는 처리경로의 마지막에 호출해야 합니다. ``Run`` 메서드는 모든 미들웨어에 공통적인 관례입니다. 그런 이유로 어떤 미들웨어 컴포넌트들의 경우에는 자신만의 Run[미들웨어의 이름] 메서드를 노출하고, 해당 메서드를 처리경로의 마지막에 호출해야 하도록 할 수 있습니다. 다음의 2가지 미들웨어는 동일한 응답을 반환합니다. ``Use`` 메서드를 사용하는 미들웨어에서 ``next`` 매개변수를 사용하지 않기 때문입니다.
+여러분은 `Run <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/RunExtensions/index.html>`__ 과 `Map <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/MapExtensions/index.html>`__ 그리고 `Use <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseExtensions/index.html>`__ 를 사용하여 HTTP 처리경로를 설정할 수 있습니다. 우선, `Run` 메서드는 처리경로를 단락시킵니다. (즉, ``next`` 매개변수로 전달되는 요청 대리자를 호출하지 않습니다.) 따라서, ``Run`` 메서드는 처리경로의 마지막에 호출해야 합니다. ``Run`` 메서드는 모든 미들웨어에 공통적인 관례입니다. 그런 이유로 어떤 미들웨어 컴포넌트들의 경우에는 자신만의 Run[미들웨어의 이름] 메서드를 노출하고, 해당 메서드를 처리경로의 마지막에 호출해야 하도록 할 수 있습니다. 다음의 2가지 미들웨어는 동일한 응답을 반환합니다. ``Use`` 메서드를 사용하는 미들웨어에서 ``next`` 매개변수를 사용하지 않기 때문입니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/Startup.cs
 	:language: c#
@@ -164,14 +164,14 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 
 `CodeLabs 미들웨어 튜터리얼 <https://github.com/Microsoft-Build-2016/CodeLabs-WebDev/tree/master/Module2-AspNetCore>`__ 에서 미들웨어를 작성하는 방법에 대한 설명을 확인할 수 있습니다. 
 
-더 복잡한 요청을 처리하기 위한 기능을 확인하고자 할 경우, ASP.NET 팀에서는 별도의 클래스로 미들웨어를 구현하고 ``Configure`` 메서드에서 호출될 수 있는 ``IApplicationBuilder`` 확장 메서드를 노출하는 방법을 권장합니다. 이전 예시에서 확인했던 간단한 로깅 미들웨어를 다음과 같이 변경할 수 있습니다. 생성자에서 ``RequestDelegate`` 형인 next 매개변수를 받고 있고 ``Invoke`` 메서드를 지원하고 있습니다.: 
+더 복잡한 요청을 처리하기 위한 기능을 확인하고자 할 경우, ASP.NET 팀에서는 별도의 클래스로 미들웨어를 구현하고 ``Configure`` 메서드에서 호출될 수 있는 ``IApplicationBuilder`` 확장 메서드를 노출하는 방법을 권장합니다. 이전 예시에서 확인했던 간단한 로깅 미들웨어를 다음과 같이 변경할 수 있습니다. 생성자에서 ``RequestDelegate`` 형인 next 매개변수를 받고 있고, ``Invoke`` 메서드를 지원하고 있습니다.: 
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/RequestLoggerMiddleware.cs
 	:language: c#
 	:caption: RequestLoggerMiddleware.cs
 	:emphasize-lines: 13, 19
 
-미들웨어는 `명시적 의존석 원칙 (Explicit Dependencies Principle) <http://deviq.com/explicit-dependencies-principle/>`_ 을 따릅니다. 이 원칙에 따라 미들웨어의 생성자에서 의존성을 명시하고 있습니다. 아래의 예시에서 보는 바와 같이 미들웨어는 `UseMiddleware<T>`_ 확장 메서드를 사용하여, 자신의 생성자에 서비스들에 대한 의존성을 직접 주입할 수 있습니다. `UseMiddleware<T>'_ 확장 메서드의 매개변수에 의존성으로서 주입된 서비스들은 자동으로 삽입되고, 그 외에 의존성으로서 주입되지 않은 매개변수의 경우에는 ``params`` 인자 배열을 사용합니다.
+미들웨어는 `명시적 의존석 원칙 (Explicit Dependencies Principle) <http://deviq.com/explicit-dependencies-principle/>`_ 을 따릅니다. 이 원칙에 따라 미들웨어의 생성자에서 의존성을 명시하고 있습니다. 아래의 예시에서 보는 바와 같이 미들웨어는 `UseMiddleware<T>`_ 확장 메서드를 사용하여, 자신의 생성자에 서비스들에 대한 의존성을 직접 주입할 수 있습니다. `UseMiddleware<T>`_ 확장 메서드의 매개변수에 의존성으로서 주입된 서비스들은 자동으로 삽입되고, 그 외에 의존성으로서 주입되지 않은 매개변수의 경우에는 ``params`` 인자 배열을 사용합니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/RequestLoggerExtensions.cs
 	:language: c#
@@ -179,8 +179,6 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 	:lines: 5-11
 	:emphasize-lines: 5
 	:dedent: 4
-
-Using the extension method and associated middleware class, the ``Configure`` method becomes very simple and readable.
 
 확장 메서드와 그와 관련된 미들웨어 클래스를 사용하면 ``Configure`` 메서드가 매우 간결해지고 가독성이 높아집니다.
 
