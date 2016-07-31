@@ -7,6 +7,8 @@ By `Tom Archer`_
 
 Static files, which include HTML files, CSS files, image files, and JavaScript files, are assets that the app will serve directly to clients. In this article, we'll cover the following topics as they relate to ASP.NET Core and static files.
 
+정적 파일은 앱에서 클라이언트에게 바로 전달하는 자원으로서, HTML 파일과 CSS 파일, 이미지 파일, 자바스크립트 파일 등이 이에 해당합니다. 이번 장에서는 ASP.NET Core 와 정적 파일에 대한 다음과 같은 주제들을 살펴볼 것입니다.
+
 .. contents:: Sections
   :local:
   :depth: 1
@@ -17,15 +19,23 @@ Serving static files
 
 By default, static files are stored in the `webroot` of your project. The location of the webroot is defined in the project's ``hosting.json`` file where the default is `wwwroot`.
 
+기본적으로 정적 파일은 여러분의 프로젝트 상의 `webroot` 에 저장합니다. webroot 의 위치는 프로젝트의 ``hosting.json`` 에서 정의합니다. 위치의 기본값은 `wwwroot` 입니다.
+
 .. code-block:: json 
 
   "webroot": "wwwroot"
 
 Static files can be stored in any folder under the webroot and accessed with a relative path to that root. For example, when you create a default Web application project using Visual Studio, there are several folders created within the webroot folder - ``css``, ``images``, and ``js``. In order to directly access an image in the ``images`` subfolder, the URL would look like the following:
 
+정적 파일은 webroot 디렉토리 하위의 어떠한 폴더에도 저장할 수 있고, webroot 에 대한 상대 경로를 통해 접근할 수 있습니다. 예를 들어, Visual Studio 에서 기본 웹 어플리케이션 프로젝트를 생성해보면, webroot 폴더에 ``css``와 ``images``, ``js`` 폴더가 생성되어 있음을 확인할 수 있습니다. 이 중 ``images`` 폴더에 있는 이미지 파일을 직접 접근하기 위해서는 다음과 같은 URL 을 사용하면 됩니다. 
+
   \http://<yourApp>/images/<imageFileName>
 
+  \http://<여러분의 앱>/images/<이미지 파일의 이름>
+
 In order for static files to be served, you must configure the :doc:`middleware` to add static files to the pipeline. This specific middleware can be configured by adding a dependency on the Microsoft.AspNetCore.StaticFiles package to your project and then calling the ``UseStaticFiles`` extension method from ``Startup.Configure`` as follows:
+
+여러분이 정적 파일을 제공하기 위해서는, 정적 파일에 대한 처리 과정을 요청 처리경로에 추가하기 위해 :doc:`middleware` 를 설정해야 합니다. Microsoft.AspNetCore.StaticFiles 패키지에 대한 의존성을 프로젝트에 추가하고, 다음과 같이 ``Startup.Configure`` 에서 ``UseStaticFiles`` 확장 메서드를 호출합니다.:
 
 .. code-block:: c#
   :emphasize-lines: 5
@@ -39,6 +49,8 @@ In order for static files to be served, you must configure the :doc:`middleware`
 
 Now, let's say that you have a project hierarchy where the static files you wish to serve are outside the webroot. For example,let's take a simple layout like the following:
 
+이제 프로젝트의 webroot 하위가 아닌 다른 위치에 정적 파일이 존재하는 경우에 대해 알아보겠습니다. 예를 들어, 다음과 같이 간단한 디렉토리 구조인 경우에 대해 설정해보겠습니다.
+
   - wwwroot
 
     - css
@@ -50,6 +62,8 @@ Now, let's say that you have a project hierarchy where the static files you wish
     - test.png
 
 In order for the user to access test.png, you can configure the static files middleware as follows:
+
+사용자가 test.png 에 접근할 수 있도록 하기 위해서, 여러분은 다음과 같은 정적 파일 미들웨어를 설정하면 됩니다.
 
 .. code-block:: c#
   :emphasize-lines: 5-9
@@ -67,11 +81,15 @@ In order for the user to access test.png, you can configure the static files mid
 
 At this point, if the user enters an address of ``http://<yourApp>/StaticFiles/test.png``, the ``test.png`` image will be served.
 
+이제 사용자가 ``http://<여러분의 앱>/StaticFiles/test.png`` 라는 주소를 브라우저에서 입력하면, ``test.png`` 이미지 파일이 제공될 것입니다.
+
 Enabling directory browsing
 디렉토리 브라우징 사용하기
 ---------------------------
 
 Directory browsing allows the user of your Web app to see a list of directories and files within a specified directory (including the root). By default, this functionality is not available such that if the user attempts to display a directory within an ASP.NET Web app, the browser displays an error. To enable directory browsing for your Web app, call the ``UseDirectoryBrowser`` extension method from  ``Startup.Configure`` as follows:
+
+
 
 .. code-block:: c#
   :emphasize-lines: 5
