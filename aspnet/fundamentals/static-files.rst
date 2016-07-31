@@ -1,6 +1,7 @@
 .. _fundamentals-static-files:
 
 Working with Static Files
+정적 파일 다루기
 =========================
 By `Tom Archer`_
 
@@ -11,6 +12,7 @@ Static files, which include HTML files, CSS files, image files, and JavaScript f
   :depth: 1
 
 Serving static files
+정적 파일 제공하기
 --------------------
 
 By default, static files are stored in the `webroot` of your project. The location of the webroot is defined in the project's ``hosting.json`` file where the default is `wwwroot`.
@@ -66,6 +68,7 @@ In order for the user to access test.png, you can configure the static files mid
 At this point, if the user enters an address of ``http://<yourApp>/StaticFiles/test.png``, the ``test.png`` image will be served.
 
 Enabling directory browsing
+디렉토리 브라우징 사용하기
 ---------------------------
 
 Directory browsing allows the user of your Web app to see a list of directories and files within a specified directory (including the root). By default, this functionality is not available such that if the user attempts to display a directory within an ASP.NET Web app, the browser displays an error. To enable directory browsing for your Web app, call the ``UseDirectoryBrowser`` extension method from  ``Startup.Configure`` as follows:
@@ -113,6 +116,7 @@ In order for the user to browse the ``MyStaticFiles`` directory, you can configu
 At this point, if the user enters an address of ``http://<yourApp>/StaticFiles``, the browser will display the files in the ``MyStaticFiles`` directory.
 
 Serving a default document
+기본 문서 제공하기
 --------------------------
 
 Setting a default home page gives site visitors a place to start when visiting your site. Without a default site users will see a blank page unless they enter a fully qualified URI to a document.  In order for your Web app to serve a default page without the user having to fully qualify the URI, call the ``UseDefaultFiles`` extension method from ``Startup.Configure`` as follows.
@@ -158,6 +162,7 @@ Now, if the user browses to a directory in the webroot with a file named ``mydef
 But, what if you want to serve a default page from a directory that is outside the webroot directory? You could call both the ``UseStaticFiles`` and ``UseDefaultFiles`` methods passing in identical values for each method's parameters. However, it's much more convenient and recommended to call the ``UseFileServer`` method, which is covered in the next section.
 
 Using the UseFileServer method
+UseFileServer 메서드 사용하기
 ------------------------------
 
 In addition to the ``UseStaticFiles``, ``UseDefaultFiles``, and ``UseDirectoryBrowser`` extensions methods, there is also a single method - ``UseFileServer`` - that combines the functionality of all three methods. The following example code shows some common ways to use this method:
@@ -204,6 +209,7 @@ Using the example hierarchy and code snippet from above, here's what happens if 
   - ``http://<yourApp>/StaticFiles`` - Since a default file is present (``MyStaticFiles/default.html``), that file will be served. If that file didn't exist, the browser would present a list of files in the ``MyStaticFiles`` directory (because the ``FileServerOptions.EnableDirectoryBrowsing`` property is set to ``true``).
 
 Working with content types
+콘텐츠 타입 다루기
 --------------------------
 
 The ASP.NET static files middleware understands almost 400 known file content types. If the user attempts to reach a file of an unknown file type, the static file middleware will not attempt to serve the file.
@@ -275,11 +281,13 @@ The ``FileExtensionContentTypeProvider`` class contains an internal collection t
 Now, if the user attempts to browse to any file with an extension of ``.myapp``, the user will be prompted to download the file (or it will happen automatically depending on the browser).
 
 IIS Considerations
+IIS 고려사항
 ------------------
 
 ASP.NET Core applications hosted in IIS use the HTTP platform handler to forward all requests to the application including requests for static files. The IIS static file handler is not used because it won’t get a chance to handle the request before it is handled by the HTTP platform handler.
 
 Best practices
+모범 사례
 --------------
 
 This section includes a list of best practices for working with static files:
@@ -287,10 +295,12 @@ This section includes a list of best practices for working with static files:
   - Code files (including C# and Razor files) should be placed outside of the app project's webroot. This creates a clean separation between your app's static (non-compilable) content and source code.
 
 Summary
+요약
 -------
 In this article, you learned how the static files middleware component in ASP.NET Core allows you to serve static files, enable directory browsing, and serve default files. You also saw how to work with content types that ASP.NET doesn't recognize. Finally, the article explained some IIS considerations and presented some best practices for working with static files.
 
 Additional Resources
+추가 자료
 --------------------
 
 - :doc:`middleware`
