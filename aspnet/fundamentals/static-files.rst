@@ -205,17 +205,23 @@ UseFileServer 메서드 사용하기
 
 In addition to the ``UseStaticFiles``, ``UseDefaultFiles``, and ``UseDirectoryBrowser`` extensions methods, there is also a single method - ``UseFileServer`` - that combines the functionality of all three methods. The following example code shows some common ways to use this method:
 
+``UseStaticFiles`` 와 ``UseDefaultFiles``, ``UseDirectoryBrowser`` 확장 메서드 외에 다른 메서드도 있습니다. ``UseFileServer`` 메서드로서 위 3가지 메서드의 기능을 통합한 메서드입니다. 다음 예제에서 이 메서드를 사용하는 몇 가지 일반적인 방법들을 확인할 수 있습니다.
+
 .. code-block:: c#
 
   // Enable all static file middleware (serving of static files and default files) EXCEPT directory browsing.
+  // 디렉토리 브라우징을 제외한 모든 정적 파일 관련 미들웨어 사용 (정적 파일 및 기본 파일 제공)
   app.UseFileServer();
 
 .. code-block:: c#
 
   // Enables all static file middleware (serving of static files, default files, and directory browsing).
+  // 모든 정적 파일 관련 미들웨어 사용 (정적 파일 및 기본 파일, 디렉토리 브라우징 제공)
   app.UseFileServer(enableDirectoryBrowsing: true);
 
 As with the ``UseStaticFiles``, ``UseDefaultFiles``, and ``UseDirectoryBrowser`` methods, if you wish to serve files that exist outside the webroot, you instantiate and configure an "options" object that you pass as a parameter to ``UseFileServer``. For example, let's say you have the following directory hierarchy in your Web app:
+
+``UseStaticFiles`` 과 ``UseDefaultFiles``, ``UseDirectoryBrowser`` 메서드와 마찬가지로 webroot 외부의 파일을 제공하길 원한다면, "options" 개체를 생성하고 설정한 뒤에 ``UseFileServer`` 메서드에 매개변수로 전달하세요. 예를 들어, 여러분의 웹 어플리케이션에서 다음과 같은 디렉토리 구조를 사용한다고 가정해보겠습니다.
 
 - wwwroot
 
@@ -230,10 +236,13 @@ As with the ``UseStaticFiles``, ``UseDefaultFiles``, and ``UseDirectoryBrowser``
 
 Using the hierarchy example above, you might want to enable static files, default files, and browsing for the ``MyStaticFiles`` directory. In the following code snippet, that is accomplished with a single call to ``UseFileServer``.
 
+위 예시와 같은 구조를 사용한다면, 여러분은 ``MyStaticFiles`` 디렉토리 내의 정적 파일과 기본 파일의 제공 및 브라우징을 가능하도록 하길 원할 수 있습니다. 다음 코드 토막에서는 ``UseFileServer`` 에 대한 한 번의 호출로 그러한 외부 디렉토리에 대한 기능을 수행하고 있습니다.
+
 .. code-block:: c#
 
   // Enable all static file middleware (serving of static files, default files,
   // and directory browsing) for the MyStaticFiles directory.
+  // MyStaticFiles 디렉토리에 대한 모든 정적 파일 미들웨어 사용 (정적 파일 및 기본 파일, 디렉토리 브라우징 제공)
   app.UseFileServer(new FileServerOptions()
   {
       FileProvider = new PhysicalFileProvider(@"D:\Source\WebApplication1\src\WebApplication1\MyStaticFiles"),
@@ -243,8 +252,12 @@ Using the hierarchy example above, you might want to enable static files, defaul
 
 Using the example hierarchy and code snippet from above, here's what happens if the user browses to various URIs:
 
+위 예시에서의 디렉토리 구조와 코드 토막을 사용하면, 사용자가 여러 URI 를 브라우징할 때 다음과 같은 일이 벌어집니다.
+
   - ``http://<yourApp>/StaticFiles/test.png`` - The ``MyStaticFiles/test.png`` file will be served to and presented by the browser.
+  - ``http://<여러분의 앱>/StaticFiles/test.png``
   - ``http://<yourApp>/StaticFiles`` - Since a default file is present (``MyStaticFiles/default.html``), that file will be served. If that file didn't exist, the browser would present a list of files in the ``MyStaticFiles`` directory (because the ``FileServerOptions.EnableDirectoryBrowsing`` property is set to ``true``).
+  - ``http://<여러분의 앱>/StaticFiles``
 
 Working with content types
 콘텐츠 타입 다루기
