@@ -171,7 +171,7 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 	:caption: RequestLoggerMiddleware.cs
 	:emphasize-lines: 13, 19
 
-미들웨어는 `명시적 의존석 원칙 (Explicit Dependencies Principle) <http://deviq.com/explicit-dependencies-principle/>`_ 을 따릅니다. 이 원칙에 따라 미들웨어의 생성자에서 의존성을 명시하고 있습니다. 아래의 예시에서 보는 바와 같이 미들웨어는 `UseMiddleware<T>`_ 확장 메서드를 사용하여, 자신의 생성자에 서비스들에 대한 의존성을 직접 주입할 수 있습니다. `UseMiddleware<T>`_ 확장 메서드의 매개변수에 의존성으로서 주입된 서비스들은 자동으로 삽입되고, 그 외에 의존성으로서 주입되지 않은 매개변수의 경우에는 ``params`` 인자 배열을 사용합니다.
+미들웨어는 `명시적 의존성 원칙 (Explicit Dependencies Principle) <http://deviq.com/explicit-dependencies-principle/>`_ 을 따릅니다. 이 원칙에 따라 미들웨어의 생성자에서 의존성을 명시하고 있습니다. 아래의 예시에서 보는 바와 같이 미들웨어는 `UseMiddleware<T>`_ 확장 메서드를 사용하여, 자신의 생성자에 서비스들에 대한 의존성을 직접 주입할 수 있습니다. `UseMiddleware<T>`_ 확장 메서드의 매개변수에 의존성으로서 주입된 서비스들은 자동으로 삽입되고, 그 외에 의존성으로서 주입되지 않은 매개변수의 경우에는 ``params`` 인자 배열을 사용합니다.
 
 .. literalinclude:: middleware/sample/src/MiddlewareSample/RequestLoggerExtensions.cs
 	:language: c#
