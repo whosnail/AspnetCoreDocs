@@ -276,7 +276,11 @@ Working with content types
 
 The ASP.NET static files middleware understands almost 400 known file content types. If the user attempts to reach a file of an unknown file type, the static file middleware will not attempt to serve the file.
 
+ASP.NET 정적 파일 미들웨어는 약 400개의 알려진 콘텐츠 타입을 인식합니다. 사용자가 미들웨어에서 인식할 수 없는 파일 타입에 접근하려면, 정적 파일 미들웨어는 파일을 제공하지 않을 것입니다.
+
 Let's take the following directory/file hierarchy example to illustrate:
+
+다음 디렉토리/파일 구조의 예시에서 확인해보겠습니다.
 
 - wwwroot
 
@@ -289,6 +293,8 @@ Let's take the following directory/file hierarchy example to illustrate:
 
 Using this hierarchy, you could enable static file serving and directory browsing with the following:
 
+이 구조에 대해 정적 파일 미들웨어와 디렉토리 브라우징 미들웨어를 다음과 같이 사용하도록 설정하겠습니다.
+
 .. code-block:: c#
   :emphasize-lines: 5-6
 
@@ -296,10 +302,13 @@ Using this hierarchy, you could enable static file serving and directory browsin
   {
     ...
     // Serve static files and allow directory browsing.
+    // 정적 파일 제공과 디렉토리 브라우징을 허용
     app.UseDirectoryBrowser();
     app.UseStaticFiles();
 
 If the user browses to ``http://<yourApp>/images``, a directory listing will be displayed by the browser that includes the ``test.image`` file. However, if the user clicks on that file, they will see a 404 error - even though the file obviously exists. In order to allow the serving of unknown file types, you could set the ``StaticFileOptions.ServeUnknownFileTypes`` property to ``true`` and specify a default content type via ``StaticFileOptions.DefaultContentType``. (Refer to this `list of common MIME content types <http://www.freeformatter.com/mime-types-list.html>`_.)
+
+사용자가 ``http://<여러분의 앱>/images`` 를 브라우징한다면, 브라우저에는 ``test.image`` 를 포함하는 디렉토리 목록이 보일 것입니다. 하지만, 사용자가 ``test.image`` 파일을 클릭하면, 파일이 존재한다 하더라도 사용자는 404 오류를 보게 될 것입니다. 인식할 수 없는 파일 타입을 제공하려면, ``StaticFileOptions.ServeUnknownFileTypes`` 속성을 ``true`` 로 설정하고 ``StaticFileOptions.DefaultContentType`` 속성에 기본 콘텐트 타입을 지정하세요. (`MIME 콘텐트 타입 목록 <http://www.freeformatter.com/mime-types-list.html>`_ 을 참고하세요.)
 
 .. code-block:: c#
   :emphasize-lines: 5-10
@@ -308,6 +317,7 @@ If the user browses to ``http://<yourApp>/images``, a directory listing will be 
   {
     ...
     // Serve static files and allow directory browsing.
+    // 정적 파일 제공과 디렉토리 브라우징을 허용
     app.UseDirectoryBrowser();
     app.UseStaticFiles(new StaticFileOptions
     {
@@ -317,9 +327,15 @@ If the user browses to ``http://<yourApp>/images``, a directory listing will be 
 
 At this point, if the user browses to a file whose content type is unknown, the browser will treat it as an image and render it accordingly.
 
+이제, 사용자가 인식할 수 없는 콘텐트 타입인 파일로 브라우징하면, 브라우저는 이미지로 인식하고 이미지로서 화면에 표시하려 할 것입니다.
+
 So far, you've seen how to specify a default content type for any file type that ASP.NET doesn't recognize. However, what if you have multiple file types that are unknown to ASP.NET? That's where the ``FileExtensionContentTypeProvider`` class comes in.
 
+지금까지 여러분은 ASP.NET 이 인식할 수 없는 파일 타입에 기본 콘텐트 타입을 지정하는 방법을 확인하였습니다. 하지만, ASP.NET 에 여러 개의 파일 타입을 지정하려고 할 경우에는 어떻게 해야 할까요? 그럴 경우 ``FileExtensionContentTypeProvider`` 클래스를 사용하십시오.
+
 The ``FileExtensionContentTypeProvider`` class contains an internal collection that maps file extensions to MIME content types. To specify custom content types, simply instantiate a ``FileExtensionContentTypeProvider`` object and add a mapping to the ``FileExtensionContentTypeProvider.Mappings`` dictionary for each needed file extension/content type. In the following example, the code adds a mapping of the file extension ``.myapp`` to the MIME content type ``application/x-msdownload``.
+
+``FileExtensionContentTypeProvider`` 클래스는 파일 확장자를 MIME 콘텐트 타입에 연결한 내부 콜렉션 객체를 포함하고 있습니다.
 
 .. code-block:: c#
   :emphasize-lines: 5-13
@@ -329,6 +345,7 @@ The ``FileExtensionContentTypeProvider`` class contains an internal collection t
     ...
 
     // Allow directory browsing.
+    // 디렉토리 브라우징 허용
     app.UseDirectoryBrowser();
 
     // Set up custom content types - associating file extension to MIME type
@@ -341,6 +358,8 @@ The ``FileExtensionContentTypeProvider`` class contains an internal collection t
     ...
 
 Now, if the user attempts to browse to any file with an extension of ``.myapp``, the user will be prompted to download the file (or it will happen automatically depending on the browser).
+
+이제 사용자가 ``.myapp`` 확장자인 파일을 브라우징하려하면, 사용자는 파일을 다운로드하려 한다는 알림을 확인하게 될 것입니다. (혹은 브라우저에 따라 자동으로 다운로드할 수도 있습니다.)
 
 IIS Considerations
 ------------------
