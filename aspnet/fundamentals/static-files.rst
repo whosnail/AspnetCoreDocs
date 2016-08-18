@@ -335,7 +335,7 @@ So far, you've seen how to specify a default content type for any file type that
 
 The ``FileExtensionContentTypeProvider`` class contains an internal collection that maps file extensions to MIME content types. To specify custom content types, simply instantiate a ``FileExtensionContentTypeProvider`` object and add a mapping to the ``FileExtensionContentTypeProvider.Mappings`` dictionary for each needed file extension/content type. In the following example, the code adds a mapping of the file extension ``.myapp`` to the MIME content type ``application/x-msdownload``.
 
-``FileExtensionContentTypeProvider`` 클래스는 파일 확장자를 MIME 콘텐트 타입에 연결한 내부 콜렉션 객체를 포함하고 있습니다.
+``FileExtensionContentTypeProvider`` 클래스 내부에는 파일 확장자에 해당하는 MIME 콘텐트 타입을 지정하는 콜렉션 객체가 있습니다. 개발자가 정의한 콘텐트 타입을 지정하기 위해서는 ``FileExtensionContentTypeProvider`` 객체를 생성하고 ``FileExtensionContentTypeProvider.Mappings`` 사전 (dictionary) 에 각각의 파일 확장자와 콘텐트 타입 간의 지정을 추가하면 됩니다. 다음 예제에서 ``.myapp`` 파일 확장과 ``application/x-msdownload`` MIME 콘텐트 타입 간의 연결을 추가하는 코드를 확인할 수 있습니다.
 
 .. code-block:: c#
   :emphasize-lines: 5-13
