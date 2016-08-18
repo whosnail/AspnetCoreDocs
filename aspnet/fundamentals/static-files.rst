@@ -123,7 +123,7 @@ By `Tom Archer`_
   public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
   {
     ...
-    // 존재한다면 기본 파일 제공
+    // 파일이 존재한다면, 기본 파일 제공
     app.UseDefaultFiles();
     app.UseStaticFiles();
     ...
