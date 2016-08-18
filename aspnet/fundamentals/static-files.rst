@@ -349,10 +349,12 @@ The ``FileExtensionContentTypeProvider`` class contains an internal collection t
     app.UseDirectoryBrowser();
 
     // Set up custom content types - associating file extension to MIME type
+    // 개발자가 정의한 콘텐트 타입 설정하기 - 파일 확장자와 MIME 타입 간의 연결
     var provider = new FileExtensionContentTypeProvider();
     provider.Mappings.Add(".myapp", "application/x-msdownload");
 
     // Serve static files.
+    // 정적 파일 제공하기
     app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 
     ...
