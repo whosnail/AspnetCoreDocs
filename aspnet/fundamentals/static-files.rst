@@ -15,7 +15,7 @@ By `Tom Archer`_
 정적 파일 제공하기
 --------------------
 
-기본적으로 정적 파일은 ``web root`` (*<콘텐트의 루트>/wwwroot*) 에 저장됩니다. 콘텐트의 루트와 웹 루트는 :doc:`/intro` 에서 더 확인해보세요. 여러분은 보통 현재 디렉토리를 콘텐트 루트로 지정하므로, 여러분의 프로젝트의 ``web root`` 는 개발 중에 확인할 수 있을 것입니다.
+기본적으로 정적 파일은 ``web root`` (*<콘텐트 루트>/wwwroot*) 에 저장됩니다. 콘텐트 루트와 웹 루트는 :doc:`/intro` 에서 더 확인해보세요. 여러분은 보통 현재 디렉토리를 콘텐트 루트로 지정하므로, 여러분의 프로젝트의 ``web root`` 는 개발 중에 확인할 수 있을 것입니다.
 
 .. literalinclude:: ../../common/samples/WebApplication1/src/WebApplication1/Program.cs
   :language: c#
