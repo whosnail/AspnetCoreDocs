@@ -6,7 +6,7 @@ By `Tom Archer`_
 
 정적 파일은 ASP.NET Core 어플리케이션에서 클라이언트에게 바로 전달할 수 있는 자원으로서, HTML 파일과 CSS 파일, 이미지 파일, 자바스크립트 파일 등이 이에 해당합니다.
 
-`샘플 코드를 확인하거나 다운로드 받으세요. <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/static-files/sample>`
+`샘플 코드를 확인하거나 다운로드 받으세요. <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/static-files/sample>`__
 
 .. contents:: Sections
   :local:
@@ -24,12 +24,12 @@ By `Tom Archer`_
   :dedent: 8
 
 
-정적 파일은 ``web root`` 디렉토리 하위의 어떠한 폴더에도 저장할 수 있고, 그 루트에 대한 상대 경로를 통해 접근할 수 있습니다. 예를 들어, Visual Studio 에서 기본 웹 어플리케이션 프로젝트를 생성해보면, *webroot* 폴더에 ``css`` 와 ``images``, ``js`` 등의 몇 가지 폴더가 생성되어 있음을 확인할 수 있습니다. ``images`` 폴더에 있는 이미지 파일을 직접 접근하기 위한 URI 는 다음과 같습니다.: 
+정적 파일은 ``web root`` 디렉토리 하위의 어떠한 폴더에도 저장할 수 있고, 그 루트에 대한 상대 경로를 통해 접근할 수 있습니다. 예를 들어, Visual Studio 에서 기본 웹 어플리케이션 프로젝트를 생성해보면, *webroot* 폴더에 *css* 와 *images*, *js* 등의 몇 가지 폴더가 생성되어 있음을 확인할 수 있습니다. ``images`` 폴더에 있는 이미지 파일을 직접 접근하기 위한 URI 는 다음과 같습니다.: 
 
 - \http://<어플리케이션>/images/<이미지 파일 이름>
 - \http://localhost:9189/images/banner3.svg
 
-여러분이 정적 파일을 제공하기 위해서는, 정적 파일에 대한 처리 과정을 요청 처리경로에 추가하기 위해 :doc:`middleware` 를 설정해야 합니다. 정적 파일 미들웨어를 설정하기 위해서는, Microsoft.AspNetCore.StaticFiles 패키지에 대한 의존성을 여러분의 프로젝트에 추가하고 ``Startup.Configure`` 에서 :dn:method:`~Microsoft.AspNetCore.Builder.StaticFileExtensions.UseStaticFiles` 확장 메서드를 호출합니다.:
+여러분이 정적 파일을 제공하기 위해서는, 정적 파일에 대한 처리 과정을 요청 처리경로에 추가하기 위해 :doc:`middleware` 를 설정해야 합니다. 정적 파일 미들웨어를 설정하기 위해서는, *Microsoft.AspNetCore.StaticFiles* 패키지에 대한 의존성을 여러분의 프로젝트에 추가하고 ``Startup.Configure`` 에서 :dn:method:`~Microsoft.AspNetCore.Builder.StaticFileExtensions.UseStaticFiles` 확장 메서드를 호출합니다.:
 
 .. literalinclude:: static-files/sample/StartupStaticFiles.cs
   :language: c#
@@ -67,13 +67,13 @@ By `Tom Archer`_
 
 ``http://<어플리케이션>/StaticFiles/test.png`` 에 대한 요청에 대해 *test.png* 파일을 제공할 것입니다.
 
-정적 파일 인증
+정적 파일 인가
 ---------------------------
 
-정적 파일 모듈에서는 어떠한 인가 절차도 거치지 **않습니다**. 정적 파일 모듈을 통해 제공되는 모든 파일은, *wwwroot** 아래 있는 파일 까지 포함하여 모두 공개되어 있습니다. 인가를 통해 파일을 제공하기 위해서는 다음과 같은 처리를 해야 합니다.
+정적 파일 모듈에서는 어떠한 인가 절차도 거치지 **않습니다**. 정적 파일 모듈을 통해 제공되는 모든 파일은, *wwwroot* 아래 있는 파일 까지 포함하여 모두 공개되어 있습니다. 인가를 통해 파일을 제공하기 위해서는 다음과 같은 처리를 해야 합니다.
 
-- 정적 파일 미들웨어를 통해 접근 가능한 모든 디렉토리 (*wwwroot* 포함) 외부에 파일을 **저장하고**
-- 컨트롤러의 동작에서 인가를 적용한 :dn:class:`~Microsoft.AspNetCore.Mvc.FileResult` 를 반환하도록 하여 파일을 제공합니다. 
+- 정적 파일 미들웨어를 통해 접근 가능한 *wwwroot* 포함하여 모든 디렉토리의 외부에 파일을 **저장하고**
+- 인가를 적용한 :dn:class:`~Microsoft.AspNetCore.Mvc.FileResult` 를 컨트롤러의 동작에서 반환하도록 하여 파일을 제공합니다. 
 
 디렉토리 브라우징 허용하기
 ---------------------------
@@ -95,13 +95,13 @@ By `Tom Archer`_
   :dedent: 8
 
 
-위 코드에서 \http://<app>/MyImages URL 을 통해 *wwwroot/images* 폴더를 디렉토리 브라우징할 수 있도록 허용하였습니다. 각각의 파일과 폴더에 대한 링크는 다음과 같습니다.:
+위 코드에서 \http://<어플리케이션>/MyImages URL 을 통해 *wwwroot/images* 폴더를 디렉토리 브라우징할 수 있도록 허용하였습니다. 각각의 파일과 폴더에 대한 링크는 다음과 같습니다.:
 
 .. image:: static-files/_static/dir-browse.png
 
 디렉토리 브라우징을 허용했을 때의 보안 위험에 대해서는 고려사항_ 을 확인하세요.
 
-``app.UseStaticFiles`` 를 두 번 호출한 점에 주의하십시오. 첫 번째 호출은 *wwwroot* 폴더 내의 CSS 와 이미지, JavaScript 를 제공하기 위한 것입니다. 두 번째 호출은 *wwwroot/images* 폴더에 대한 디렉토리 브라운징을 \http://<app>/MyImages 을 통해 하기 위한 것입니다.: 
+``app.UseStaticFiles`` 를 두 번 호출한 점에 주의하십시오. 첫 번째 호출은 *wwwroot* 폴더 내의 CSS 와 이미지, JavaScript 를 제공하기 위한 것입니다. 두 번째 호출은 *wwwroot/images* 폴더에 대한 디렉토리 브라운징을 \http://<어플리케이션>/MyImages 을 통해 하기 위한 것입니다.: 
 
 .. literalinclude:: static-files/sample/StartupBrowse.cs
   :language: c#
@@ -169,7 +169,7 @@ UseFileServer
   - test.png
   - default.html
 
-위 예시와 같은 구조를 사용한다면, 여러분은 ``MyStaticFiles`` 디렉토리 내의 정적 파일과 기본 파일의 제공 및 브라우징을 가능하도록 하길 원할 수 있습니다. 다음 코드 토막에서는 dn:class:`~Microsoft.AspNetCore.Builder.FileServerOptions` 에 대한 한 번의 호출로 그 기능을 수행하고 있습니다.
+위 예시와 같은 구조를 사용한다면, 여러분은 ``MyStaticFiles`` 디렉토리 내의 정적 파일과 기본 파일의 제공 및 브라우징을 가능하도록 하길 원할 수 있습니다. 다음 코드 토막에서는 :dn:class:`~Microsoft.AspNetCore.Builder.FileServerOptions` 에 대한 한 번의 호출로 그 기능을 수행하고 있습니다.
 
 .. literalinclude:: static-files/sample/StartupUseFileServer.cs
   :language: c#
@@ -197,12 +197,10 @@ URI                                         응답
 \http://<어플리케이션>/StaticFiles                   MyStaticFiles/default.html
 ==========================================  ===================================
 
-If no default named files are in the *MyStaticFiles* directory, \http://<app>/StaticFiles returns the directory listing with clickable links:
 *MyStaticFiles* 디렉토리에 기본 파일이 존재하지 않는다면, \http://<app>/StaticFiles URI 에 대한 요청에서 클릭 가능한 링크가 걸린 디렉토리 목록이 반환됩니다.
 
 .. image:: static-files/_static/db2.PNG
 
-.. note:: ``UseDefaultFiles`` and ``UseDirectoryBrowser`` will take the url \http://<app>/StaticFiles without the trailing slash and cause a client side redirect to \http://<app>/StaticFiles/ (adding the trailing slash). Without the trailing slash relative URLs within the documents would be incorrect.
 .. note:: ``UseDefaultFiles`` 와 ``UseDirectoryBrowser`` 에서 끝에 슬래쉬 (/) 가 없는 URL \http://<app>/StaticFiles 을 받게 되면, 클라이언트에서 끝에 슬래쉬를 추가한 \http://<app>/StaticFiles/ 로 리다이렉트하도록 합니다. 끝에 슬래쉬가 없다면, 문서 내의 상대 경로가 맞지 않을 것이기 때문입니다.
 
 FileExtensionContentTypeProvider
@@ -232,7 +230,6 @@ ASP.NET 정적 파일 미들웨어는 약 400개의 알려진 콘텐트 타입�
   :end-before: <Configure
   :dedent: 8
 
-With the code above, a request for a file with an unknown content type will be returned as an image.
 위 코드를 사용하면, 인식할 수 없는 콘텐트 타입의 파일에 대한 요청을 이미지로서 반환할 것입니다. 
 
 .. warning:: :dn:property:`~Microsoft.AspNetCore.Builder.StaticFileOptions.ServeUnknownFileTypes` 허용하면, 보안 위협이 있어 사용하지 않도록 권고하고 있습니다. 아래에서 설명하는 바와 같이 :dn:class:`~Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider` 에서 비표준 확장자를 가진 파일을 제공하는 더 안전한 대체수단을 제공합니다.
