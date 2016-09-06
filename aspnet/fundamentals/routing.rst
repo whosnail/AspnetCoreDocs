@@ -1,36 +1,37 @@
-Routing
+라우팅
 =======
 By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
-Routing is used to map requests to route handlers. Routes are configured when the application starts up, and can extract values from the URL that will be used for request processing. Routing functionality is also responsible for generating links using the defined routes in ASP.NET apps.
+라우팅은 요청을 경로 핸들러 (route handler) 에 연결할 때 사용합니다. 경로 핸들러는 어플리케이션이 시작할 때 설정됩니다. 경로 핸들러를 통해 URL 내에서 요청을 처리할 때 필요한 값을 추출할 수 있습니다. 또한 ASP.NET 어플리케이션 내에 정의한 경로 핸들러에서 사용할 링크도 라우팅 기능을 통해 생성할 수 있습니다.
 
-This document covers the low level ASP.NET Core routing. For ASP.NET Core MVC routing, see :doc:`/mvc/controllers/routing`
+이 문서에서는 저수준의 ASP.NET Core 라우팅 기능 까지 다루고 있습니다. ASP.NET Core MVC 라우팅을 확인하기 위해서는 :doc:`/mvc/controllers/routing` 를 확인하세요.
 
 .. contents:: Sections
   :local:
   :depth: 1
 
-`View or download sample code <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/routing/sample>`__
+`샘플 코드를 확인하거나 다운로드 받으세요. <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/routing/sample>`__
 
-Routing basics
+라우팅의 기본
 ----------------
 
-Routing uses *routes* (implementations of :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter`) to:
+라우팅에서는 *경로 핸들러 (route handler)* (:dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체) 를 다음과 같은 목적으로 사용합니다.:
 
-- map incoming requests to *route handlers*
-- generate URLs used in responses
+- 인입되는 요청을 *경로 핸들러* 로 연결
+- 응답에서 사용할 URL 생성
 
-Generally an app has a single collection of routes. The route collection is processed in order. Requests look for a match in the route collection by :ref:`URL-Matching-ref`. Responses use routing to generate URLs.
+일반적으로 하나의 어플리케이션에는 경로들에 대한 목록이 하나 있습니다. 경로 목록은 순서대로 처리됩니다. 요청 측면에서 볼 때는 요청의 URL 에 일치하는 경로를 경로 목록에서 찾기 위해 :ref:`URL-Matching-ref` 을 사용합니다. 응답 측면에서 볼 때는 응답 내에서 사용할 URL 을 생성하기 위해 라우팅을 사용합니다.
 
-Routing is connected to the :doc:`middleware <middleware>` pipeline by the :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` class. :doc:`ASP.NET MVC </mvc/overview>` adds routing to the middleware pipeline as part of its configuration. To learn about using routing as a standalone component, see using-routing-middleware_.
+라우팅을 :doc:`middleware <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가할 수 있습니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 확인하세요.
 
 .. _URL-Matching-ref:
 
-URL matching
+URL 일치 확인
 ^^^^^^^^^^^^
-URL matching is the process by which routing dispatches an incoming request to a *handler*. This process is generally based on data in the URL path, but can be extended to consider any data in the request. The ability to dispatch requests to separate handlers is key to scaling the size and complexity of an application.
+URL 일치 확인은 라우팅이 인입되는 요청을 어떤 *경로 핸들러 (route handler)* 에서 전달할지를 결정하는 절차입니다. 이 절차는 일반적인 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용하여 확장할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
 
 Incoming requests enter the :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` which calls the :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` method on each route in sequence. The :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` instance chooses whether to *handle* the request by setting the :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` to a non-null :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate`. If a handler is set a route, it will be invoked to process the request and no further routes will be processed. If all routes are executed, and no handler is found for a request, the middleware calls *next* and the next middleware in the request pipeline is invoked.
+인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 으로 진입하면, :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 은 
 
 The primary input to ``RouteAsync`` is the :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` associated with the current request. The ``RouteContext.Handler`` and :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` are outputs that will be set after a successful match.
 
@@ -42,7 +43,7 @@ A successful match during ``RouteAsync`` also will set the properties of the ``R
 
 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Routers` is a list of the routes that took part in successfully matching the request. Routes can be nested inside one another, and the ``Routers`` property reflects the path through the logical tree of routes that resulted in a match. Generally the first item in ``Routers`` is the route collection, and should be used for URL generation. The last item in ``Routers`` is the route that matched.
 
-URL generation
+URL 생성
 ^^^^^^^^^^^^^^
 URL generation is the process by which routing can create a URL path based on a set of route values. This allows for a logical separation between your handlers and the URLs that access them.
 
@@ -67,7 +68,7 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` :dn:prop:`~Microsoft
 
 The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.DataTokens` properties is a dictionary of additional data related to the route that generated the URL. This is the parallel of ``RouteData.DataTokens``.
 
-Creating routes
+라우트 생성하기
 ^^^^^^^^^^^^^^^
 Routing provides the :dn:cls:`~Microsoft.AspNetCore.Routing.Route` class as the standard implementation of ``IRouter``. ``Route`` uses the *route template* syntax to define patterns that will match against the URL path when :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` is called. ``Route`` will use the same route template to generate a URL when :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` is called.
 
@@ -147,7 +148,7 @@ This template will match a URL path like ``/en-US/Products/5`` and will extract 
 
 .. _url-generation:
 
-URL generation
+URL 생성
 ^^^^^^^^^^^^^^^
 The ``Route`` class can also perform URL generation by combining a set of route values with its route template. This is logically the reverse process of matching the URL path.
 
@@ -171,7 +172,7 @@ For more details about the URL generation process, see url-generation-reference_
 
 .. _using-routing-middleware:
 
-Using Routing Middleware
+라우팅 미들웨어 사용하기
 -------------------------
 To use routing middleware, add it to the **dependencies** in *project.json*:
 
@@ -200,7 +201,7 @@ Routes must configured in the ``Configure`` method in the ``Startup`` class. The
 The table below shows the responses with the given URIs.
 
 ===================== ====================================================
-URI                    Response
+URI                    응답
 ===================== ====================================================
 /package/create/3     Hello! Route values: [operation, create], [id, 3]
 /package/track/-3     Hello! Route values: [operation, track], [id, -3]
@@ -228,7 +229,7 @@ The ``Map[Verb]`` methods use constraints to limit the route to the HTTP Verb in
 
 .. _route-template-reference:
 
-Route Template Reference
+라우트 템플릿에 대한 참고사항
 ------------------------
 Tokens within curly braces (``{ }``) define *route parameters* which will be bound if the route is matched. You can define more than one route parameter in a route segment, but they must be separated by a literal value. For example ``{controller=Home}{action=Index}`` would not be a valid route, since there is no literal value between ``{controller}`` and ``{action}``. These route parameters must have a name, and may have additional attributes specified.
 
@@ -251,7 +252,7 @@ The following table demonstrates some route templates and their behavior.
 
 
 +-----------------------------------+--------------------------------+------------------------------------------------+
-| Route Template                    | Example Matching URL           | Notes                                          |
+| Route Template                    | URL 일치 확인 예시           | 비고                                          |
 +===================================+================================+================================================+
 | hello                             | | /hello                       | | Only matches the single path ‘/hello’        +
 +-----------------------------------+--------------------------------+------------------------------------------------+
@@ -275,7 +276,7 @@ Using a template is generally the simplest approach to routing. Constraints and 
 
 .. _route-constraint-reference:
 
-Route Constraint Reference
+라우트 제약사항에 대한 참고사항
 --------------------------
 Route constraints execute when a ``Route`` has matched the syntax of the incoming URL and tokenized the URL path into route values. Route constraints generally inspect the route value associated via the route template and make a simple yes/no decision about whether or not the value is acceptable. Some route constraints use data outside the route value to consider whether the request can be routed. For example, the `HttpMethodRouteConstraint <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Routing/Constraints/HttpMethodRouteConstraint/index.html#httpmethodrouteconstraint-class>`_ can accept or reject a request based on its HTTP verb.
 
@@ -367,7 +368,7 @@ The following table demonstrates some route constraints and their expected behav
 
 .. _url-generation-reference:
 
-URL Generation Reference
+URL 생성에 대한 참고사항
 ------------------------
 The example below shows how to generate a link to a route given a dictionary of route values and a ``RouteCollection``.
 
