@@ -20,7 +20,7 @@ The syntax for ``@inject``:
 
 An example of ``@inject`` in action:
 
-.. literalinclude:: dependency-injection/sample/src/ViewInjectSample/Views/Todo/Index.cshtml
+.. literalinclude:: dependency-injection/sample/src/ViewInjectSample/Views/ToDo/Index.cshtml
   :linenos:
   :language: c#
   :emphasize-lines: 4-5,15-17
@@ -31,7 +31,7 @@ This view displays a list of ``ToDoItem`` instances, along with a summary showin
   :linenos:
   :lines: 15-22
   :language: c#
-  :emphasize-lines: 5-6
+  :emphasize-lines: 6-7
   :dedent: 8
   
 The ``StatisticsService`` performs some calculations on the set of ``ToDoItem`` instances, which it accesses via a repository:
@@ -40,7 +40,7 @@ The ``StatisticsService`` performs some calculations on the set of ``ToDoItem`` 
 .. literalinclude:: dependency-injection/sample/src/ViewInjectSample/Model/Services/StatisticsService.cs
   :linenos:
   :language: c#
-  :emphasize-lines: 16,21,27
+  :emphasize-lines: 15,20,26
 
 The sample repository uses an in-memory collection. The implementation shown above (which operates on all of the data in memory) is not recommended for large, remotely accessed data sets.
 
@@ -90,7 +90,7 @@ As you can see, the default fields include ``Html``, ``Component``, and ``Url`` 
 .. literalinclude:: dependency-injection/sample/src/ViewInjectSample/Views/Helper/Index.cshtml
   :linenos:
   :language: html
-  :emphasize-lines: 5,13
+  :emphasize-lines: 3,11
 
 If you want to extend existing services, you can simply use this technique while inheriting from or wrapping the existing implementation with your own.
 

@@ -19,7 +19,7 @@ In ASP.NET Core MVC, a controller can be any instantiable class that ends in "Co
 By convention, controller classes:
 
 * Are located in the root-level "Controllers" folder
-* Inherit from Microsoft.AspNet.Mvc.Controller
+* Inherit from Microsoft.AspNetCore.Mvc.Controller
 
 These two conventions are not required.
 
@@ -59,7 +59,7 @@ Content negotiated response
   Instead of returning an object directly, an action can return a content negotiated response (using ``Ok``, ``Created``, ``CreatedAtRoute`` or ``CreatedAtAction``). Examples: ``return Ok();`` or ``return CreatedAtRoute("routename",values,newobject");``
 
 Redirect
-  Returns a redirect to another action or destination (using ``Redirect``,``LocalRedirect``,``RedirectToAction`` or ``RedirectToRoute``). Example: ``return RedirectToAction("Complete", new {id = 123});``
+  Returns a redirect to another action or destination (using ``Redirect``, ``LocalRedirect``, ``RedirectToAction`` or ``RedirectToRoute``). Example: ``return RedirectToAction("Complete", new {id = 123});``
 
 In addition to the methods above, an action can also simply return an object. In this case, the object will be formatted based on the client's request. Learn more about :doc:`/mvc/models/formatting`
 
@@ -71,7 +71,7 @@ In most apps, many actions will share parts of their workflow. For instance, mos
 In the case of authorization and authentication, you can apply the ``Authorize`` attribute to any actions that require it. Adding it to a controller will apply it to all actions within that controller. Adding this attribute will ensure the appropriate filter is applied to any request for this action. Some attributes can be applied at both controller and action levels to provide granular control over filter behavior. Learn more: :doc:`filters` and :doc:`/security/authorization/authorization-filters`.
 
 Other examples of cross-cutting concerns in MVC apps may include:
-  * :doc:`error-handling`
+  * :ref:`Error handling <exception-filters>`
   * :doc:`/performance/caching/response`
 
 .. note:: Many cross-cutting concerns can be handled using filters in MVC apps. Another option to keep in mind that is available to any ASP.NET Core app is custom :doc:`middleware </fundamentals/middleware>`.

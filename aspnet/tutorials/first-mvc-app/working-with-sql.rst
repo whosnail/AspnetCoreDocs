@@ -1,19 +1,19 @@
 Working with SQL Server LocalDB
-===============================================
+=============================================
 
 By `Rick Anderson`_
 
 The ``ApplicationDbContext`` class handles the task of connecting to the database and mapping ``Movie`` objects to database records. The database context is registered with the :doc:`Dependency Injection  </fundamentals/dependency-injection>` container in the ``ConfigureServices`` method in the *Startup.cs* file:
 
-.. literalinclude:: start-mvc/sample/src/MvcMovie/Startup.cs
+.. literalinclude:: start-mvc/sample2/src/MvcMovie/Startup.cs
   :language: c#
-  :lines: 39-45
+  :start-after: snippet_details
+  :end-before: #endregion
   :dedent: 8
-  :emphasize-lines: 5,6
 
 The ASP.NET Core :doc:`Configuration </fundamentals/configuration>` system reads the ``ConnectionString``. For local development, it gets the connection string from the *appsettings.json* file:
 
-.. literalinclude:: start-mvc/sample/src/MvcMovie/appsettings.json
+.. literalinclude:: start-mvc/sample2/src/MvcMovie/appsettings.json
   :language: javascript
   :lines: 1-6
   :emphasize-lines: 3
@@ -32,6 +32,7 @@ LocalDB is a lightweight version of the SQL Server Express Database Engine that 
 - Right click on the ``Movie`` table **> View Designer**
 
 .. image:: working-with-sql/_static/design.png
+   :scale: 100%
 
 .. image:: working-with-sql/_static/dv.png
 
@@ -50,35 +51,46 @@ Seed the database
 
 Create a new class named ``SeedData`` in the *Models* folder. Replace the generated code with the following:
 
-.. literalinclude:: start-mvc/sample/src/MvcMovie/Models/SeedData.cs
+.. literalinclude:: start-mvc/sample2/src/MvcMovie/Models/SeedData.cs
   :language: c#
-  :lines: 3-62
+  :start-after: snippet_1
+  :end-before: #endregion
 
 Notice if there are any movies in the DB, the seed initializer returns.
 
-.. literalinclude:: start-mvc/sample/src/MvcMovie/Models/SeedData.cs
-  :language: c#
-  :lines: 18-21
-  :dedent: 12
-  :emphasize-lines: 3
+.. code-block:: c#
 
-Add the seed initializer to the end of the ``Configure`` method in the *Startup.cs* file: 
+  if (context.Movie.Any())
+  {
+      return;   // DB has been seeded.
+  }
 
-.. literalinclude:: start-mvc/sample/src/MvcMovie/Startup.cs
-  :language: c#
-  :lines: 80-88
+Add the seed initializer to the end of the ``Configure`` method in the *Startup.cs* file:
+
+.. literalinclude:: start-mvc/sample2/src/MvcMovie/Startup.cs
   :dedent: 8
-  :emphasize-lines: 8
+  :emphasize-lines: 9
+  :start-after: snippet_1
 
 Test the app
 
 - Delete all the records in the DB. You can do this with the delete links in the browser or from SSOX.
 - Force the app to initialize (call the methods in the ``Startup`` class) so the seed method runs. To force initialization, IIS Express must be stopped and restarted. You can do this with any of the following approaches:
 
-.. comment this no longer works  - ^<Shift>F5 (Hold down the control and Shift keys and tap F5)
-  - Right click the IIS Express system tray icon in the notification area and tap **Exit** or **Stop* Site*
-  - .. image:: working-with-sql/_static/iisExIcon.png
-  - .. image:: working-with-sql/_static/stopIIS.png
+  - Right click the IIS Express system tray icon in the notification area and tap **Exit** or **Stop Site**
+
+|
+
+.. image:: working-with-sql/_static/iisExIcon.png
+  :height: 100px
+  :width: 200 px
+
+|
+
+.. image:: working-with-sql/_static/stopIIS.png
+
+|
+
   - If you were running VS in non-debug mode, press F5 to run in debug mode
   - If you were running VS in debug mode, stop the debugger and press ^F5
 

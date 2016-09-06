@@ -1,3 +1,5 @@
+:version: 1.0.0-rc1
+
 Working with Forms 
 ====================
 
@@ -15,7 +17,7 @@ In many cases, :doc:`HTML Helpers </mvc/views/html-helpers>` provide an alternat
 .. _my-asp-route-param-ref-label:
 
 The Form Tag Helper
----------------------
+--------------------
   
 The `Form <https://www.w3.org/TR/html401/interact/forms.html>`__ Tag Helper:
 
@@ -26,7 +28,7 @@ The `Form <https://www.w3.org/TR/html401/interact/forms.html>`__ Tag Helper:
 
 Sample:
 
-.. literalinclude::   forms/sample/final/Views/Demo/RegisterFormOnly.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Demo/RegisterFormOnly.cshtml
   :language: HTML
 
 The Form Tag Helper above generates the following HTML:
@@ -45,13 +47,13 @@ Using a named route
 
 The ``asp-route`` Tag Helper attribute can also generate markup for the HTML ``action`` attribute. An app with a :doc:`route </fundamentals/routing>`  named ``register`` could use the following markup for the registration page:
  
-.. literalinclude::  forms/sample/final/Views/Demo/RegisterRoute.cshtml 
+.. literalinclude::  working-with-forms/sample/final/Views/Demo/RegisterRoute.cshtml 
   :language: HTML
   :emphasize-lines: 4
 
 Many of the views in the *Views/Account* folder (generated when you create a new web app with *Individual User Accounts*) contain the `asp-route-returnurl <http://docs.asp.net/en/latest/mvc/views/working-with-forms.html#the-form-tag-helper>`__ attribute: 
 
-.. code-block:: HTML
+.. code-block:: none
   :emphasize-lines: 2
   
   <form asp-controller="Account" asp-action="Login" 
@@ -131,10 +133,10 @@ The following table shows some common `data annotations <https://msdn.microsoft.
  
 Sample: 
  
-.. literalinclude::  forms/sample/final/ViewModels/RegisterViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/RegisterViewModel.cs
   :language: c#
 
-.. literalinclude::  forms/sample/final/Views/Demo/RegisterInput.cshtml
+.. literalinclude::  working-with-forms/sample/final/Views/Demo/RegisterInput.cshtml
   :language: HTML
 
 The code above generates the following HTML:
@@ -165,7 +167,7 @@ HTML Helper alternatives to Input Tag Helper
 Expression names 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The ``asp-for`` attribute value is a `ModelExpression <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/Rendering/ModelExpression/index.html>`__ and the right hand side of a lambda expression. Therefore, ``asp-for="Property1"`` becomes ``m => m.Property1`` in the generated code which is why you don't need to prefix with ``Model``. You can use the "@" character to start an inline expression and move before the ``m.``:
+The ``asp-for`` attribute value is a `ModelExpression <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/Rendering/ModelExpression/index.html>`__ and the right hand side of a lambda expression. Therefore, ``asp-for="Property1"`` becomes ``m => m.Property1`` in the generated code which is why you don't need to prefix with ``Model``. You can use the "@" character to start an inline expression and move before the ``m.``:
 
 .. code-block:: HTML
 
@@ -186,13 +188,13 @@ Navigating child properties
 
 You can also navigate to child properties using the property path of the view model. Consider a more complex model class that contains a child ``Address`` property.
 
-.. literalinclude::  forms/sample/final/ViewModels/AddressViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/AddressViewModel.cs
   :language: c#
   :lines: 5-8
   :dedent: 3
   :emphasize-lines: 1-
 
-.. literalinclude::  forms/sample/final/ViewModels/RegisterAddressViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/RegisterAddressViewModel.cs
   :language: c#
   :lines: 5-14
   :dedent: 3
@@ -200,7 +202,7 @@ You can also navigate to child properties using the property path of the view mo
 
 In the view, we bind to ``Address.AddressLine1``: 
 
-.. literalinclude::  forms/sample/final/Views/Demo/RegisterAddress.cshtml 
+.. literalinclude::  working-with-forms/sample/final/Views/Demo/RegisterAddress.cshtml 
   :language: HTML
   :emphasize-lines: 6
 
@@ -215,7 +217,7 @@ Expression names and Collections
 
 Sample, a model containing an array of ``Colors``:
 
-.. literalinclude::  forms/sample/final/ViewModels/Person.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/Person.cs
   :language: c#
   :lines: 5-10
   :dedent: 3
@@ -233,29 +235,29 @@ The action method:
 
 The following Razor shows how you access a specific ``Color`` element:
 
-.. literalinclude::   forms/sample/final/Views/Demo/EditColor.cshtml 
+.. literalinclude::   working-with-forms/sample/final/Views/Demo/EditColor.cshtml 
   :language: HTML
 
 The *Views/Shared/EditorTemplates/String.cshtml* template:
 
-.. literalinclude::   forms/sample/final/Views/Shared/EditorTemplates/String.cshtml 
+.. literalinclude::   working-with-forms/sample/final/Views/Shared/EditorTemplates/String.cshtml 
   :language: HTML
   
 Sample using ``List<T>``:
 
-.. literalinclude::  forms/sample/final/ViewModels/ToDoItem.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/ToDoItem.cs
   :language: c#
   :lines: 3-7
   :dedent: 3
 
 The following Razor shows how to iterate over a collection:
 
-.. literalinclude::   forms/sample/final/Views/Demo/Edit.cshtml 
-  :language: HTML
+.. literalinclude::   working-with-forms/sample/final/Views/Demo/Edit.cshtml 
+  :language: none
 
 The *Views/Shared/EditorTemplates/ToDoItem.cshtml* template:
 
-.. literalinclude::   forms/sample/final/Views/Shared/EditorTemplates/ToDoItem.cshtml 
+.. literalinclude::   working-with-forms/sample/final/Views/Shared/EditorTemplates/ToDoItem.cshtml 
   :language: HTML
   
 :Note: Always use ``for`` (and *not* ``foreach``) to iterate over a list. Evaluating an indexer in a LINQ expression can be expensive and should be minimized.
@@ -266,7 +268,7 @@ The *Views/Shared/EditorTemplates/ToDoItem.cshtml* template:
 The Textarea Tag Helper
 -------------------------
 
-The `Textarea Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/TextAreaTagHelper/index.html>`__ tag helper is  similar to the Input Tag Helper.  
+The `Textarea Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/TextAreaTagHelper/index.html>`__ tag helper is  similar to the Input Tag Helper.  
 
 - Generates the ``id`` and ``name`` attributes, and the data validation attributes from the model for a `<textarea> <http://www.w3.org/wiki/HTML/Elements/textarea>`__ element. 
 - Provides strong typing. 
@@ -274,10 +276,10 @@ The `Textarea Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Mi
 
 Sample:
 
-.. literalinclude::  forms/sample/final/ViewModels/DescriptionViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/DescriptionViewModel.cs
   :language: c#
 
-..  literalinclude::  forms/sample/final/Views/Demo/RegisterTextArea.cshtml
+..  literalinclude::  working-with-forms/sample/final/Views/Demo/RegisterTextArea.cshtml
   :language: HTML
   :emphasize-lines: 4
   
@@ -304,7 +306,7 @@ The Label Tag Helper
 - Generates the label caption and ``for`` attribute on a `<label> <https://www.w3.org/wiki/HTML/Elements/label>`__ element for an expression name
 - HTML Helper alternative: ``Html.LabelFor``.
 
-The `Label Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/LabelTagHelper/index.html>`__  provides the following benefits over a pure HTML label element:
+The `Label Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/LabelTagHelper/index.html>`__  provides the following benefits over a pure HTML label element:
 
 - You automatically get the descriptive label value from the ``Display`` attribute. The intended display name might change over time, and the combination of ``Display`` attribute and Label Tag Helper will apply the ``Display`` everywhere it's used.
 - Less markup in source code
@@ -312,10 +314,10 @@ The `Label Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Micro
 
 Sample:
 
-.. literalinclude::  forms/sample/final/ViewModels/SimpleViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/SimpleViewModel.cs
   :language: c#
 
-..  literalinclude::  forms/sample/final/Views/Demo/RegisterLabel.cshtml
+..  literalinclude::  working-with-forms/sample/final/Views/Demo/RegisterLabel.cshtml
   :language: HTML
   :emphasize-lines: 4
 
@@ -330,7 +332,7 @@ The Label Tag Helper generated the ``for`` attribute value of "Email", which is 
 The Validation Tag Helpers
 ---------------------------
 
-There are two Validation Tag Helpers. The `Validation Message Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/ValidationMessageTagHelper/index.html>`__ (which displays a validation message for a single property on your model), and the `Validation Summary Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/ValidationSummaryTagHelper/index.html>`__ (which displays a summary of validation errors). The `Input Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/InputTagHelper/index.html>`__ adds HTML5 client side validation attributes to input elements based on data annotation attributes on your model classes. Validation is also performed on the server. The Validation Tag Helper displays these error messages when a validation error occurs. 
+There are two Validation Tag Helpers. The `Validation Message Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/ValidationMessageTagHelper/index.html>`__ (which displays a validation message for a single property on your model), and the `Validation Summary Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/ValidationSummaryTagHelper/index.html>`__ (which displays a summary of validation errors). The `Input Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/InputTagHelper/index.html>`__ adds HTML5 client side validation attributes to input elements based on data annotation attributes on your model classes. Validation is also performed on the server. The Validation Tag Helper displays these error messages when a validation error occurs. 
 
 The Validation Message Tag Helper
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -339,11 +341,11 @@ The Validation Message Tag Helper
 - Validation also takes place on the server. Clients may have JavaScript disabled and some validation can only be done on the server side.
 - HTML Helper alternative: ``Html.ValidationMessageFor``
 
-The `Validation Message Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/ValidationMessageTagHelper/index.html>`__  is used with the ``asp-validation-for`` attribute on a HTML `span <https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span>`__ element.
+The `Validation Message Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/ValidationMessageTagHelper/index.html>`__  is used with the ``asp-validation-for`` attribute on a HTML `span <https://developer.mozilla.org/en-US/docs/Web/HTML/Element/span>`__ element.
 
 .. code-block:: HTML
   
-  <span asp-validation-for="Email">
+  <span asp-validation-for="Email"></span>
   
 The Validation Message Tag Helper will generate the following HTML:
 
@@ -351,9 +353,9 @@ The Validation Message Tag Helper will generate the following HTML:
 
     <span class="field-validation-valid" 
       data-valmsg-for="Email" 
-      data-valmsg-replace="true">
+      data-valmsg-replace="true"></span>
 
-You generally use the `Validation Message Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/ValidationMessageTagHelper/index.html>`__  after an ``Input`` Tag Helper for the same property. Doing so displays any validation error messages near the input that caused the error.
+You generally use the `Validation Message Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/ValidationMessageTagHelper/index.html>`__  after an ``Input`` Tag Helper for the same property. Doing so displays any validation error messages near the input that caused the error.
 
 :Note: You must have a view with the correct JavaScript and `jQuery <https://jquery.com/>`__ 
  script references in place for client side validation. See :doc:`/mvc/models/validation` for more information.
@@ -373,7 +375,7 @@ The Validation Summary Tag Helper
 - Targets ``<div>`` elements with the ``asp-validation-summary`` attribute 
 - HTML Helper alternative: ``@Html.ValidationSummary``
 
-The `Validation Summary Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/ValidationSummaryTagHelper/index.html>`__  is used to display a summary of validation messages. The ``asp-validation-summary`` attribute value can be any of the following:
+The `Validation Summary Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/ValidationSummaryTagHelper/index.html>`__  is used to display a summary of validation messages. The ``asp-validation-summary`` attribute value can be any of the following:
 
 +-------------------------------+--------------------------------+
 |asp-validation-summary         |  Validation messages displayed |  
@@ -390,10 +392,10 @@ Sample
 
 In the following example, the data model is decorated with ``DataAnnotation`` attributes, which generates validation error messages on the ``<input>`` element.  When a validation error occurs, the Validation Tag Helper displays the error message:
 
-.. literalinclude::  forms/sample/final/ViewModels/RegisterViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/RegisterViewModel.cs
   :language: c#
 
-..  literalinclude::  forms/sample/final/Views/Demo/RegisterValidation.cshtml
+..  literalinclude::  working-with-forms/sample/final/Views/Demo/RegisterValidation.cshtml
   :language: HTML
   :emphasize-lines: 4,6,8
   :lines: 1-10
@@ -426,35 +428,35 @@ The Select Tag Helper
 - Generates `select <https://www.w3.org/wiki/HTML/Elements/select>`__ and associated `option <https://www.w3.org/wiki/HTML/Elements/option>`__ elements for properties of your model. 
 - Has an HTML Helper alternative ``Html.DropDownListFor`` and ``Html.ListBoxFor``
 
-The `Select Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/TagHelpers/SelectTagHelper/index.html>`__ ``asp-for`` specifies the model property  name for the `select <https://www.w3.org/wiki/HTML/Elements/select>`__ element  and ``asp-items`` specifies the `option <https://www.w3.org/wiki/HTML/Elements/option>`__ elements.  For example:
+The `Select Tag Helper <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/TagHelpers/SelectTagHelper/index.html>`__ ``asp-for`` specifies the model property  name for the `select <https://www.w3.org/wiki/HTML/Elements/select>`__ element  and ``asp-items`` specifies the `option <https://www.w3.org/wiki/HTML/Elements/option>`__ elements.  For example:
 
-.. literalinclude::   forms/sample/final/Views/Home/Index.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/Index.cshtml
   :language: HTML
   :lines: 4
   :dedent: 3
   
 Sample:
 
-.. literalinclude::  forms/sample/final/ViewModels/CountryViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/CountryViewModel.cs
   :language: c#
   
 The ``Index`` method initializes the ``CountryViewModel``, sets the selected country and passes it to the ``Index`` view.
 
-.. literalinclude:: forms/sample/final/Controllers/HomeController.cs
+.. literalinclude:: working-with-forms/sample/final/Controllers/HomeController.cs
   :language: c#
   :lines: 8-13
   :dedent: 6
 
 The HTTP POST ``Index`` method displays the selection:
 
-.. literalinclude::  forms/sample/final/Controllers/HomeController.cs
+.. literalinclude::  working-with-forms/sample/final/Controllers/HomeController.cs
   :language: c#
   :lines: 15-27
   :dedent: 6
   
 The ``Index`` view:
 
-.. literalinclude:: forms/sample/final/Views/Home/Index.cshtml
+.. literalinclude:: working-with-forms/sample/final/Views/Home/Index.cshtml
   :language: HTML
   :emphasize-lines: 4
   
@@ -477,7 +479,7 @@ Which generates the following HTML (with "CA" selected):
 
 The ``asp-for`` attribute value is a special case and doesn't require a ``Model`` prefix, the other Tag Helper attributes do (such as ``asp-items``)
 
-.. literalinclude::   forms/sample/final/Views/Home/Index.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/Index.cshtml
   :language: HTML
   :lines: 4
   :dedent: 3  
@@ -485,28 +487,28 @@ The ``asp-for`` attribute value is a special case and doesn't require a ``Model`
 Enum binding
 ^^^^^^^^^^^^^^
 
-It's often convenient to use ``<select>`` with an ``enum`` property and generate the `SelectListItem <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/Rendering/SelectListItem/index.html?highlight=selectlistitem>`__ elements from the ``enum`` values. 
+It's often convenient to use ``<select>`` with an ``enum`` property and generate the `SelectListItem <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/Rendering/SelectListItem/index.html?highlight=selectlistitem>`__ elements from the ``enum`` values. 
 
 Sample:
 
-.. literalinclude::  forms/sample/final/ViewModels/CountryEnumViewModel.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/CountryEnumViewModel.cs
   :language: c#
   :lines: 3-6
   :dedent: 3
   
-.. literalinclude::  forms/sample/final/ViewModels/CountryEnum.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/CountryEnum.cs
   :language: c#
   :lines: 1-4,6,8-
 
-The `GetEnumSelectList <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/Rendering/IHtmlHelper/index.html>`__ method generates a `SelectList <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/Rendering/SelectList/index.html>`__ object for an enum.
+The `GetEnumSelectList <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/Rendering/IHtmlHelper/index.html>`__ method generates a `SelectList <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/Rendering/SelectList/index.html>`__ object for an enum.
 
-.. literalinclude::   forms/sample/final/Views/Home/IndexEnum.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/IndexEnum.cshtml
   :language: HTML
   :emphasize-lines: 5
 
 You can decorate your enumerator list with the ``Display`` attribute to get a richer UI:
 
-.. literalinclude::  forms/sample/final/ViewModels/CountryEnum.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/CountryEnum.cs
   :language: c#
   :emphasize-lines: 5,7
 
@@ -532,11 +534,11 @@ The following HTML is generated:
 Option Group
 ^^^^^^^^^^^^^^^^^^^^^
 
-The HTML  `<optgroup> <https://www.w3.org/wiki/HTML/Elements/optgroup>`__ element is generated when the view model contains one or more `SelectListGroup  <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Mvc/Rendering/SelectListGroup/index.html>`__ objects.
+The HTML  `<optgroup> <https://www.w3.org/wiki/HTML/Elements/optgroup>`__ element is generated when the view model contains one or more `SelectListGroup  <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Mvc/Rendering/SelectListGroup/index.html>`__ objects.
 
 The ``CountryViewModelGroup`` groups the ``SelectListItem`` elements into the "North America" and "Europe" groups:
 
-.. literalinclude::  forms/sample/final/ViewModels/CountryViewModelGroup.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/CountryViewModelGroup.cs
   :language: c#
   :lines: 6-59
   :dedent: 3
@@ -544,7 +546,7 @@ The ``CountryViewModelGroup`` groups the ``SelectListItem`` elements into the "N
 
 The two groups are shown below:
 
-.. image:: forms/_static/grp.png
+.. image:: working-with-forms/_static/grp.png
 
 The generated HTML:
 
@@ -573,13 +575,13 @@ Multiple select
 
 The Select Tag Helper  will automatically generate the `multiple = "multiple" <https://www.w3.org/TR/html-markup/select.html#select.attrs.multiple>`__  attribute if the property specified in the ``asp-for`` attribute is an ``IEnumerable``. For example, given the following model:
 
-.. literalinclude::  forms/sample/final/ViewModels/CountryViewModelIEnumerable.cs
+.. literalinclude::  working-with-forms/sample/final/ViewModels/CountryViewModelIEnumerable.cs
   :language: c#
   :emphasize-lines: 6
 
 With the following view:
 
-.. literalinclude::   forms/sample/final/Views/Home/IndexMultiSelect.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/IndexMultiSelect.cshtml
   :language: HTML
   :emphasize-lines: 4
   
@@ -607,29 +609,29 @@ No selection
 
 To allow for no selection, add a "not specified" option to the select list. If the property is a `value type <https://msdn.microsoft.com/en-us/library/s1ax56ch.aspx>`__, you'll have to make it `nullable <https://msdn.microsoft.com/en-us/library/2cf62fcy.aspx>`__. 
 
-.. literalinclude::   forms/sample/final/Views/Home/IndexEmpty.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/IndexEmpty.cshtml
   :language: HTML
   :emphasize-lines: 5
 
 If you find yourself using the "not specified" option in multiple pages, you can create a template to eliminate repeating the HTML:
 
-.. literalinclude::   forms/sample/final/Views/Home/IndexEmptyTemplate.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/IndexEmptyTemplate.cshtml
   :language: HTML
   :emphasize-lines: 5
 
 The *Views/Shared/EditorTemplates/CountryViewModel.cshtml* template:
 
-.. literalinclude::   forms/sample/final/Views/Shared/EditorTemplates/CountryViewModel.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Shared/EditorTemplates/CountryViewModel.cshtml
   :language: HTML
 
 Adding HTML `<option> <https://www.w3.org/wiki/HTML/Elements/option>`__ elements is not limited to the *No selection* case. For example, the following view and action method will generate HTML similar to the code above:
 
-.. literalinclude:: forms/sample/final/Controllers/HomeController.cs
+.. literalinclude:: working-with-forms/sample/final/Controllers/HomeController.cs
   :language: c#
   :lines: 114-119
   :dedent: 6
 
-.. literalinclude::   forms/sample/final/Views/Home/IndexOption.cshtml
+.. literalinclude::   working-with-forms/sample/final/Views/Home/IndexOption.cshtml
   :language: HTML
  
 The correct ``<option>`` element will be selected ( contain the ``selected="selected"`` attribute) depending on the current ``Country`` value. 

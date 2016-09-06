@@ -1,4 +1,4 @@
-.. _Daniel Roth: https://github.com/danroth27
+﻿.. _Daniel Roth: https://github.com/danroth27
 .. _Rick Anderson: https://twitter.com/RickAndMSFT
 .. _Steve Smith: http://ardalis.com
 .. _Noel Rice: http://blog.falafel.com/author/noel-rice/
@@ -8,7 +8,7 @@
 .. _Pranav Rastogi: https://github.com/rustd
 .. _Tom Archer: https://github.com/tomarcher
 .. _David Paquette: https://github.com/dpaquette
-.. _Scott Addie: http://scottaddie.com
+.. _Scott Addie: https://scottaddie.com
 .. _Sayed Ibrahim Hashimi: https://github.com/sayedihashimi
 .. _Sourabh Shirhatti: https://twitter.com/sshirhatti
 .. _Matt Perdeck: http://www.linkedin.com/in/mattperdeck
@@ -19,3 +19,9 @@
 .. _Bart Calixto: https://twitter.com/bartmax
 .. _Nadeem Afana: https://twitter.com/NadeemAfana
 .. _Rachel Appel: http://github.com/rachelappel
+.. _Barry Dorrans: https://twitter.com/blowdart
+.. _Cesar Blum Silveira: https://github.com/cesarbs
+.. _Victor Hurdugaci: https://twitter.com/victorhurdugaci
+.. _Shayne Boyer: https://twitter.com/spboyer
+.. _Ryan Nowak: https://github.com/rynowak
+.. _Tom Dykstra: https://github.com/tdykstra

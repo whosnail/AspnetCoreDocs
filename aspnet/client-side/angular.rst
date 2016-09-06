@@ -1,3 +1,5 @@
+﻿:version: 1.0.0-rc1
+
 Using Angular for Single Page Applications (SPAs)
 =================================================
 
@@ -18,7 +20,7 @@ What is AngularJS?
 
 AngularJS is not a DOM manipulation library like jQuery, but it uses a subset of jQuery called jQLite. AngularJS is primarily based on declarative HTML attributes that you can add to your HTML tags. You can try AngularJS in your browser using the `Code School website <http://campus.codeschool.com/courses/shaping-up-with-angular-js/intro>`_.
 
-Version 1.5.x is the current stable version and the Angular team is working towards a big rewrite of AngularJS for V2.0 which is currently still in development. This article focuses on Angular 1.X with some notes on where Angular is heading with 2.0.
+This article focuses on Angular 1.X with some notes on where Angular is heading with 2.0.
 
 Getting Started
 ---------------
@@ -63,7 +65,7 @@ Once you have a reference to the angular.js script file, you're ready to begin u
 Key Components
 --------------
 
-AngularJS includes a number of major components, such as *directives*, *templates*, *repeaters*, *modules*, *controllers*, and more. Let's examine how these components work together to add behavior to your web pages.
+AngularJS includes a number of major components, such as *directives*, *templates*, *repeaters*, *modules*, *controllers*, *components*, *component router* and more. Let's examine how these components work together to add behavior to your web pages.
 
 Directives
 ^^^^^^^^^^
@@ -271,6 +273,37 @@ The page shows "Mary" and "Jane" that correspond to the ``firstName`` and ``last
 
 .. image:: angular/_static/controllers.png
 
+Components
+^^^^^^^^^^
+`Components <https://docs.angularjs.org/guide/component>`_ in Angular 1.5.x allow for the encapsulation and capability of creating individual HTML elements. In Angular 1.4.x you could achieve the same feature using the .directive() method.
+
+By using the .component() method, development is simplified gaining the functionality of the directive and the controller. Other benefits include; scope isolation, best practices are inherent, and migration to Angular 2 becomes an easier task.
+The ``<module name>.component()`` function call is used to create and register components in AngularJS.
+
+Below is a snippet of code that registers a new component. The ``personApp`` variable in the snippet references an Angular module, which is defined on line 2.
+
+.. literalinclude:: angular/sample/AngularSample/src/AngularSample/wwwroot/app/components.js
+  :language: javascript
+  :linenos:
+  :emphasize-lines: 2,5,13
+
+The view where we are displaying the custom HTML element.
+
+.. literalinclude:: angular/sample/AngularSample/src/AngularSample/Views/Home/Components.cshtml
+  :language: html
+  :linenos:
+  :emphasize-lines: 8
+  
+The associated template used by component: 
+
+.. literalinclude:: angular/sample/AngularSample/src/AngularSample/wwwroot/app/partials/personcomponent.html
+  :language: html
+  :linenos:
+  :emphasize-lines: 2,3
+
+The page shows "Aftab" and "Ansari" that correspond to the ``firstName`` and ``lastName`` properties attached to the ``vm`` object:
+
+.. image:: angular/_static/components.png  
 
 Services
 ^^^^^^^^
@@ -439,16 +472,6 @@ The running example demonstrates that the controller's ``sayName`` function is c
 .. image:: angular/_static/events.png
 
 For more detail on AngularJS built-in event handler directives, be sure to head to the `documentation website <https://docs.angularjs.org/api/ng/directive/ngClick>`_ of AngularJS.
-
-Angular 2.0
------------
-
-Angular 2.0 is the next version of AngularJS, which is completely reimagined with ES6 and mobile in mind. It's built using Microsoft's TypeScript language. Angular 2.0 is currently a beta product and is expected to be released in early 2016. Several breaking changes will be introduced in the Angular 2.0 release, so the Angular team is working hard to provide guidance to developers. A migration path will become more clear as the release date approaches. If you wish to play with Angular 2.0 now, the Angular team has created `Angular.io <http://angular.io>`_ to show their progress, to provide early documentation, and to gather feedback. 
-
-Summary
--------
-
-This article provides an overview of AngularJS for ASP.NET developers. It aims to help developers who are new to this SPA framework get up-to-speed quickly.
 
 Related Resources
 -----------------

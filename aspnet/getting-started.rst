@@ -16,7 +16,7 @@ Getting Started 시작하기
 
   .. literalinclude:: getting-started/sample/aspnetcoreapp/project.json
     :language: c#
-    :emphasize-lines: 11
+    :emphasize-lines: 15
 
 4. 종속된 패키지들을 다시 불러와주십시오.
 
@@ -33,7 +33,7 @@ Getting Started 시작하기
 
   .. literalinclude:: getting-started/sample/aspnetcoreapp/Program.cs
     :language: c#
-    :emphasize-lines: 2,10-15
+    :emphasize-lines: 2,4,10-15
 
 7. 앱을 실행해주십시오. (``dotnet run`` 명령을 실행할 때 소스에 변경 사항이 있다면, 앱을 다시 빌드할 것입니다.)
 

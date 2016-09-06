@@ -1,3 +1,5 @@
+:version: 1.0.0-rc1
+
 .. _application-startup:
 
 어플리케이션 시작하기
@@ -52,7 +54,7 @@ ConfigureServices 메서드
 
 :doc:`의존성 주입<dependency-injection>` 을 통해 서비스를 서비스 컨테이너에 추가하여 여러분의 어플리케이션에서 사용할 수 있습니다. ``Startup`` 클래스에서 특정 구현체를 하드코딩하기 보다 메서드의 매개변수를 사용하여 의존성을 지정하였듯이, 미들웨어나 MVC 컨트롤러, 혹은 다른 클래스에 대해서도 의존성을 지정할 수 있습니다.
 
-또한 ``ConfigureServices`` 메서드는 위의 예제 상의 ``AppSettings`` 와 같은 설정용 클래스를 추가해야 위치입니다. 설정에 대해 더 많은 부분을 확인하려면 :doc:'configuration' 주제를 확인하세요.
+또한 ``ConfigureServices`` 메서드도 어플리케이션에서 사용하고자 하는 설정용 클래스들을 추가해야 하는 곳입니다. 설정에 대해 더 많은 부분을 확인하려면 :doc:'configuration' 주제를 확인하세요.
 
 Startup 클래스에서 사용할 수 있는 서비스들
 -----------------------------
@@ -62,11 +64,8 @@ ASP.NET Core 에서는 여러분의 어플리케이션이 시작하는 동안 �
 IApplicationBuilder
   어플리케이션의 요청 처리경로를 구축할 때 사용합니다. ``Startup`` 의 ``Configure`` 메서드에서만 사용할 수 있습니다. :doc:'request-features' 에서 더 확인할 수 있습니다.
 
-IApplicationEnvironment
-  어플리케이션의 속성에 대한 접근 방법을 제공합니다. 어플리케이션의 속성은 ``ApplicationName`` 과 ``ApplicationVersion``, ``ApplicationBasePath`` 와 같은 것입니다. ``Startup`` 생성자와 ``Configure`` 메서드에서 사용할 수 있습니다.
-
 IHostingEnvironment
-  현재의 ``EnvironmentName`` 과 ``WebRootPath``, 웹 루트 파일 제공자를 제공합니다. ``Startup`` 생성자와 ``Configure`` 메서드에서 사용할 수 있습니다.
+  현재의 ``EnvironmentName`` 과, ``ContentRootPath``, ``WebRootPath``, 웹 루트 파일 제공자를 제공합니다. ``Startup`` 생성자와 ``Configure`` 메서드에서 사용할 수 있습니다.
 
 ILoggerFactory
   로거를 생성하는 방법을 제공합니다. ``Startup`` 생성자와 ``Configure`` 메서드에서 사용할 수 있습니다. :doc:`logging` 에서 더 확인할 수 있습니다.
@@ -77,7 +76,6 @@ IServiceCollection
 호출되는 순서에 따라 ``Startup`` 클래스의 각각의 메서드를 살펴보면, 다음과 같은 서비스들을 매개변수로서 요청합니다. 
 
 Startup 생성자
-- ``IApplicationEnvironment``
 - ``IHostingEnvironment``
 - ``ILoggerFactory``
 
@@ -86,7 +84,6 @@ ConfigureServices
 
 Configure
 - ``IApplicationBuilder``
-- ``IApplicationEnvironment``
 - ``IHostingEnvironment``
 - ``ILoggerFactory``
 
@@ -99,5 +96,5 @@ Configure
 - :doc:`middleware`
 - :doc:`owin`
 
-.. _IApplicationBuilder: https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/IApplicationBuilder/index.html
+.. _IApplicationBuilder: https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Builder/IApplicationBuilder/index.html
 .. _IServiceCollection: https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/Extensions/DependencyInjection/IServiceCollection/index.html

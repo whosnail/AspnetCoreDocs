@@ -31,12 +31,12 @@ ASP.NET 의 요청 처리경로는 일련의 요청 대리자들로 구성됩니
 여러분은 Visual Studio 2015 에 포함된 기본 웹사이트 템플릿에서 요청 처리경로를 설정하는 방법을 확인할 수 있습니다. ``Configure`` 메서드에서 다음과 같은 미들웨어 컴포넌트를 추가합니다.
 
 #. 오류 처리 (개발 환경과 비개발 환경 모두에 대응)
-#. IIS HttpPlatformHandler 역프록시 모듈. 이 모듈에서 전달된 윈도우 인증이나 요청 스키마, 원격 IP 등을 처리합니다.
 #. 정적 파일 서버
 #. 인증
 #. MVC
 
 .. literalinclude:: /../common/samples/WebApplication1/src/WebApplication1/Startup.cs
+  :linenos:
   :language: c#
   :lines: 58-86
   :dedent: 8
@@ -148,8 +148,6 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
      - 인증 기능을 제공합니다.
   *  - :doc:`CORS </security/cors>`
      - 크로스 출처 자원 공유 (Cross-Origin Resource Sharing) 를 설정할 수 있습니다.
-  *  - :doc:`진단 <diagnostics>`
-     - 오류 페이지와 런타임 정보에 대한 지원을 제공합니다.
   *  - :doc:`라우팅 <routing>`
      - 요청 경로의 정의와 제한 방법을 제공합니다.
   *  - :ref:`세션 <session>`
@@ -169,7 +167,7 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 .. literalinclude:: middleware/sample/src/MiddlewareSample/RequestLoggerMiddleware.cs
 	:language: c#
 	:caption: RequestLoggerMiddleware.cs
-	:emphasize-lines: 13, 19
+	:emphasize-lines: 12, 18
 
 미들웨어는 `명시적 의존성 원칙 (Explicit Dependencies Principle) <http://deviq.com/explicit-dependencies-principle/>`_ 을 따릅니다. 이 원칙에 따라 미들웨어의 생성자에서 의존성을 명시하고 있습니다. 아래의 예시에서 보는 바와 같이 미들웨어는 `UseMiddleware<T>`_ 확장 메서드를 사용하여, 자신의 생성자에 서비스들에 대한 의존성을 직접 주입할 수 있습니다. `UseMiddleware<T>`_ 확장 메서드의 매개변수에 의존성으로서 주입된 서비스들은 자동으로 삽입되고, 그 외에 의존성으로서 주입되지 않은 매개변수의 경우에는 ``params`` 인자 배열을 사용합니다.
 
@@ -205,4 +203,4 @@ ASP.NET 은 다음과 같은 미들웨어 컴포넌트를 포함하고 있습니
 - :doc:`startup`
 - :doc:`request-features`
 
-.. _UseMiddleware<T>: https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNet/Builder/UseMiddlewareExtensions/index.html#meth-Microsoft.AspNet.Builder.UseMiddlewareExtensions.UseMiddleware<TMiddleware>
+.. _UseMiddleware<T>: https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Builder/UseMiddlewareExtensions/index.html#meth-Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.UseMiddleware<TMiddleware>
