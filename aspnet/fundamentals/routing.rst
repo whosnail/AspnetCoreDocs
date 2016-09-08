@@ -30,33 +30,33 @@ URL 일치 확인
 ^^^^^^^^^^^^
 URL 일치 확인은 라우팅이 인입되는 요청을 어떤 *경로 핸들러 (route handler)* 에서 전달할지를 결정하는 절차입니다. 이 절차는 일반적인 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용하여 확장할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
 
-Incoming requests enter the :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` which calls the :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` method on each route in sequence. The :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` instance chooses whether to *handle* the request by setting the :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` to a non-null :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate`. If a handler is set a route, it will be invoked to process the request and no further routes will be processed. If all routes are executed, and no handler is found for a request, the middleware calls *next* and the next middleware in the request pipeline is invoked.
-인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 으로 진입하면, :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 은 
+인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 으로 진입하면, 미들웨어는 순서대로 각 경로 핸들러의 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 를 호출합니다. :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체인 경로 핸들러 개체는 ``RounteAsync`` 의 매개변수로 전달된 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 상의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` 속성에 null 이 아닌 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 할당하는가 마는가를 통해 요청을 *처리할지 말지*를 결정합니다. 경로 핸들러에서 처리하기로 결정했다면, 요청을 처리하도록 호출될 것이고 미들웨어 내에서 그 이상의 경로는 처리되지 않을 것입니다. 모든 경로를 처리하였고 요청에 대한 핸들러가 더 없다면, 미들웨어는 *next* 를 호출하여 요청 처리경로 상의 다음 미들웨어를 호출합니다.
 
-The primary input to ``RouteAsync`` is the :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` associated with the current request. The ``RouteContext.Handler`` and :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` are outputs that will be set after a successful match.
+``RouteAsync`` 메서드의 가장 중요한 입력값은 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` 속성으로서, 현재 요청과 관련되어 있습니다. ``RouteContext.Handler`` 와 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` 속성은 URL 일치 확인에 성공한 후에 설정될 출력값입니다.
 
-A successful match during ``RouteAsync`` also will set the properties of the ``RouteContext.RouteData`` to appropriate values based on the request processing that was done. The ``RouteContext.RouteData`` contains important state information about the *result* of a route when it successfully matches a request.
+``RouteAsync`` 실행 중에 URL 일치 확인에 성공한 경우, ``RouteContext.RouteData`` 의 속성들에 요청 처리 과정의 결과를 바탕으로 적절한 값을 할당합니다. 즉, ``RouteContext.RouteData`` 에는 경로의 *결과* 에 대한 중요한 정보를 담고 있습니다.
 
-:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Values` is a dictionary of *route values* produced from the route. These values are usually determined by tokenizing the URL, and can be used to accept user input, or to make further dispatching decisions inside the application.
+:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Values` 속성은 경로 핸들러에서 만든 *경로 값들*의 사전입니다. 이 값들은 보통 URL 을 토큰화하는 과정에서 결정되고, 사용자의 입력을 수용할 때 쓰이거나 혹은 어플리케이션 내에서 더 복잡한 어떤 선택을 할 때 쓰입니다.
 
-:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.DataTokens`  is a property bag of additional data related to the matched route. ``DataTokens`` are provided to support associating state data with each route so the application can make decisions later based on which route matched. These values are developer-defined and do **not** affect the behavior of routing in any way. Additionally, values stashed in data tokens can be of any type, in contrast to route values which must be easily convertable to and from strings.
+:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.DataTokens` 속성은 일치한 경로와 관련된 추가적인 데이터들의 ``PropertyBag`` 입니다. ``DataTokens`` 는 각 경로의 상태 데이터와 관련되어 있어, 어플리케이션에서 어떤 경로에 일치하는가에 따라 선택을 해야 할 때 사용합니다. 이 값들은 개발자가 정의한 것으로서 라우팅의 행태에 *어떠한* 영향도 끼치지 않습니다. 게다가, ``DataTokens`` 속성 에 저장된 값들은 어떠한 형이라도 괜찮습니다. 이는 ``Values`` 속성 내의 경로 값들은 문자열로 쉽게 변환 가능해야 한다는 점과는 차이가 있습니다.
 
-:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Routers` is a list of the routes that took part in successfully matching the request. Routes can be nested inside one another, and the ``Routers`` property reflects the path through the logical tree of routes that resulted in a match. Generally the first item in ``Routers`` is the route collection, and should be used for URL generation. The last item in ``Routers`` is the route that matched.
+:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Routers` 속성은 요청 일치 확인에 성공한 모든 경로 핸들러의 목록입니다. 경로 핸들러들은 서로 중첩될 수 있고, ``Routers`` 속성은 URL 일치 확인 결과에 따라 생성된 경로 핸들러들의 로직  트리를 반영합니다. 일반적으로 ``Routers`` 속성의 첫 번째 항목은 경로 핸들러 콜렉션 개체로서, URL 생성 시에 사용되어야 합니다. 마지만 항목은 일치에 성공한 경로 핸들러 입니다.
 
 URL 생성
 ^^^^^^^^^^^^^^
-URL generation is the process by which routing can create a URL path based on a set of route values. This allows for a logical separation between your handlers and the URLs that access them.
+URL 생성은 라우팅 미들웨어가 경로 값들을 기반으로 URL 을 만드는 절차입니다. 이를 통해 핸들러와 핸들러에 접근하는 URL 을 논리적으로 분리할 수 있습니다.
 
-URL generation follows a similar iterative process, but starts with user or framework code calling into the :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` method of the route collection. Each *route* will then have its ``GetVirtualPath`` method called in sequence until a non-null :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` is returned.
+URL 생성은 다른 비슷한 반복적인 절차들과 마찬가지로서, 사용자나 프레임워크가 경로 핸들러 콜렉션에 대해 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` 메서드를 호출합니다. 각각의 *경로* 의 ``GetVirtualPath`` 메서드를 null 이 아닌 :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 이 반환될 때까지 호출합니다.
 
-The primary inputs to ``GetVirtualPath`` are:
+``GetVirtualPath`` 에 대한 가장 중요한 입력값들은 다음과 같습니다.:
 
-- :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.HttpContext`
-- :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.Values`
-- :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.AmbientValues`
+- :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.HttpContext` 속성
+- :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.Values` 속성
+- :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.AmbientValues` 속성
 
-Routes primarily use the route values provided by the ``Values`` and ``AmbientValues`` to decide where it is possible to generate a URL and what values to include. The ``AmbientValues`` are the set of route values that were produced from matching the current request with the routing system. In contrast, ``Values`` are the route values that specify how to generate the desired URL for the current operation. The ``HttpContext`` is provided in case a route needs to get services or additional data associated with the current context.
+경로 핸들러는 우선 ``Values`` 와 ``AmbientValues`` 로 제공되는 경로 값을 사용하여, 어디서 URL 을 생성할 수 있고 어떤 값을 포함해야 할지를 결정합니다. ``AmbientValues`` 는 라우팅 시스템에서 현재 요청에 대한 일치 확인을 하는 과정에서 생성된 경로 값들의 모음입니다. 대조적으로 ``Values`` 는 현재 동작에 적합한 URL 을 어떻게 생성할지를 지정하는 경로 값들입니다. ``HttpContext`` 는 경로 핸들러에서 서비스나 현재의 컨텍스트와 관련 추가 데이터가 필요할 때 사용합니다. 
 
+.. tip:: ``Values`` 를 ``AmbientValues`` 에 대한 
 .. tip:: Think of ``Values`` as being a set of overrides for the ``AmbientValues``. URL generation tries to reuse route values from the current request to make it easy to generate URLs for links using the same route or route values.
 
 The output of ``GetVirtualPath`` is a :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData`. ``VirtualPathData`` is a parallel of ``RouteData``; it contains the ``VirtualPath`` for the output URL as well as the some additional properties that should be set by the route.
