@@ -56,20 +56,19 @@ URL 생성은 다른 비슷한 반복적인 절차들과 마찬가지로서, 사
 
 경로 핸들러는 우선 ``Values`` 와 ``AmbientValues`` 로 제공되는 경로 값을 사용하여, 어디서 URL 을 생성할 수 있고 어떤 값을 포함해야 할지를 결정합니다. ``AmbientValues`` 는 라우팅 시스템에서 현재 요청에 대한 일치 확인을 하는 과정에서 생성된 경로 값들의 모음입니다. 대조적으로 ``Values`` 는 현재 동작에 적합한 URL 을 어떻게 생성할지를 지정하는 경로 값들입니다. ``HttpContext`` 는 경로 핸들러에서 서비스나 현재의 컨텍스트와 관련 추가 데이터가 필요할 때 사용합니다. 
 
-.. tip:: ``Values`` 를 ``AmbientValues`` 에 대한 
-.. tip:: Think of ``Values`` as being a set of overrides for the ``AmbientValues``. URL generation tries to reuse route values from the current request to make it easy to generate URLs for links using the same route or route values.
+.. tip:: ``Values`` 를 ``AmbientValues`` 에 우선하는 값으로 생각하세요. 또한 URL 생성에서는 현재 요청의 경로 값들을 재사용하여, 동일한 경로나 경로 값들을 사용하는 링크에 대한 URL 생성을 원활하게 하려 할 수 있습니다.
 
-The output of ``GetVirtualPath`` is a :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData`. ``VirtualPathData`` is a parallel of ``RouteData``; it contains the ``VirtualPath`` for the output URL as well as the some additional properties that should be set by the route.
+``GetVirtualPath`` 의 출력값은 :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 입니다. ``VirtualPathData`` 는 ``RouteData`` 와 유사합니다. ``VirtualPathData`` 에는 출력 URL 에 대한 ``VirtualPath`` 가 들어있고, 그 외에 경로 핸들러에서 입력한 추가적인 값들도 들어있습니다.
 
-The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.VirtualPath`
-property contains the *virtual path* produced by the route. Depending on your needs you may need to process the path further. For instance, if you want to render the generated URL in HTML you need to prepend the base path of the application.
+:dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.VirtualPath` 속성에는 경로 핸들러가 생성한 *가상 경로* 가 들어있습니다. 필요에 따라 가상 경로에 추가적인 처리해야 할 수 있습니다. 예를 들어, 생성된 URL 을 HTML 형태로 내보내고자 할 경우 어플리케이션의 기본 경로를 경로 문자열 앞에 붙여야 할 수 있습니다.
 
-The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.Router` is a reference to the route that successfully generated the URL.
+:dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.Router` 속성은 URL 을 성공적으로 생성한 경로 핸들러에 대한 참조가 할당되어 있습니다.
 
-The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.DataTokens` properties is a dictionary of additional data related to the route that generated the URL. This is the parallel of ``RouteData.DataTokens``.
+The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathData.DataTokens` 속성은 URL 을 생성한 경로 핸들러와 관련된 추가적인 데이터들의 사전입니다. 이는 ``RouteData.DataTokens`` 와 유사합니다.
 
-라우트 생성하기
+경로 핸들러 만들기
 ^^^^^^^^^^^^^^^
+
 Routing provides the :dn:cls:`~Microsoft.AspNetCore.Routing.Route` class as the standard implementation of ``IRouter``. ``Route`` uses the *route template* syntax to define patterns that will match against the URL path when :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` is called. ``Route`` will use the same route template to generate a URL when :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` is called.
 
 Most applications will create routes by calling ``MapRoute`` or one of the similar extension methods defined on :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder`. All of these methods will create an instance of ``Route`` and add it to the route collection.
