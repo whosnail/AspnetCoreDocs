@@ -26,21 +26,21 @@ By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
 .. _URL-Matching-ref:
 
-URL 일치 확인
+URL 일치 판정
 ^^^^^^^^^^^^
-URL 일치 확인은 라우팅이 인입되는 요청을 어떤 *라우트 핸들러 (route handler)* 에서 전달할지를 결정하는 절차입니다. 이 절차는 일반적인 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용하여 확장할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
+URL 일치 판정은 라우팅이 인입되는 요청을 어떤 *라우트 핸들러 (route handler)* 에서 전달할지를 결정하는 절차입니다. 이 절차는 일반적인 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용하여 확장할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
 
 인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 으로 진입하면, 미들웨어는 순서대로 각 라우트 (route) 의 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 를 호출합니다. :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체인 라우트 핸들러 개체는 ``RounteAsync`` 의 매개변수로 전달된 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 상의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` 속성에 null 이 아닌 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 할당하는가 마는가를 통해 요청을 *처리할지 말지*를 결정합니다. 라우트 핸들러에서 하나의 라우트를 지정하였다면, 요청을 처리하도록 호출될 것이고 미들웨어 내에서 그 이상의 라우트는 처리되지 않을 것입니다. 모든 라우트를 처리하였고 요청에 대한 핸들러가 더 없다면, 미들웨어는 *next* 를 호출하여 요청 처리경로 상의 다음 미들웨어를 호출합니다.
 
-``RouteAsync`` 메서드의 가장 중요한 입력값은 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` 속성으로서, 현재 요청과 관련되어 있습니다. ``RouteContext.Handler`` 와 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` 속성은 URL 일치 확인에 성공한 후에 설정될 출력값입니다.
+``RouteAsync`` 메서드의 가장 중요한 입력값은 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` 속성으로서, 현재 요청과 관련되어 있습니다. ``RouteContext.Handler`` 와 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` 속성은 URL 일치 판정에 성공한 후에 설정될 출력값입니다.
 
-``RouteAsync`` 실행 중에 URL 일치 확인에 성공한 경우, ``RouteContext.RouteData`` 의 속성들에 요청 처리 과정의 결과를 바탕으로 적절한 값을 할당합니다. 즉, ``RouteContext.RouteData`` 에는 라우트의 *결과* 에 대한 중요한 정보를 담고 있습니다.
+``RouteAsync`` 실행 중에 URL 일치 판정에 성공한 경우, ``RouteContext.RouteData`` 의 속성들에 요청 처리 과정의 결과를 바탕으로 적절한 값을 할당합니다. 즉, ``RouteContext.RouteData`` 에는 라우트의 *결과* 에 대한 중요한 정보를 담고 있습니다.
 
 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Values` 속성은 라우트에서 생성된 *라우트 값들*의 사전입니다. 이 값들은 보통 URL 을 토큰화하는 과정에서 결정되고, 사용자의 입력을 수용할 때 쓰이거나 혹은 어플리케이션 내에서 더 복잡한 어떤 선택을 할 때 쓰입니다.
 
 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.DataTokens` 속성은 일치한 라우트와 관련된 추가적인 데이터들의 ``PropertyBag`` 입니다. ``DataTokens`` 는 상태 데이터와 각 라우트를 연관지으므로, 어플리케이션에서 어떤 라우트에 일치하는가에 따라 선택을 해야 할 때 사용합니다. 이 값들은 개발자가 정의한 것으로서 라우팅의 행태에 *어떠한* 영향도 끼치지 않습니다. 게다가, ``DataTokens`` 속성 에 저장된 값들은 어떠한 형이라도 괜찮습니다. 이는 ``Values`` 속성 내의 라우트 값들은 문자열로 쉽게 변환 가능해야 한다는 점과는 차이가 있습니다.
 
-:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Routers` 속성은 요청 일치 확인에 성공한 모든 라우트의 목록입니다. 라우트들은 서로 중첩될 수 있고, ``Routers`` 속성은 URL 일치 확인 결과에 따라 생성된 라우트들의 로직 트리를 반영합니다. 일반적으로 ``Routers`` 속성의 첫 번째 항목은 라우트 콜렉션 개체로서, URL 생성 시에 사용되어야 합니다. 마지막 항목은 일치한 라우트입니다.
+:dn:cls:`~Microsoft.AspNetCore.Routing.RouteData` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteData.Routers` 속성은 요청 일치 판정에 성공한 모든 라우트의 목록입니다. 라우트들은 서로 중첩될 수 있고, ``Routers`` 속성은 URL 일치 판정 결과에 따라 생성된 라우트들의 로직 트리를 반영합니다. 일반적으로 ``Routers`` 속성의 첫 번째 항목은 라우트 콜렉션 개체로서, URL 생성 시에 사용되어야 합니다. 마지막 항목은 일치한 라우트 그 자체입니다.
 
 URL 생성
 ^^^^^^^^^^^^^^
@@ -54,7 +54,7 @@ URL 생성은 다른 비슷한 반복적인 절차들과 마찬가지로서, 사
 - :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.Values` 속성
 - :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.VirtualPathContext.AmbientValues` 속성
 
-라우트는 우선 ``Values`` 와 ``AmbientValues`` 로 제공되는 라우트 값을 사용하여, 어디서 URL 을 생성할 수 있고 어떤 값을 포함해야 할지를 결정합니다. ``AmbientValues`` 는 라우팅 시스템에서 현재 요청에 대한 일치 확인을 하는 과정에서 생성된 라우트 값들의 모음입니다. 대조적으로 ``Values`` 는 현재 동작에 적합한 URL 을 어떻게 생성할지를 지정하는 라우트 값들입니다. ``HttpContext`` 는 라우트에서 서비스나 현재의 컨텍스트와 관련 추가 데이터가 필요할 때 사용합니다. 
+라우트는 우선 ``Values`` 와 ``AmbientValues`` 로 제공되는 라우트 값을 사용하여, 어디서 URL 을 생성할 수 있고 어떤 값을 포함해야 할지를 결정합니다. ``AmbientValues`` 는 라우팅 시스템에서 현재 요청에 대한 일치 판정을 하는 과정에서 생성된 라우트 값들의 모음입니다. 대조적으로 ``Values`` 는 현재 동작에 적합한 URL 을 어떻게 생성할지를 지정하는 라우트 값들입니다. ``HttpContext`` 는 라우트에서 서비스나 현재의 컨텍스트와 관련 추가 데이터가 필요할 때 사용합니다. 
 
 .. tip:: ``Values`` 를 ``AmbientValues`` 에 우선하는 값으로 생각하세요. 또한 URL 생성에서는 현재 요청의 라우트 값들을 재사용하여, 동일한 라우트나 라우트 값들을 사용하는 링크에 대한 URL 생성을 원활하게 하려 할 수 있습니다.
 
@@ -68,13 +68,13 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
 
 라우트 만들기
 ^^^^^^^^^^^^^^^
-라우팅에서는 ``IRouter`` 의 표준 구현으로서 :dn:cls:`~Microsoft.AspNetCore.Routing.Route` 클래스를 제공합니다. ``Route`` 는 *라우트 템플릿 (route template)* 문법을 사용하여 패턴을 정의하고, :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 메서드가 호출된 경우에 URL 일치 여부를 확인할 때 이를 사용합니다. ``Route`` 는 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` 메서드가 호출되었을 때도, 동일한 라우트 템플릿을 사용하여 URL 을 생성합니다.
+라우팅에서는 ``IRouter`` 의 표준 구현으로서 :dn:cls:`~Microsoft.AspNetCore.Routing.Route` 클래스를 제공합니다. ``Route`` 는 *라우트 템플릿 (route template)* 문법을 사용하여 패턴을 정의하고, :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 메서드가 호출된 경우에 URL 일치 여부를 판정할 때 이를 사용합니다. ``Route`` 는 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` 메서드가 호출되었을 때도, 동일한 라우트 템플릿을 사용하여 URL 을 생성합니다.
 
 대부분의 어플리케이션에서는 ``MapRoute`` 메서드를 호출하거나 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder` 에 정의된 비슷한 확장 메서드 중 하나를 호출하여 라우트를 생성합니다. 이런 메서드들에서는 ``Route`` 개체를 생성하고 라우트 콜랙션에 이를 추가합니다.
 
 .. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 속성을 통해 처리될 라우트 만 추가합니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 할 것이기 때문입니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 확인하세요.
 
-This is an example of a ``MapRoute`` call used by a typical ASP.NET MVC route definition:
+다음은 ASP.NET MVC 의 라우트 정의부에서 사용하는 ``MapRoute`` 메서드 호출에 대한 예제입니다.
 
 .. code-block:: c#
 
@@ -82,13 +82,13 @@ This is an example of a ``MapRoute`` call used by a typical ASP.NET MVC route de
         name: "default",
         template: "{controller=Home}/{action=Index}/{id?}");
 
-This template will match a URL path like ``/Products/Details/17`` and extract the route values ``{ controller = Products, action = Details, id = 17 }``. The route values are determined by splitting the URL path into segments, and matching each segment with the *route parameter* name in the route template. Route parameters are named. They are defined by enclosing the parameter name in braces ``{ }``.
+이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정하고, ``{ controller = Products, action = Details, id = 17 }`` 라는 라우트 값을 추출합니다. 이 라우트 값은 URL 경로를 분할하고 각 분할에 해당하는 라우트 템플릿 상의 *라우트 매개변수* 의 이름을 지정하여 생성합니다. 각 라우트 매개변수는 이름이 지정되어 있고, ``{ }`` 괄호로 쌓여있습니다.
 
-The template above could also match the URL path ``/`` and would produce the values ``{ controller = Home, action = Index }``. This happens because the ``{controller}`` and ``{action}`` route parameters have default values, and the ``id`` route parameter is optional. An equals ``=`` sign followed by a value after the route parameter name defines a default value for the parameter. A question mark ``?`` after the route parameter name defines the parameter as optional. Route parameters with a default value *always* produce a route value when the route matches - optional parameters will not produce a route value if there was no corresponding URL path segment.
+위의 템플릿은 URL 경로 ``/`` 도 일치하는 것으로 판정하고, ``{ controller = Home, action = Index }`` 이라는 값을 생성할 것입니다. 이는 ``{controller}`` 와 ``{action}`` 라우트 매개변수에는 기본값이 지정되어 있고, ``id`` 라우트 매개변수는 선택적이기 때문입니다. 매개변수 이름과 값 사이의 ``=`` 등호는 매개변수에 대한 기본값을 정의합니다. 라우트 매개변수 이름 뒤의 ``?`` 물음표는 해당 매개변수가 선택적이라고 정의합니다. 기본값을 지정한 라우트 매개변수는 *언제나* 라우트가 일치하는 것으로 판정될 때마다 라우트를 생성합니다. 반면에 선택적 매개변수의 경우에는 URL 경로에 관련된 분할이 없다면 라우트 값을 생성하지 않습니다.
 
-See route-template-reference_ for a thorough description of route template features and syntax.
+라우트 템플릿 기능과 문법에 대한 전반적인 설명을 확인하기 위해서는 route-template-reference_ 를 참고하세요.
 
-This example includes a *route constraint*:
+다음 예제에서는 라우트 제한조건을 포함하였습니다.
 
 .. code-block:: c#
 
@@ -96,7 +96,7 @@ This example includes a *route constraint*:
         name: "default",
         template: "{controller=Home}/{action=Index}/{id:int}");
 
-This template will match a URL path like ``/Products/Details/17``, but not ``/Products/Details/Apples``. The route parameter definition ``{id:int}`` defines a *route constraint* for the ``id`` route parameter. Route constraints implement ``IRouteConstraint`` and inspect route values to verify them. In this example the route value ``id`` must be convertable to an integer. See route-constraint-reference_ for a more detailed explaination of route constraints that are provided by the framework.
+이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정할 것입니다. 하지만 ``/Products/Details/Apples`` 같은 경우에는 일치하지 않는 것으로 판정할 것입니다. ``{id:int}`` 라는 라우트 매개변수 정의는 ``id`` 라우트 매개변수에 *라우트 제한조건* 을 지정하고 있습니다. 라우트 제한조건은 ``IRouteConstraint`` 를 구현하고, 라우트 값이 올바른지 검사합니다. 이번 예제에서 라우트 값 ``id`` 는 정수 (int) 로 변환할 수 있어야 합니다. 프레임워크에서 제공하는 라우트 제한조건에 대해 더 자세히 확인하기 위해서는 route-constraint-reference_ 를 참고하세요.
 
 Additional overloads of ``MapRoute`` accept values for ``constraints``, ``dataTokens``, and ``defaults``. These additional parameters of ``MapRoute`` are defined as type ``object``. The typical usage of these parameters is to pass an anonymously typed object, where the property names of the anonymous type match route parameter names.
 
@@ -250,7 +250,7 @@ The following table demonstrates some route templates and their behavior.
 
 
 +-----------------------------------+--------------------------------+------------------------------------------------+
-| Route Template                    | URL 일치 확인 예시           | 비고                                          |
+| Route Template                    | URL 일치 판정 예시           | 비고                                          |
 +===================================+================================+================================================+
 | hello                             | | /hello                       | | Only matches the single path ‘/hello’        +
 +-----------------------------------+--------------------------------+------------------------------------------------+
