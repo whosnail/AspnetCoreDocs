@@ -22,7 +22,7 @@ By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
 일반적으로 하나의 어플리케이션에는 라우트들에 대한 콜렉션이 하나 있습니다. 라우트 콜렉션은 순서대로 처리됩니다. 요청 측면에서 볼 때는 요청의 URL 에 일치하는 라우트를 라우트 콜렉션에서 찾기 위해 :ref:`URL-Matching-ref` 을 사용합니다. 응답 측면에서 볼 때는 응답 내에서 사용할 URL 을 생성하기 위해 라우팅을 사용합니다.
 
-라우팅을 :doc:`middleware <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가할 수 있습니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 확인하세요.
+라우팅을 :doc:`middleware <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가할 수 있습니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 참고하세요.
 
 .. _URL-Matching-ref:
 
@@ -72,7 +72,7 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
 
 대부분의 어플리케이션에서는 ``MapRoute`` 메서드를 호출하거나 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder` 에 정의된 비슷한 확장 메서드 중 하나를 호출하여 라우트를 생성합니다. 이런 메서드들에서는 ``Route`` 개체를 생성하고 라우트 콜랙션에 이를 추가합니다.
 
-.. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 속성을 통해 처리될 라우트 만 추가합니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 할 것이기 때문입니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 확인하세요.
+.. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 속성을 통해 처리될 라우트 만 추가합니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 할 것이기 때문입니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 참고하세요.
 
 다음은 ASP.NET MVC 의 라우트 정의부에서 사용하는 ``MapRoute`` 메서드 호출에 대한 예제입니다.
 
@@ -97,10 +97,9 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
         template: "{controller=Home}/{action=Index}/{id:int}");
 
 이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정할 것입니다. 하지만 ``/Products/Details/Apples`` 같은 경우에는 일치하지 않는 것으로 판정할 것입니다. ``{id:int}`` 라는 라우트 매개변수 정의는 ``id`` 라우트 매개변수에 *라우트 제한조건* 을 지정하고 있습니다. 라우트 제한조건은 ``IRouteConstraint`` 를 구현하고, 라우트 값이 올바른지 검사합니다. 이번 예제에서 라우트 값 ``id`` 는 정수 (int) 로 변환할 수 있어야 합니다. 프레임워크에서 제공하는 라우트 제한조건에 대해 더 자세히 확인하기 위해서는 route-constraint-reference_ 를 참고하세요.
+``MapRoute`` 의 다른 오버로딩 메서드들의 경우 ``constraints`` 와 ``dataTokens``, ``defaults`` 에 대한 값을 매개변수로 받습니다. ``MapRoute`` 의 추가적인 매개변수들은 ``object`` 형으로 정의되어 있습니다. 이 매개변수들을 일반적인 사용 방법은 익명의 형인 개체로서 전달하는 것으로서, 해당 개체의 속성들은 라우트의 매개변수와 이름이 일치합니다.
 
-Additional overloads of ``MapRoute`` accept values for ``constraints``, ``dataTokens``, and ``defaults``. These additional parameters of ``MapRoute`` are defined as type ``object``. The typical usage of these parameters is to pass an anonymously typed object, where the property names of the anonymous type match route parameter names.
-
-The following two examples create equivalent routes:
+다음 2가지 예제에서는 동일한 라우트를 생성하고 있습니다.
 
 .. code-block:: c#
 
@@ -113,11 +112,11 @@ The following two examples create equivalent routes:
         name: "default_route",
         template: "{controller=Home}/{action=Index}/{id?}");
 
-.. tip:: The inline syntax for defining constraints and defaults can be more convenient for simple routes. However, there are features such as data tokens which are not supported by inline syntax.
+.. tip:: 제약사항과 기본값을 정의하는 인라인 형태의 문법이 간단한 라우트에 더 편리할 수 있습니다. 하지만 데이터 토큰와 같이 인라인 문법으로 지원하지 않는 기능도 있습니다.
 
 .. review-required: changed template and add MVC controller sample
 
-This example demonstrates a few more features:
+다음 예제에서는 좀더 많은 기능을 확인할 수 있습니다.
 
 .. code-block:: c#
 
@@ -126,9 +125,9 @@ This example demonstrates a few more features:
     template: "Blog/{*article}",
     defaults: new { controller = "Blog", action = "ReadArticle" });
 
-This template will match a URL path like ``/Blog/All-About-Routing/Introduction`` and will extract the values ``{ controller = Blog, action = ReadArticle, article = All-About-Routing/Introduction }``. The default route values for ``controller`` and ``action`` are produced by the route even though there are no corresponding route parameters in the template. Default values can be specified in the route template. The ``article`` route parameter is defined as a *catch-all* by the appearance of an asterix ``*`` before the route parameter name. Catch-all route parameters capture the remainder of the URL path, and can also match the empty string.
+이 템플릿은 ``/Blog/All-About-Routing/Introduction`` 와 같은 URL 경로를 일치하는 것으로 판정할 것이고, ``{ controller = Blog, action = ReadArticle, article = All-About-Routing/Introduction }`` 와 같이 값을 추축할 것입니다. ``controller`` 와 ``action`` 관련 매개변수가 URL 경로에 없지만, 라우트에 의해 기본 라우트 값이 생성되었습니다. 기본 라우트 값은 라우트 템플릿 내에서 지정할 수도 있습니다. ``article`` 라우트 매개변수는 라우트 매개변수 이름 앞에 별표 ``*`` 를 붙여, ``포괄적 (catch-all)`` 이라고 정의하고 있습니다. 포괄적인 라우트 매개변수는 이후의 모든 URL 경로를 수집 (capture) 하고, 공백 문자도 일치하는 것으로 판정합니다. 
 
-This example adds route constraints and data tokens:
+다음 예제에서는 라우트 제약사항과 데이터 토큰을 포함하고 있습니다.
 
 .. code-block:: c#
 
@@ -139,7 +138,7 @@ This example adds route constraints and data tokens:
       constraints: new { id = new IntRouteConstraint() },
       dataTokens: new { locale = "en-US" });
 
-This template will match a URL path like ``/en-US/Products/5`` and will extract the values ``{ controller = Products, action = Details, id = 5 }`` and the data tokens ``{ locale = en-US }``.
+이 템플릿은 ``/en-US/Products/5`` 와 같은 URL 경로를 일치하는 것으로 판정할 것이고, ``{ controller = Products, action = Details, id = 5 }`` 와 같은 값과 ``{ locale = en-US }`` 와 같은 데이터 토큰을 추출할 것입니다.
 
 
 .. image:: routing/_static/tokens.png
@@ -148,11 +147,11 @@ This template will match a URL path like ``/en-US/Products/5`` and will extract 
 
 URL 생성
 ^^^^^^^^^^^^^^^
-The ``Route`` class can also perform URL generation by combining a set of route values with its route template. This is logically the reverse process of matching the URL path.
+``Route`` 클래스는 일련의 라우트 값과 라우트 템플릿을 조합하여 URL 생성도 수행할 수 있습니다. 이는 논리적으로 URL 경로의 일치 판정 과정의 정반대 과정입니다.
 
-.. tip:: To better understand URL generation, imagine what URL you want to generate and then think about how a route template would match that URL. What values would be produced? This is the rough equivalent of how URL generation works in the ``Route`` class.
+.. tip:: URL 생성에 대해 더 깊이 이해하기 위해서는, 여러분이 생성하고자 하는 URL 을 정하고 어떻게 라우트 템플릿을 통해 해당 URL 이 일치하는지 판정할 것인가에 대해 생각해보세요. 어떤 값을 생성될 것 같습니까? 이와 거의 동일한 과정이 ``Route`` 클래스 내부에서 URL 을 생성할 때 일어납니다.
 
-This example uses a basic ASP.NET MVC style route:
+다음 예시에서는 ASP.NET MVC 의 기본적인 형식인 라우트를 사용하고 있습니다.
 
 .. code-block:: c#
 
@@ -160,23 +159,23 @@ This example uses a basic ASP.NET MVC style route:
         name: "default",
         template: "{controller=Home}/{action=Index}/{id?}");
 
-With the route values ``{ controller = Products, action = List }``, this route will generate the URL ``/Products/List``. The route values are substituted for the corresponding route parameters to form the URL path. Since ``id`` is an optional route parameter, it's no problem that it doesn't have a value.
+이 라우트는 ``{ controller = Products, action = List }`` 라우트 값으로 URL ``/Products/List`` 를 생성할 것입니다. 라우트 값들은 관련된 라우트 매개변수에 대치되어 URL 경로를 형성합니다. ``id`` 는 선택적인 라우트 매개변수이기 때문에, 값이 없어도 문제없습니다.
 
-With the route values ``{ controller = Home, action = Index }``, this route will generate the URL ``/``. The route values that were provided match the default values so the segments corresponding to those values can be safely omitted. Note that both URLs generated would round-trip with this route definition and produce the same route values that were used to generate the URL.
+이 라우트는 ``{ controller = Home, action = Index }`` 라우트 값으로 URL ``/`` 를 생성할 것입니다. 라우트 값이 기본값과 동일하기 때문에, 관련된 분할을 안전하게 생략할 수 있습니다. 위 두 가지 생성된 URL들 모두가 라우트에 입력되었을 때, URL 을 생성할 때 사용된 것과 동일한 라우트 값을 생성할 것입니다.
 
-.. tip:: An app using ASP.NET MVC should use :dn:cls:`~Microsoft.AspNetCore.Mvc.Routing.UrlHelper` to generate URLs instead of calling into routing directly.
+.. tip:: ASP.NET MVC 를 사용하는 앱은 라우팅 기능을 직접 사용하지 말고 :dn:cls:`~Microsoft.AspNetCore.Mvc.Routing.UrlHelper` 을 사용하여 URL 을 생성해야 합니다.
 
-For more details about the URL generation process, see url-generation-reference_.
+URL 생성 절차에 대한 더 자세한 내용을 위해서는 url-generation-reference_ 을 참고하세요.
 
 .. _using-routing-middleware:
 
 라우팅 미들웨어 사용하기
 -------------------------
-To use routing middleware, add it to the **dependencies** in *project.json*:
+라우팅 미들웨어를 사용하기 위해서는, *project.json* 내의 **dependencies** 에 추가하세요.
 
 ``"Microsoft.AspNetCore.Routing": <current version>``
 
-Add routing to the service container in *Startup.cs*:
+*Startup.cs* 에서 서비스 컨테이너에 라우팅을 추가하세요.
 
 .. literalinclude:: routing/sample/RoutingSample/Startup.cs
   :dedent: 8
@@ -184,11 +183,11 @@ Add routing to the service container in *Startup.cs*:
   :lines: 11-14
   :emphasize-lines: 3
 
-Routes must configured in the ``Configure`` method in the ``Startup`` class. The sample below uses these APIs:
+경로들은 ``Startup`` 클래스의 ``Configure`` 메서드에서 설정해야 합니다. 아래의 예제에서는 다음과 같은 API를 사용합니다.
 
 - :dn:cls:`~Microsoft.AspNetCore.Routing.RouteBuilder`
 - :dn:method:`~Microsoft.AspNetCore.Routing.RouteBuilder.Build`
-- :dn:method:`~Microsoft.AspNetCore.Routing.RequestDelegateRouteBuilderExtensions.MapGet`  Matches only HTTP GET requests
+- :dn:method:`~Microsoft.AspNetCore.Routing.RequestDelegateRouteBuilderExtensions.MapGet` HTTP GET 요청에 대해서만 일치 판정을 수행합니다.
 - :dn:method:`~Microsoft.AspNetCore.Builder.RoutingBuilderExtensions.UseRouter`
 
 .. literalinclude:: routing/sample/RoutingSample/Startup.cs
@@ -196,7 +195,7 @@ Routes must configured in the ``Configure`` method in the ``Startup`` class. The
   :start-after: // Routes must configured in Configure
   :end-before: // Show link generation when no routes match.
 
-The table below shows the responses with the given URIs.
+아래의 표에서는 각 URI 에 대한 응답을 확인할 수 있습니다.
 
 ===================== ====================================================
 URI                    응답
@@ -204,15 +203,15 @@ URI                    응답
 /package/create/3     Hello! Route values: [operation, create], [id, 3]
 /package/track/-3     Hello! Route values: [operation, track], [id, -3]
 /package/track/-3/    Hello! Route values: [operation, track], [id, -3]
-/package/track/       <Fall through, no match>
+/package/track/       <실패, 일치하지 않음>
 GET /hello/Joe        Hi, Joe!
-POST /hello/Joe       <Fall through, matches HTTP GET only>
-GET /hello/Joe/Smith  <Fall through, no match>
+POST /hello/Joe       <실패, HTTP GET 만 일치 판정함>
+GET /hello/Joe/Smith  <실패, 일치하지 않음>
 ===================== ====================================================
 
-If you are configuring a single route, call ``app.UseRouter`` passing in an ``IRouter`` instance. You won't need to call ``RouteBuilder``.
+하나의 경로 만 설정하고자 한다면, ``app.UseRouter`` 에 ``IRouter`` 개체를 바로 전달하세요. ``RouteBuilder`` 를 호출할 필요없습니다.
 
-The framework provides a set of extension methods for creating routes such as:
+프레임워크에서는 라우트 생성을 위해 다음과 같은 일련의 확장 메서드를 제공합니다.
 
 - :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute`
 - :dn:method:`~Microsoft.AspNetCore.Routing.RequestDelegateRouteBuilderExtensions.MapGet`
@@ -221,20 +220,19 @@ The framework provides a set of extension methods for creating routes such as:
 - :dn:method:`~Microsoft.AspNetCore.Routing.RequestDelegateRouteBuilderExtensions.MapDelete`
 - :dn:method:`~Microsoft.AspNetCore.Routing.RequestDelegateRouteBuilderExtensions.MapVerb`
 
-Some of these methods such as ``MapGet`` require a :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` to be provided. The ``RequestDelegate`` will be used as the *route handler* when the route matches. Other methods in this family allow configuring a middleware pipeline which will be used as the route handler. If the *Map* method doesn't accept a handler, such as ``MapRoute``, then it will use the :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler`.
+이 메서드들 중 일부 오버로딩 메서드의 경우 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 필요로 합니다. ``RequestDelegate`` 는 라우트의 일치 판정 시에 *라우트 핸들러* 로서 사용될 것입니다. 이 외의 다른 오버로딩 메서드의 경우 라우트 핸들러로서 사용할 미들웨어 처리경로를 설정합니다. ``MapRoute`` 같은 *Map* 메서드에 핸들러를 전달하지 않는 경우, :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 를 사용할 것입니다.
 
-The ``Map[Verb]`` methods use constraints to limit the route to the HTTP Verb in the method name. For example, see `MapGet <https://github.com/aspnet/Routing/blob/1.0.0/src/Microsoft.AspNetCore.Routing/RequestDelegateRouteBuilderExtensions.cs#L85-L88>`__ and `MapVerb <https://github.com/aspnet/Routing/blob/1.0.0/src/Microsoft.AspNetCore.Routing/RequestDelegateRouteBuilderExtensions.cs#L156-L180>`__.
+``Map[Verb]`` 메서드들은 제약사항을 사용하여 해당 라우트가 메서드 이름 내에 포함된 HTTP 동사 (Verb) 에서만 처리되도록 합니다. 예시를 확인하시려면, `MapGet <https://github.com/aspnet/Routing/blob/1.0.0/src/Microsoft.AspNetCore.Routing/RequestDelegateRouteBuilderExtensions.cs#L85-L88>`__ 와 `MapVerb <https://github.com/aspnet/Routing/blob/1.0.0/src/Microsoft.AspNetCore.Routing/RequestDelegateRouteBuilderExtensions.cs#L156-L180>`__ 를 참고하세요.
 
 .. _route-template-reference:
 
 라우트 템플릿에 대한 참고사항
 ------------------------
-Tokens within curly braces (``{ }``) define *route parameters* which will be bound if the route is matched. You can define more than one route parameter in a route segment, but they must be separated by a literal value. For example ``{controller=Home}{action=Index}`` would not be a valid route, since there is no literal value between ``{controller}`` and ``{action}``. These route parameters must have a name, and may have additional attributes specified.
+중괄호 (``{ }``) 내의 토큰은 *라우트 매개변수* 를 정의하고, 라우트가 일치하는 것으로 판정되었을 때 연동될 것입니다. 여러분은 하나의 라우트 분할 내에 하나 이상의 라우트 매개변수를 정의할 수 있습니다. 하지만 각각의 매개변수는 리터럴 값 (literal value) 으로 구분되어야 합니다. 예를 들어 ``{controller=Home}{action=Index}`` 는 ``{controller}`` 와 ``{action}`` 사이에 리터럴 값이 없으므로 적절한 경로가 아닙니다. 라우트 매개변수는 반드시 이름은 있어야 하고, 추가적인 특성의 경우에는 선택적으로 지정할 수 있습니다.
 
-Literal text other than route parameters (for example, ``{id}``) and the path separator ``/`` must match the text in the URL. Text matching is case-insensitive and based on the decoded representation of the URLs path. To match the literal route parameter delimiter ``{`` or  ``}``, escape it by repeating the character (``{{`` or ``}}``).
+라우트 매개변수 (예를 들어 ``{id}``) 와 경로 구분자 ``/`` 외의 리터럴 문자는 URL 경로 내에 일치하는 문자가 있어야 합니다. 문자 일치 확인은 대소문자를 구분하지 않고 URL 경로 내의 URL 인코딩이 디코딩된 표현을 기반으로 합니다. 라우트 매개변수 구분자인 ``{`` 이나 ``}`` 를 리터럴 문자로서 사용하기 위해서는, 문자를 반복하여 사용해야 합니다. (``{{`` 혹은 ``}}``)
 
-URL patterns that attempt to capture a filename with an optional file extension have additional considerations. For example, using the template ``files/{filename}.{ext?}`` -
-When both ``filename`` and ``ext`` exist, both values will be populated. If only ``filename`` exists in the URL, the route matches because the trailing period ``.`` is  optional. The following URLs would match this route:
+파일 확장자가 선택적으로 존재하는 경우에 파일 이름을 수집하기 위한 URL 패턴의 경우에는 추가적으로 고려해야 할 부분이 있습니다. 예를 들어, ``files/{filename}.{ext?}`` 템플릿을 사용하는 경우에는 다음과 같은 경우가 존재할 것입니다. ``filename`` 과 ``ext`` 모두 있는 경우에는 두 가지 값 모두 결정할 것입니다. ``filename`` 만 있는 경우에는 뒷쪽의 마침표 ``.`` 가 선택적이기 때문에 라우트가 일치하는 것으로 판정될 것입니다. 다음 URL 은 모두 이 라우트에 일치하는 것으로 판정됩니다.
 
 - ``/files/myFile.txt``
 - ``/files/myFile.``
@@ -250,7 +248,7 @@ The following table demonstrates some route templates and their behavior.
 
 
 +-----------------------------------+--------------------------------+------------------------------------------------+
-| Route Template                    | URL 일치 판정 예시           | 비고                                          |
+| 라우트 템플릿                        | URL 일치 판정 예시                 | 비고                                            |
 +===================================+================================+================================================+
 | hello                             | | /hello                       | | Only matches the single path ‘/hello’        +
 +-----------------------------------+--------------------------------+------------------------------------------------+
