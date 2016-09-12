@@ -228,7 +228,7 @@ GET /hello/Joe/Smith  <실패, 일치하지 않음>
 
 라우트 템플릿에 대한 참고사항
 ------------------------
-중괄호 (``{ }``) 내의 토큰은 *라우트 매개변수* 를 정의하고, 라우트가 일치하는 것으로 판정되었을 때 연동될 것입니다. 여러분은 하나의 라우트 분할 내에 하나 이상의 라우트 매개변수를 정의할 수 있습니다. 하지만 각각의 매개변수는 리터럴 값 (literal value) 으로 구분되어야 합니다. 예를 들어 ``{controller=Home}{action=Index}`` 는 ``{controller}`` 와 ``{action}`` 사이에 리터럴 값이 없으므로 적절한 경로가 아닙니다. 라우트 매개변수는 반드시 이름은 있어야 하고, 추가적인 특성의 경우에는 선택적으로 지정할 수 있습니다.
+중괄호 (``{ }``) 내의 토큰은 *라우트 매개변수* 를 정의하고, 라우트가 일치하는 것으로 판정되었을 때 해당 토큰을 연결된 매개변수에 할당할 것입니다. 여러분은 하나의 라우트 분할 내에 하나 이상의 라우트 매개변수를 정의할 수 있습니다. 하지만 각각의 매개변수는 리터럴 값 (literal value) 으로 구분되어야 합니다. 예를 들어 ``{controller=Home}{action=Index}`` 는 ``{controller}`` 와 ``{action}`` 사이에 리터럴 값이 없으므로 적절한 경로가 아닙니다. 라우트 매개변수는 반드시 이름은 있어야 하고, 추가적인 특성의 경우에는 선택적으로 지정할 수 있습니다.
 
 라우트 매개변수 (예를 들어 ``{id}``) 와 경로 구분자 ``/`` 외의 리터럴 문자는 URL 경로 내에 일치하는 문자가 있어야 합니다. 문자 일치 확인은 대소문자를 구분하지 않고 URL 경로 내의 URL 인코딩이 디코딩된 표현을 기반으로 합니다. 라우트 매개변수 구분자인 ``{`` 이나 ``}`` 를 리터럴 문자로서 사용하기 위해서는, 문자를 반복하여 사용해야 합니다. (``{{`` 혹은 ``}}``)
 
@@ -238,51 +238,51 @@ GET /hello/Joe/Smith  <실패, 일치하지 않음>
 - ``/files/myFile.``
 - ``/files/myFile``
 
-You can use the ``*`` character as a prefix to a route parameter to bind to the rest of the URI - this is called a *catch-all* parameter. For example, ``blog/{*slug}`` would match any URI that started with ``/blog`` and had any value following it (which would be assigned to the ``slug`` route value). Catch-all parameters can also match the empty string.
+``*`` 문자를 라우트 매개변수의 접두사로 사용하여, URI 의 나머지 부분을 모두 라우트 매개변수에 할당할 수 있습니다. - 이를 *포괄적 (catch-all)* 매개변수라고 합니다. 예를 들어, ``blog/{*slug}`` 의 경우 ``/blog`` 로 시작하는 URI 는 그 뒤에 어떤 문자열이 있더라도 일치하는 것으로 판정할 것입니다. (``/blog`` 뒤에 붙는 문자열은 ``slug`` 라우트 값에 할당될 것입니다.) 포괄적 변수에는 빈 문자열이 할당될 수도 있습니다.
 
-Route parameters may have *default values*, designated by specifying the default after the parameter name, separated by an ``=``. For example, ``{controller=Home}`` would define ``Home`` as the default value for ``controller``. The default value is used if no value is present in the URL for the parameter. In addition to default values, route parameters may be optional (specified by appending a ``?`` to the end of the parameter name, as in ``id?``). The difference between optional and "has default" is that a route parameter with a default value always produces a value; an optional parameter has a value only when one is provided.
+라우트 매개변수는 *기본값*을 가질 수도 있는데, 템플릿에서 매개변수의 이름 뒤의 ``=`` 다음에 지정하면 됩니다. 예를 들어, ``{controller=Home}`` 의 경우 ``Home`` 을 ``controller`` 의 기본값으로 지정합니다. 기본값은 URL 에 해당 매개변수에 대한 값이 없을 때 사용됩니다. 기본값 외에, 라우트 매개변수를 선택적으로 지정할 수 있습니다. (매개변수 이름 뒤에 ``?`` 를 붙여서 설정합니다. ``id?`` 와 같습니다.) 선택적과 "기본값 있음" 의 차이는 기본값이 있는 라우트 매개변수는 언제나 값을 있다는 점입니다. 그에 반해 선택적 매개변수는 URL 경로에 해당 부분이 있을 때에만 값이 할당됩니다.
 
-Route parameters may also have constraints, which must match the route value bound from the URL. Adding a colon ``:`` and constraint name after the route parameter name specifies an *inline constraint* on a route parameter. If the constraint requires arguments those are provided enclosed in parentheses ``( )`` after the constraint name. Multiple inline constraints can be specified by appending another colon ``:`` and constraint name. The constraint name is passed to the :dn:iface:`~Microsoft.AspNetCore.Routing.IInlineConstraintResolver` service to create an instance of :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteConstraint` to use in URL processing. For example, the route template ``blog/{article:minlength(10)}`` specifies the ``minlength`` constraint with the argument ``10``. For more description route constraints, and a listing of the constraints provided by the framework, see route-constraint-reference_.
+라우트 매개변수에는 제약사항을 지정할 수도 있습니다. URL 에서 추출된 라우트 값은 반드시 제약사항을 지켜야 합니다. 라우트 매개변수 뒤에 콜론 ``:`` 과 제약사항 이름을 붙여서 라우트 매개변수에 대한 *인라인 제약사항*을 지정합니다. 제약사항에 인자가 필요한 경우에는 제약사항 이름 뒤에 괄호 ``( )`` 내에 넣어 지정합니다. 여러 개의 인라인 제약사항을 지정하고자 할 때는 제약사항들 사이에 콜론 ``:`` 을 넣어 추가하면 됩니다. 제약사항 이름은 :dn:iface:`~Microsoft.AspNetCore.Routing.IInlineConstraintResolver` 서비스에 전달되고 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteConstraint` 개체를 생성하여 URL 처리과정에서 사용됩니다. 예를 들어, 라우트 템플릿 ``blog/{article:minlength(10)}`` 은 인자 ``10`` 을 할당한 ``minlength`` 제약사항을 지정합니다. 라우트 제약사항과 프레임워크에서 제공하는 제약사항들의 목록에 대해 더 자세히 확인하기 위해서는, route-constraint-reference_ 를 참고하세요.
 
-The following table demonstrates some route templates and their behavior.
+다음 표에서 몇 가지 라우트 템플릿들과 그 행태를 확인할 수 있습니다.
 
 
 +-----------------------------------+--------------------------------+------------------------------------------------+
 | 라우트 템플릿                        | URL 일치 판정 예시                 | 비고                                            |
 +===================================+================================+================================================+
-| hello                             | | /hello                       | | Only matches the single path ‘/hello’        +
+| hello                             | | /hello                       | | `/hello` 만을 일치하는 것으로 판정                 +
 +-----------------------------------+--------------------------------+------------------------------------------------+
-|{Page=Home}                        | | /                            | | Matches and sets ``Page`` to ``Home``        |
+|{Page=Home}                        | | /                            | | 일치하는 것으로 판정하고, ``Page`` 에 ``Home`` 할당  |
 +-----------------------------------+--------------------------------+------------------------------------------------+
-|{Page=Home}                        | | /Contact                     | | Matches and sets ``Page`` to ``Contact``     |
+|{Page=Home}                        | | /Contact                     | | 일치하는 것으로 판정하고, ``Page`` 에 ``Contact`` 할당 |
 +-----------------------------------+--------------------------------+------------------------------------------------+
-| {controller}/{action}/{id?}       | | /Products/List               | | Maps to ``Products`` controller and ``List`` |
-|                                   | |                              | | action                                       |
+| {controller}/{action}/{id?}       | | /Products/List               | | ``Products`` 컨트롤러와 ``List`` 기능에 연결됨     |
 +-----------------------------------+--------------------------------+------------------------------------------------+
-| {controller}/{action}/{id?}       | | /Products/Details/123        | | Maps to ``Products`` controller and          |
-|                                   | |                              | | ``Details`` action.  ``id`` set to 123       |
+| {controller}/{action}/{id?}       | | /Products/Details/123        | | ``Products`` 컨트롤러와 ``Details`` 기능에 연결됨  |
+|                                   | |                              | | ``id`` 에 123 할당                             |
 +-----------------------------------+--------------------------------+------------------------------------------------+
-| {controller=Home}/                | |   /                          | | Maps to ``Home`` controller and ``Index``    |
-|            {action=Index}/{id?}   | |                              | | method; ``id`` is ignored.                   |
+| {controller=Home}/                | |   /                          | | ``Home`` 컨트롤러와 ``Index`` 기능에 연결됨        |
+|            {action=Index}/{id?}   | |                              | | ``id`` 는 무시함                               |
 +-----------------------------------+--------------------------------+------------------------------------------------+
 
+템플릿을 사용하는 방법은 일반적으로 라우팅을 사용하는 가장 간단한 방법입니다. 제약사항과 기본값은 라우티 템플릿 외부에서 지정할 수도 있습니다.
 Using a template is generally the simplest approach to routing. Constraints and defaults can also be specified outside the route template.
 
-.. tip:: Enable :doc:`logging` to see how the built in routing implementations, such as ``Route``, match requests.
+.. tip:: :doc:`logging` 을 허용하여 ``Route`` 와 같은 라우팅 구현체 내부에서 어떻게 요청들을 일치 판정하는지 확인할 수 있습니다.
 
 .. _route-constraint-reference:
 
 라우트 제약사항에 대한 참고사항
 --------------------------
-Route constraints execute when a ``Route`` has matched the syntax of the incoming URL and tokenized the URL path into route values. Route constraints generally inspect the route value associated via the route template and make a simple yes/no decision about whether or not the value is acceptable. Some route constraints use data outside the route value to consider whether the request can be routed. For example, the `HttpMethodRouteConstraint <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Routing/Constraints/HttpMethodRouteConstraint/index.html#httpmethodrouteconstraint-class>`_ can accept or reject a request based on its HTTP verb.
+라우트 제약사항은 ``Route`` 가 인입된 URL 이 일치하는지 판정하고 URL 경로를 토큰화하여 라우트 값에 할당할 때 사용됩니다. 라우트 제약사항은 일반적으로 라우트 템플릿과 관련된 라우트 값을 검사하고 해당 값을 사용해도 되는지 판정합니다. 일부 라우트 제약사항의 경우, 요청이 적합한지 판정하기 위해 라우트 값 이외의 데이터를 사용합니다. 예를 들어, `HttpMethodRouteConstraint <https://docs.asp.net/projects/api/en/latest/autoapi/Microsoft/AspNetCore/Routing/Constraints/HttpMethodRouteConstraint/index.html#httpmethodrouteconstraint-class>`_ 의 경우 HTTP 동사 (Verb) 를 바탕으로 요청을 허용할지 거부할지 판정합니다.
 
-.. warning:: Avoid using constraints for **input validation**, because doing so means that invalid input will result in a 404 (Not Found) instead of a 400 with an appropriate error message. Route constraints should be used to **disambiguate** between similar routes, not to validate the inputs for a particular route.
+.. warning:: **입력값 검증** 의 목적으로 라우트 제약사항을 사용하지 마십시오. 그렇게 사용할 경우, 부적절한 입력값이 인입되었을 때 적절한 오류 메시지를 담은 400 응답을 전달하지 않고 404 (페이지 없음) 응답을 전달할 것이기 때문입니다. 라우트 제약사항은 비슷한 라우트들을 **구분짓기 위해** 사용해야 합니다. 특정 라우트에 대한 입력값을 검증하기 위한 목적으로 사용해서는 안됩니다.
 
-The following table demonstrates some route constraints and their expected behavior.
+다음 표에서는 일부 라우트 제약사항들과 그 행태를 확인할 수 있습니다.
 
 .. TODO to-do when we migrate to MD, make sure this table doesn't require a scroll bar
 
-.. list-table:: Inline Route Constraints
+.. list-table:: 인라인 라우트 제약사항
   :header-rows: 1
 
   * - constraint
