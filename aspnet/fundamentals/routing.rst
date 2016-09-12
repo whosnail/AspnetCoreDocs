@@ -285,10 +285,10 @@ Using a template is generally the simplest approach to routing. Constraints and 
 .. list-table:: 인라인 라우트 제약사항
   :header-rows: 1
 
-  * - constraint
-    - Example
-    - Example Match
-    - Notes
+  * - 제약사항
+    - 예
+    - 일치하는 경우
+    - 비고
   * - ``int``
     - {id:int}
     - 123
