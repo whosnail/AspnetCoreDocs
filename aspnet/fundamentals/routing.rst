@@ -2,9 +2,9 @@
 =======
 By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
-라우팅은 요청을 라우트 핸들러 (route handler) 에 연결할 때 사용합니다. 라우트 (route) 는 어플리케이션이 시작할 때 설정됩니다. 라우트를 통해 URL 내에서 요청을 처리할 때 필요한 값을 추출할 수 있습니다. 또한 ASP.NET 어플리케이션 내에 정의한 라우트를 사용하는 링크도 라우팅 기능을 통해 생성할 수 있습니다.
+라우팅은 요청을 라우트 핸들러 (route handler) 에 지정할 때 사용합니다. 라우트 (route) 는 어플리케이션이 시작할 때 설정합니다. 요청을 처리할 때 필요한 값을 URL 에서 라우트를 통해 추출할 수 있습니다. 또한 ASP.NET 어플리케이션 내에서 정의한 라우트를 사용하는 링크도 라우팅 기능을 통해 생성할 수 있습니다.
 
-이 문서에서는 저수준의 ASP.NET Core 라우팅 기능 까지 다루고 있습니다. ASP.NET Core MVC 라우팅을 확인하기 위해서는 :doc:`/mvc/controllers/routing` 를 확인하세요.
+이 문서에서는 저수준의 ASP.NET Core 라우팅 기능을 다루고 있습니다. ASP.NET Core MVC 라우팅을 확인하기 위해서는 :doc:`/mvc/controllers/routing` 를 확인하세요.
 
 .. contents:: Sections
   :local:
@@ -22,15 +22,15 @@ By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
 일반적으로 하나의 어플리케이션에는 라우트들에 대한 콜렉션이 하나 있습니다. 라우트 콜렉션은 순서대로 처리됩니다. 요청 측면에서 볼 때는 요청의 URL 에 일치하는 라우트를 라우트 콜렉션에서 찾기 위해 :ref:`URL-Matching-ref` 을 사용합니다. 응답 측면에서 볼 때는 응답 내에서 사용할 URL 을 생성하기 위해 라우팅을 사용합니다.
 
-라우팅을 :doc:`middleware <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가할 수 있습니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 참고하세요.
+라우팅은 :doc:`미들웨어 <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가합니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 참고하세요.
 
 .. _URL-Matching-ref:
 
 URL 일치 판정
 ^^^^^^^^^^^^
-URL 일치 판정은 라우팅이 인입되는 요청을 어떤 *라우트 핸들러 (route handler)* 에서 전달할지를 결정하는 절차입니다. 이 절차는 일반적인 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용하여 확장할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
+URL 일치 판정은 라우팅이 인입되는 요청을 어떤 *핸들러* 에 전달할지를 결정하는 절차입니다. 이 절차는 일반적으로 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
 
-인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 으로 진입하면, 미들웨어는 순서대로 각 라우트 (route) 의 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 를 호출합니다. :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체인 라우트 핸들러 개체는 ``RounteAsync`` 의 매개변수로 전달된 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 상의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` 속성에 null 이 아닌 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 할당하는가 마는가를 통해 요청을 *처리할지 말지*를 결정합니다. 라우트 핸들러에서 하나의 라우트를 지정하였다면, 요청을 처리하도록 호출될 것이고 미들웨어 내에서 그 이상의 라우트는 처리되지 않을 것입니다. 모든 라우트를 처리하였고 요청에 대한 핸들러가 더 없다면, 미들웨어는 *next* 를 호출하여 요청 처리경로 상의 다음 미들웨어를 호출합니다.
+인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 로 진입하면, 미들웨어는 순서대로 각 라우트 (route) 의 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 를 호출합니다. :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체인 라우트 핸들러 개체는 ``RounteAsync`` 의 매개변수로 전달된 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 상의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` 속성에 null 이 아닌 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 할당하는가 마는가를 통해 요청을 *처리할지 말지* 를 결정합니다. 라우트 핸들러에서 하나의 라우트를 지정하였다면, 요청을 처리하도록 호출될 것이고 미들웨어 내에서 그 이상의 라우트는 처리되지 않을 것입니다. 모든 라우트를 처리하였고 요청에 대한 핸들러가 더 없다면, 미들웨어는 *next* 를 호출하여 요청 처리경로 상의 다음 미들웨어를 호출합니다.
 
 ``RouteAsync`` 메서드의 가장 중요한 입력값은 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` 속성으로서, 현재 요청과 관련되어 있습니다. ``RouteContext.Handler`` 와 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` 속성은 URL 일치 판정에 성공한 후에 설정될 출력값입니다.
 
