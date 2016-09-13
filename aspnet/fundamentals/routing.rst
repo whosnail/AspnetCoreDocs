@@ -70,11 +70,11 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
 ^^^^^^^^^^^^^^^
 라우팅에서는 ``IRouter`` 의 표준 구현으로서 :dn:cls:`~Microsoft.AspNetCore.Routing.Route` 클래스를 제공합니다. ``Route`` 는 *라우트 템플릿 (route template)* 문법을 사용하여 패턴을 정의하고, :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 메서드가 호출된 경우에 URL 일치 여부를 판정할 때 이를 사용합니다. ``Route`` 는 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` 메서드가 호출되었을 때도, 동일한 라우트 템플릿을 사용하여 URL 을 생성합니다.
 
-대부분의 어플리케이션에서는 ``MapRoute`` 메서드를 호출하거나 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder` 에 정의된 비슷한 확장 메서드 중 하나를 호출하여 라우트를 생성합니다. 이런 메서드들에서는 ``Route`` 개체를 생성하고 라우트 콜랙션에 이를 추가합니다.
+대부분의 어플리케이션에서는 ``MapRoute`` 메서드를 호출하거나 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder` 에 정의된 확장 메서드 중 하나를 호출하여 라우트를 생성합니다. 이런 메서드들에서는 ``Route`` 개체를 생성하고 라우트 콜랙션에 이를 추가합니다.
 
-.. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 속성을 통해 처리될 라우트 만 추가합니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 할 것이기 때문입니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 참고하세요.
+.. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 로 처리할 라우트를 추가할 뿐입니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 수도 있습니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 참고하세요.
 
-다음은 ASP.NET MVC 의 라우트 정의부에서 사용하는 ``MapRoute`` 메서드 호출에 대한 예시입니다.
+다음은 ASP.NET MVC 에서 라우트를 정의하는 전형적인 예시로서, ``MapRoute`` 메서드를 호출하고 있습니다.
 
 .. code-block:: c#
 
@@ -82,9 +82,9 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
         name: "default",
         template: "{controller=Home}/{action=Index}/{id?}");
 
-이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정하고, ``{ controller = Products, action = Details, id = 17 }`` 라는 라우트 값을 추출합니다. 이 라우트 값은 URL 경로를 분할하고 각 분할에 해당하는 라우트 템플릿 상의 *라우트 매개변수* 의 이름을 지정하여 생성합니다. 각 라우트 매개변수는 이름이 지정되어 있고, ``{ }`` 괄호로 쌓여있습니다.
+이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정하고, ``{ controller = Products, action = Details, id = 17 }`` 라는 라우트 값을 추출합니다. 이 라우트 값은 URL 경로를 분할하고 각 분할에 해당하는 라우트 템플릿 상의 *라우트 매개변수* 에 이름을 지정하여 생성합니다. 각 라우트 매개변수는 이름이 지정되어 있고, ``{ }`` 괄호로 쌓여있습니다.
 
-위의 템플릿은 URL 경로 ``/`` 도 일치하는 것으로 판정하고, ``{ controller = Home, action = Index }`` 이라는 값을 생성할 것입니다. 이는 ``{controller}`` 와 ``{action}`` 라우트 매개변수에는 기본값이 지정되어 있고, ``id`` 라우트 매개변수는 선택적이기 때문입니다. 매개변수 이름과 값 사이의 ``=`` 등호는 매개변수에 대한 기본값을 정의합니다. 라우트 매개변수 이름 뒤의 ``?`` 물음표는 해당 매개변수가 선택적이라고 정의합니다. 기본값을 지정한 라우트 매개변수는 *언제나* 라우트가 일치하는 것으로 판정될 때마다 라우트를 생성합니다. 반면에 선택적 매개변수의 경우에는 URL 경로에 관련된 분할이 없다면 라우트 값을 생성하지 않습니다.
+위의 템플릿은 URL 경로 ``/`` 도 일치하는 것으로 판정하고, ``{ controller = Home, action = Index }`` 이라는 값을 생성할 것입니다. 이는 ``{controller}`` 와 ``{action}`` 라우트 매개변수에는 기본값이 지정되어 있고, ``id`` 라우트 매개변수는 선택적이기 때문입니다. 매개변수 이름과 값 사이의 ``=`` 등호는 매개변수에 대한 기본값을 정의합니다. 라우트 매개변수 이름 뒤의 ``?`` 물음표는 해당 매개변수가 선택적이라고 정의합니다. 기본값을 지정한 라우트 매개변수는 *언제나* 라우트가 일치하는 것으로 판정될 때마다 라우트를 생성합니다. 반면에 선택적 매개변수의 경우에는 URL 경로에 관련된 분할 (segment) 이 없다면 라우트 값을 생성하지 않습니다.
 
 라우트 템플릿 기능과 문법에 대한 전반적인 설명을 확인하기 위해서는 route-template-reference_ 를 참고하세요.
 
@@ -198,7 +198,7 @@ URL 생성 절차에 대한 더 자세한 내용을 위해서는 url-generation-
 아래의 표에서는 각 URI 에 대한 응답을 확인할 수 있습니다.
 
 ===================== ====================================================
-URI                    응답
+URI                   응답
 ===================== ====================================================
 /package/create/3     Hello! Route values: [operation, create], [id, 3]
 /package/track/-3     Hello! Route values: [operation, track], [id, -3]
