@@ -2,9 +2,9 @@
 =======
 By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
-라우팅은 요청을 라우트 핸들러 (route handler) 에 연결할 때 사용합니다. 라우트 (route) 는 어플리케이션이 시작할 때 설정됩니다. 라우트를 통해 URL 내에서 요청을 처리할 때 필요한 값을 추출할 수 있습니다. 또한 ASP.NET 어플리케이션 내에 정의한 라우트를 사용하는 링크도 라우팅 기능을 통해 생성할 수 있습니다.
+라우팅은 요청을 라우트 핸들러 (route handler) 에 지정할 때 사용합니다. 라우트 (route) 는 어플리케이션이 시작할 때 설정합니다. 요청을 처리할 때 필요한 값을 URL 에서 라우트를 통해 추출할 수 있습니다. 또한 ASP.NET 어플리케이션 내에서 정의한 라우트를 사용하는 링크도 라우팅 기능을 통해 생성할 수 있습니다.
 
-이 문서에서는 저수준의 ASP.NET Core 라우팅 기능 까지 다루고 있습니다. ASP.NET Core MVC 라우팅을 확인하기 위해서는 :doc:`/mvc/controllers/routing` 를 확인하세요.
+이 문서에서는 저수준의 ASP.NET Core 라우팅 기능을 다루고 있습니다. ASP.NET Core MVC 라우팅을 확인하기 위해서는 :doc:`/mvc/controllers/routing` 를 확인하세요.
 
 .. contents:: Sections
   :local:
@@ -22,15 +22,15 @@ By `Ryan Nowak`_, `Steve Smith`_, and `Rick Anderson`_
 
 일반적으로 하나의 어플리케이션에는 라우트들에 대한 콜렉션이 하나 있습니다. 라우트 콜렉션은 순서대로 처리됩니다. 요청 측면에서 볼 때는 요청의 URL 에 일치하는 라우트를 라우트 콜렉션에서 찾기 위해 :ref:`URL-Matching-ref` 을 사용합니다. 응답 측면에서 볼 때는 응답 내에서 사용할 URL 을 생성하기 위해 라우팅을 사용합니다.
 
-라우팅을 :doc:`middleware <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가할 수 있습니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 참고하세요.
+라우팅은 :doc:`미들웨어 <middleware>` 처리경로에 :dn:class:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 클래스를 통해 연동할 수 있습니다. :doc:`ASP.NET MVC </mvc/overview>` 에서는 설정을 통해 미들웨어 처리경로에 라우팅을 추가합니다. 독립적인 컴포넌트로서 라우팅을 사용하는 방법을 확인하기 위해서는 using-routing-middleware_ 를 참고하세요.
 
 .. _URL-Matching-ref:
 
 URL 일치 판정
 ^^^^^^^^^^^^
-URL 일치 판정은 라우팅이 인입되는 요청을 어떤 *라우트 핸들러 (route handler)* 에서 전달할지를 결정하는 절차입니다. 이 절차는 일반적인 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용하여 확장할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
+URL 일치 판정은 라우팅이 인입되는 요청을 어떤 *핸들러* 에 전달할지를 결정하는 절차입니다. 이 절차는 일반적으로 URL 상의 데이터를 기반으로 합니다. 하지만 요청 내의 다른 종류의 데이터를 사용할 수도 있습니다. 요청을 각각의 핸들러로 전달하는 기능이야 말로 어플리케이션의 크기와 복잡도를 가늠하는 척도입니다.
 
-인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 으로 진입하면, 미들웨어는 순서대로 각 라우트 (route) 의 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 를 호출합니다. :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체인 라우트 핸들러 개체는 ``RounteAsync`` 의 매개변수로 전달된 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 상의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` 속성에 null 이 아닌 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 할당하는가 마는가를 통해 요청을 *처리할지 말지*를 결정합니다. 라우트 핸들러에서 하나의 라우트를 지정하였다면, 요청을 처리하도록 호출될 것이고 미들웨어 내에서 그 이상의 라우트는 처리되지 않을 것입니다. 모든 라우트를 처리하였고 요청에 대한 핸들러가 더 없다면, 미들웨어는 *next* 를 호출하여 요청 처리경로 상의 다음 미들웨어를 호출합니다.
+인입되는 요청이 :dn:cls:`~Microsoft.AspNetCore.Builder.RouterMiddleware` 로 진입하면, 미들웨어는 순서대로 각 라우트 (route) 의 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 를 호출합니다. :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체인 라우트 핸들러 개체는 ``RounteAsync`` 의 매개변수로 전달된 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 상의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.Handler` 속성에 null 이 아닌 :dn:delegate:`~Microsoft.AspNetCore.Http.RequestDelegate` 를 할당하는가 마는가를 통해 요청을 *처리할지 말지* 를 결정합니다. 라우트 핸들러에서 하나의 라우트를 지정하였다면, 요청을 처리하도록 호출될 것이고 미들웨어 내에서 그 이상의 라우트는 처리되지 않을 것입니다. 모든 라우트를 처리하였고 요청에 대한 핸들러가 더 없다면, 미들웨어는 *next* 를 호출하여 요청 처리경로 상의 다음 미들웨어를 호출합니다.
 
 ``RouteAsync`` 메서드의 가장 중요한 입력값은 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.HttpContext` 속성으로서, 현재 요청과 관련되어 있습니다. ``RouteContext.Handler`` 와 :dn:cls:`~Microsoft.AspNetCore.Routing.RouteContext` 의 :dn:prop:`~Microsoft.AspNetCore.Routing.RouteContext.RouteData` 속성은 URL 일치 판정에 성공한 후에 설정될 출력값입니다.
 
@@ -70,11 +70,11 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
 ^^^^^^^^^^^^^^^
 라우팅에서는 ``IRouter`` 의 표준 구현으로서 :dn:cls:`~Microsoft.AspNetCore.Routing.Route` 클래스를 제공합니다. ``Route`` 는 *라우트 템플릿 (route template)* 문법을 사용하여 패턴을 정의하고, :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.RouteAsync` 메서드가 호출된 경우에 URL 일치 여부를 판정할 때 이를 사용합니다. ``Route`` 는 :dn:method:`~Microsoft.AspNetCore.Routing.IRouter.GetVirtualPath` 메서드가 호출되었을 때도, 동일한 라우트 템플릿을 사용하여 URL 을 생성합니다.
 
-대부분의 어플리케이션에서는 ``MapRoute`` 메서드를 호출하거나 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder` 에 정의된 비슷한 확장 메서드 중 하나를 호출하여 라우트를 생성합니다. 이런 메서드들에서는 ``Route`` 개체를 생성하고 라우트 콜랙션에 이를 추가합니다.
+대부분의 어플리케이션에서는 ``MapRoute`` 메서드를 호출하거나 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouteBuilder` 에 정의된 확장 메서드 중 하나를 호출하여 라우트를 생성합니다. 이런 메서드들에서는 ``Route`` 개체를 생성하고 라우트 콜랙션에 이를 추가합니다.
 
-.. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 속성을 통해 처리될 라우트 만 추가합니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 할 것이기 때문입니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 참고하세요.
+.. note:: :dn:method:`~Microsoft.AspNetCore.Builder.MapRouteRouteBuilderExtensions.MapRoute` 메서드에는 라우트 핸들러를 매개변수로 전달받지 않습니다. - :dn:prop:`~Microsoft.AspNetCore.Routing.IRouteBuilder.DefaultHandler` 로 처리할 라우트를 추가할 뿐입니다. 기본 핸들러가 :dn:iface:`~Microsoft.AspNetCore.Routing.IRouter` 의 구현체이므로, 요청을 처리하지 않을 수도 있습니다. 예를 들어, 보통 ASP.NET MVC 를 기본 핸들러로 설정하므로 가능한 컨트롤러나 동작을 찾을 수 있는 요청 만 처리합니다. MVC 에 대한 라우팅에 대해 더 확인하시려면, :doc:`/mvc/controllers/routing` 를 참고하세요.
 
-다음은 ASP.NET MVC 의 라우트 정의부에서 사용하는 ``MapRoute`` 메서드 호출에 대한 예제입니다.
+다음은 ASP.NET MVC 에서 라우트를 정의하는 전형적인 예시로서, ``MapRoute`` 메서드를 호출하고 있습니다.
 
 .. code-block:: c#
 
@@ -82,13 +82,13 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
         name: "default",
         template: "{controller=Home}/{action=Index}/{id?}");
 
-이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정하고, ``{ controller = Products, action = Details, id = 17 }`` 라는 라우트 값을 추출합니다. 이 라우트 값은 URL 경로를 분할하고 각 분할에 해당하는 라우트 템플릿 상의 *라우트 매개변수* 의 이름을 지정하여 생성합니다. 각 라우트 매개변수는 이름이 지정되어 있고, ``{ }`` 괄호로 쌓여있습니다.
+이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정하고, ``{ controller = Products, action = Details, id = 17 }`` 라는 라우트 값을 추출합니다. 이 라우트 값은 URL 경로를 분할하고 각 분할에 해당하는 라우트 템플릿 상의 *라우트 매개변수* 에 이름을 지정하여 생성합니다. 각 라우트 매개변수는 이름이 지정되어 있고, ``{ }`` 괄호로 쌓여있습니다.
 
-위의 템플릿은 URL 경로 ``/`` 도 일치하는 것으로 판정하고, ``{ controller = Home, action = Index }`` 이라는 값을 생성할 것입니다. 이는 ``{controller}`` 와 ``{action}`` 라우트 매개변수에는 기본값이 지정되어 있고, ``id`` 라우트 매개변수는 선택적이기 때문입니다. 매개변수 이름과 값 사이의 ``=`` 등호는 매개변수에 대한 기본값을 정의합니다. 라우트 매개변수 이름 뒤의 ``?`` 물음표는 해당 매개변수가 선택적이라고 정의합니다. 기본값을 지정한 라우트 매개변수는 *언제나* 라우트가 일치하는 것으로 판정될 때마다 라우트를 생성합니다. 반면에 선택적 매개변수의 경우에는 URL 경로에 관련된 분할이 없다면 라우트 값을 생성하지 않습니다.
+위의 템플릿은 URL 경로 ``/`` 도 일치하는 것으로 판정하고, ``{ controller = Home, action = Index }`` 이라는 값을 생성할 것입니다. 이는 ``{controller}`` 와 ``{action}`` 라우트 매개변수에는 기본값이 지정되어 있고, ``id`` 라우트 매개변수는 선택적이기 때문입니다. 매개변수 이름과 값 사이의 ``=`` 등호는 매개변수에 대한 기본값을 정의합니다. 라우트 매개변수 이름 뒤의 ``?`` 물음표는 해당 매개변수가 선택적이라고 정의합니다. 기본값을 지정한 라우트 매개변수는 *언제나* 라우트가 일치하는 것으로 판정될 때마다 라우트를 생성합니다. 반면에 선택적 매개변수의 경우에는 URL 경로에 관련된 분할 (segment) 이 없다면 라우트 값을 생성하지 않습니다.
 
 라우트 템플릿 기능과 문법에 대한 전반적인 설명을 확인하기 위해서는 route-template-reference_ 를 참고하세요.
 
-다음 예제에서는 라우트 제한조건을 포함하였습니다.
+다음 예시에서는 라우트 제한조건을 포함하였습니다.
 
 .. code-block:: c#
 
@@ -96,10 +96,10 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
         name: "default",
         template: "{controller=Home}/{action=Index}/{id:int}");
 
-이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정할 것입니다. 하지만 ``/Products/Details/Apples`` 같은 경우에는 일치하지 않는 것으로 판정할 것입니다. ``{id:int}`` 라는 라우트 매개변수 정의는 ``id`` 라우트 매개변수에 *라우트 제한조건* 을 지정하고 있습니다. 라우트 제한조건은 ``IRouteConstraint`` 를 구현하고, 라우트 값이 올바른지 검사합니다. 이번 예제에서 라우트 값 ``id`` 는 정수 (int) 로 변환할 수 있어야 합니다. 프레임워크에서 제공하는 라우트 제한조건에 대해 더 자세히 확인하기 위해서는 route-constraint-reference_ 를 참고하세요.
+이 템플릿은 ``/Products/Details/17`` 와 같은 URL 경로를 일치하는 것으로 판정할 것입니다. 하지만 ``/Products/Details/Apples`` 같은 경우에는 일치하지 않는 것으로 판정할 것입니다. ``{id:int}`` 라는 라우트 매개변수 정의는 ``id`` 라우트 매개변수에 *라우트 제한조건* 을 지정하고 있습니다. 라우트 제한조건은 ``IRouteConstraint`` 를 구현하고, 라우트 값이 올바른지 검사합니다. 이번 예시에서 라우트 값 ``id`` 는 정수 (int) 로 변환할 수 있어야 합니다. 프레임워크에서 제공하는 라우트 제한조건에 대해 더 자세히 확인하기 위해서는 route-constraint-reference_ 를 참고하세요.
 ``MapRoute`` 의 다른 오버로딩 메서드들의 경우 ``constraints`` 와 ``dataTokens``, ``defaults`` 에 대한 값을 매개변수로 받습니다. ``MapRoute`` 의 추가적인 매개변수들은 ``object`` 형으로 정의되어 있습니다. 이 매개변수들을 일반적인 사용 방법은 익명의 형인 개체로서 전달하는 것으로서, 해당 개체의 속성들은 라우트의 매개변수와 이름이 일치합니다.
 
-다음 2가지 예제에서는 동일한 라우트를 생성하고 있습니다.
+다음 2가지 예시에서는 동일한 라우트를 생성하고 있습니다.
 
 .. code-block:: c#
 
@@ -116,7 +116,7 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
 
 .. review-required: changed template and add MVC controller sample
 
-다음 예제에서는 좀더 많은 기능을 확인할 수 있습니다.
+다음 예시에서는 좀더 많은 기능을 확인할 수 있습니다.
 
 .. code-block:: c#
 
@@ -127,7 +127,7 @@ The :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathData` 의 :dn:prop:`~Micro
 
 이 템플릿은 ``/Blog/All-About-Routing/Introduction`` 와 같은 URL 경로를 일치하는 것으로 판정할 것이고, ``{ controller = Blog, action = ReadArticle, article = All-About-Routing/Introduction }`` 와 같이 값을 추축할 것입니다. ``controller`` 와 ``action`` 관련 매개변수가 URL 경로에 없지만, 라우트에 의해 기본 라우트 값이 생성되었습니다. 기본 라우트 값은 라우트 템플릿 내에서 지정할 수도 있습니다. ``article`` 라우트 매개변수는 라우트 매개변수 이름 앞에 별표 ``*`` 를 붙여, ``포괄적 (catch-all)`` 이라고 정의하고 있습니다. 포괄적인 라우트 매개변수는 이후의 모든 URL 경로를 수집 (capture) 하고, 공백 문자도 일치하는 것으로 판정합니다. 
 
-다음 예제에서는 라우트 제약사항과 데이터 토큰을 포함하고 있습니다.
+다음 예시에서는 라우트 제약사항과 데이터 토큰을 포함하고 있습니다.
 
 .. code-block:: c#
 
@@ -183,7 +183,7 @@ URL 생성 절차에 대한 더 자세한 내용을 위해서는 url-generation-
   :lines: 11-14
   :emphasize-lines: 3
 
-경로들은 ``Startup`` 클래스의 ``Configure`` 메서드에서 설정해야 합니다. 아래의 예제에서는 다음과 같은 API를 사용합니다.
+경로들은 ``Startup`` 클래스의 ``Configure`` 메서드에서 설정해야 합니다. 아래의 예시에서는 다음과 같은 API를 사용합니다.
 
 - :dn:cls:`~Microsoft.AspNetCore.Routing.RouteBuilder`
 - :dn:method:`~Microsoft.AspNetCore.Routing.RouteBuilder.Build`
@@ -198,7 +198,7 @@ URL 생성 절차에 대한 더 자세한 내용을 위해서는 url-generation-
 아래의 표에서는 각 URI 에 대한 응답을 확인할 수 있습니다.
 
 ===================== ====================================================
-URI                    응답
+URI                   응답
 ===================== ====================================================
 /package/create/3     Hello! Route values: [operation, create], [id, 3]
 /package/track/-3     Hello! Route values: [operation, track], [id, -3]
@@ -292,102 +292,102 @@ Using a template is generally the simplest approach to routing. Constraints and 
   * - ``int``
     - {id:int}
     - 123
-    - Matches any integer
+    - 정수형이면 일치 판정
   * - ``bool``
     - {active:bool}
     - true
-    - Matches ``true`` or ``false``
+    - ``true`` 혹은 ``false`` 이면 일치 판정
   * - ``datetime``
     - {dob:datetime}
     - 2016-01-01
-    - Matches a valid ``DateTime`` value (in the invariant culture - see `options <http://msdn.microsoft.com/en-us/library/aszyst2c(v=vs.110).aspx>`_)
+    - 적정한 ``DateTime`` 값이면 일치 판정 (문화권에 상관없는 값 - `options <http://msdn.microsoft.com/en-us/library/aszyst2c(v=vs.110).aspx>`_ 를 확인하세요.)
   * - ``decimal``
     - {price:decimal}
     - 49.99
-    - Matches a valid ``decimal`` value
+    - 적정한 ``decimal (10진수)`` 값이면 일치 판정
   * - ``double``
     - {weight:double}
     - 4.234
-    - Matches a valid ``double`` value
+    - 적정한 ``double`` 값이면 일치 판정
   * - ``float``
     - {weight:float}
     - 3.14
-    - Matches a valid ``float`` value
+    - 적정한 ``float`` 값이면 일치 판정
   * - ``guid``
     - {id:guid}
     - 7342570B-<snip>
-    - Matches a valid ``Guid`` value
+    - 적정한 ``Guid`` 값이면 일치 판정
   * - ``long``
     - {ticks:long}
     - 123456789
-    - Matches a valid ``long`` value
+    - 적정한 ``long`` 값이면 일치 판정
   * - ``minlength(value)``
     - {username:minlength(5)}
     - steve
-    - String must be at least 5 characters long.
+    - 문자열은 최소 5자 이어야 함.
   * - ``maxlength(value)``
     - {filename:maxlength(8)}
-    - somefile
-    - String must be no more than 8 characters long.
+    - 어떤 파일
+    - 파일 이름은 8자 이하 이어야 함.
   * - ``length(min,max)``
     - {filename:length(4,16)}
     - Somefile.txt
-    - String must be at least 8 and no more than 16 characters long.
+    - 파일 이름은 4자 이상, 16자 이하 이어야 함.
   * - ``min(value)``
     - {age:min(18)}
     - 19
-    - Value must be at least 18.
+    - 값이 18 이상 이어야 함.
   * - ``max(value)``
     - {age:max(120)}
     - 91
-    - Value must be no more than 120.
+    - 값이 120 이하 이어야 함.
   * - ``range(min,max)``
     - {age:range(18,120)}
     - 91
-    - Value must be at least 18 but no more than 120.
+    - 값이 18 이상, 120 이하 이어야 함.
   * - ``alpha``
     - {name:alpha}
     - Steve
-    - String must consist of alphabetical characters.
+    - 문자열은 알파벳 글자 만 가능함.
   * - ``regex(expression)``
     - {ssn:regex(^\d{3}-\d{2}-\d{4}$)}
     - 123-45-6789
-    - String must match the provided regular expression.
+    - 문자열은 주어진 정규식에 맞아야 함.
   * - ``required``
     - {name:required}
     - Steve
-    - Used to enforce that a non-parameter value is present during URL generation.
+    - URL 생성 시에 매개변수로 값이 전달되지 않았더라도 지정된 부분에 추가하도록 함.
 
-.. warning:: Route constraints that verify the URL can be converted to a CLR type (such as ``int`` or ``DateTime``) always use the invariant culture - they assume the URL is non-localizable. The framework-provided route constraints do not modify the values stored in route values. All route values parsed from the URL will be stored as strings. For example, the `Float route constraint <https://github.com/aspnet/Routing/blob/1.0.0/src/Microsoft.AspNetCore.Routing/Constraints/FloatRouteConstraint.cs#L44-L60>`__ will attempt to convert the route value to a float, but the converted value is used only to verify it can be converted to a float.
+.. warning:: URL 이 CLR 형으로 전환될 수 있는지 검사하는 라우트 제약사항은 언제나 문화권에 상관없는 값을 사용합니다. 즉, URL 이 지역화 가능하지 않은 것으로 가정합니다. 프레임워크에서 제공하는 라우트 제약사항의 경우, 라우트 값에 포함된 값을 변경하지 않습니다. URL 에서 추출된 모든 라우트 값은 문자열로 저장될 것입니다. 예를 들어, `실수 (floar) 라우트 제약사항<https://github.com/aspnet/Routing/blob/1.0.0/src/Microsoft.AspNetCore.Routing/Constraints/FloatRouteConstraint.cs#L44-L60>`__ 의 경우, 라우트 값을 float 형으로 전환해봅니다. 그러나 이러한 값의 전환은 단지 전환이 가능한지 확인할 때만 사용할 뿐입니다.
 
-.. tip:: To constrain a parameter to a known set of possible values, you can use a regular expression ( for example ``{action:regex(list|get|create)}``. This would only match the ``action`` route value to ``list``, ``get``, or ``create``. If passed into the constraints dictionary, the string "list|get|create" would be equivalent. Constraints that are passed in the constraints dictionary (not inline within a template) that don't match one of the known constraints are also treated as regular expressions.
+.. tip:: 받을 수 있는 값들의 집합으로 매개변수를 한정 지으려면, 정규식을 사용하면 됩니다. 예를 들면, ``{action:regex(list|get|create)}`` 입니다. 이 정규식에 따르면 ``action`` 라우트 값에는 ``list`` 혹은 ``get`` 혹은 ``create`` 만 일치하는 것으로 판정합니다. 제약사항을 사전 (dictionary) 으로 전달할 경우, 문자열 "list|get|create" 이 사전의 내용에 해당합니다. 사전형으로 제약사항을 전달할 때, 내용 중에 ASP.NET 이 인지하지 못하는 것이 있는 경우 정규식으로서 인식합니다.
 
 .. _url-generation-reference:
 
 URL 생성에 대한 참고사항
 ------------------------
-The example below shows how to generate a link to a route given a dictionary of route values and a ``RouteCollection``.
+아래 예시에서는 라우트 값 사전과 ``RouteCollection`` 을 통해 어떤 라우트에 대한 링크를 생성하는 방법을 확인할 수 있습니다.
 
 .. literalinclude:: routing/sample/RoutingSample/Startup.cs
   :start-after: // Show link generation when no routes match.
   :end-before: // End of app.Run
   :dedent: 12
 
-The ``VirtualPath`` generated at the end of the sample above is ``/package/create/123``.
+예시의 마지막에서 생성되는 ``VirtualPath`` 는 ``/package/create/123`` 입니다.
 
-The second parameter to the :dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` constructor is a collection of `ambient values`. Ambient values provide convenience by limiting the number of values a developer must specify within a certain request context. The current route values of the current request are considered ambient values for link generation. For example, in an ASP.NET MVC app if you are in the ``About`` action of the ``HomeController``, you don't need to specify the controller route value to link to the ``Index`` action (the ambient value of ``Home`` will be used).
+:dn:cls:`~Microsoft.AspNetCore.Routing.VirtualPathContext` 생성자에 대한 두 번째 매개변수는 `환경 값 (ambient values)` 의 콜렉션입니다. 환경 값올 사용하면 개발자는 특정 요청 컨텍스트 내에서 본인지 지정해야 하는 값의 개수를 줄일 수 있어 편리합니다. 현재 요청의 현재 라우트 값의 경우, 링크 생성 시에 환경 값으로 간주합니다. 예를 들어, ASP.NET MVC 어플리케이션에서 ``HomeController` 의 ``About`` 기능에 위치해있다고 하면, ``Index`` 기능에 대한 링크를 생성할 때 컨트롤러에 대한 라우트 값을 지정하지 않아도 됩니다. (즉, 컨트롤러에 대해 환경 값인 ``Home`` 이 사용될 것입니다.)
 
-Ambient values that don't match a parameter are ignored, and ambient values are also ignored when an explicitly-provided value overrides it, going from left to right in the URL.
+일치하는 매개변수가 없는 환경 값은 무시됩니다. 또한 명시적으로 값을 지정한 경우에도 환경 값을 무시합니다. URL 내에서 왼쪽에서 오른쪽으로 값을 추출하면서 환경 값으로 간주합니다.
 
-Values that are explicitly provided but which don't match anything are added to the query string. The following table shows the result when using the route template ``{controller}/{action}/{id?}``.
+명시적으로 지정한 값이나, 일치하는 매개변수가 없는 경우에는 쿼리 문자열에 추가합니다. 다음 표에서는 라우트 템플릿 ``{controller}/{action}/{id?}`` 을 사용하는 경우에 환경 값과 외부 지정 값에 의한 결과를 보여주고 있습니다.
 
-.. list-table:: Generating links with ``{controller}/{action}/{id?}`` template
+.. list-table:: ``{controller}/{action}/{id?}`` 템플릿으로 링크 생성하기
   :header-rows: 1
 
 
-  * - Ambient Values
-    - Explicit Values
-    - Result
+  * - 환경값
+    - 외부 지정 값
+    - 결과
 
   * - controller="Home"
     - action="About"
@@ -403,11 +403,11 @@ Values that are explicitly provided but which don't match anything are added to 
     - ``/Home/About?color=Red``
 
 
-If a route has a default value that doesn't correspond to a parameter and that value is explicitly provided, it must match the default value. For example:
+라우트에 매개변수와 관련없는 기본값을 지정한 상황에서 라우트 값을 명시적으로 전달하려 할 경우, 그 라우트 값은 반드시 기본값에 일치해야 합니다. 예를 들면 다음과 같습니다.
 
 .. code-block:: c#
 
   routes.MapRoute("blog_route", "blog/{*slug}",
     defaults: new { controller = "Blog", action = "ReadPost" });
 
-Link generation would only generate a link for this route when the matching values for controller and action are provided.
+링크를 생성하려 할 때, 컨트롤러와 기능에 대해 일치하는 값을 전달한 경우에만 이 라우트에 대한 링크를 생성될 것입니다.
