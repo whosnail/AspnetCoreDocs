@@ -1,19 +1,20 @@
 :version: 1.0.0-rc1
 
-Error Handling
+오류 처리하기
 ==============
 
 By `Steve Smith`_
 
 When errors occur in your ASP.NET app, you can handle them in a variety of ways, as described in this article.
+여러분의 ASP.NET 어플리케이션에서 오류가 발생할 경우, 여러가지 방법으로 처리할 수 있습니다.
 
 .. contents:: Sections
 	:local:
 	:depth: 1
 
-`View or download sample code <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/error-handling/sample>`_
+`샘플 코드를 확인하거나 다운로드 받으세요. <https://github.com/aspnet/Docs/tree/master/aspnet/fundamentals/error-handling/sample>`_
 
-Configuring an Exception Handling Page
+예외 처리 페이지 설정하기
 --------------------------------------
 
 You configure the pipeline for each request in the ``Startup`` class's ``Configure()`` method (learn more about :doc:`startup`). You can add a simple exception page, meant only for use during development, very easily. All that's required is to add a dependency on ``Microsoft.AspNetCore.Diagnostics`` to the project and then add one line to ``Configure()`` in ``Startup.cs``:
@@ -54,7 +55,7 @@ For the action associated with the endpoint, don't explicitly decorate the ``IAc
       // Handle error here
   }
 
-Using the Developer Exception Page
+개발자 예외 페이지 사용하기
 ----------------------------------
 
 The developer exception page displays useful diagnostics information when an unhandled exception occurs within the web processing pipeline. The page includes several tabs with information about the exception that was triggered and the request that was made. The first tab includes a stack trace:
@@ -71,7 +72,7 @@ In this case, you can see the value of the ``throw`` parameter that was passed t
 
 .. _status-code-pages:
 
-Configuring Status Code Pages
+상태 코드 페이지 설정하기
 -----------------------------
 
 By default, your app will not provide a rich status code page for HTTP status codes such as 500 (Internal Server Error) or 404 (Not Found). You can configure the ``StatusCodePagesMiddleware`` adding this line to the ``Configure`` method:
@@ -124,7 +125,7 @@ If you need to disable status code pages for certain requests, you can do so usi
     statusCodePagesFeature.Enabled = false;
   }
 
-Limitations of Exception Handling During Client-Server Interaction
+클라이언트-서버 상호작용 중의 예외 처리의 한계점
 ------------------------------------------------------------------
 
 Web apps have certain limitations to their exception handling capabilities because of the nature of disconnected HTTP requests and responses. Keep these in mind as you design your app's exception handling behavior.
@@ -136,31 +137,31 @@ Web apps have certain limitations to their exception handling capabilities becau
 
 Following the above recommendations will help ensure your app remains responsive and is able to gracefully handle exceptions that may occur.
 
-Server Exception Handling
+서버 예외 처리하기
 -------------------------
 
 In addition to the exception handling logic in your app, the server hosting your app will perform some exception handling. If the server catches an exception before the headers have been sent it will send a 500 Internal Server Error response with no body. If it catches an exception after the headers have been sent it must close the connection. Requests that are not handled by your app will be handled by the server, and any exception that occurs will be handled by the server's exception handling. Any custom error pages or exception handling middleware or filters you have configured for your app will not affect this behavior.
 
 .. _startup-error-handling:
 
-Startup Exception Handling
+시작점의 예외 처리하기
 --------------------------
 
 One of the trickiest places to handle exceptions in your app is during its startup. Only the hosting layer can handle exceptions that take place during app startup. Exceptions that occur in your app's startup can also impact server behavior. For example, to enable SSL in Kestrel, one must configure the server with ``KestrelServerOptions.UseHttps()``. If an exception happens before this line in ``Startup``, then by default hosting will catch the exception, start the server, and display an error page on the non-SSL port. If an exception happens after that line executes, then the error page will be served over HTTPS instead.
 
-ASP.NET MVC Error Handling
+ASP.NET MVC 오류 처리하기
 --------------------------
 
 :doc:`MVC </mvc/index>` apps have some additional options when it comes to handling errors, such as configuring exception filters and performing model validation.
 
-Exception Filters
+예외 필터
 ^^^^^^^^^^^^^^^^^
 
 Exception filters can be configured globally or on a per-controller or per-action basis in an :doc:`MVC </mvc/index>` app. These filters handle any unhandled exception that occurs during the execution of a controller action or another filter, and are not called otherwise. Exception filters are detailed in :doc:`filters </mvc/controllers/filters>`.
 
 .. tip:: Exception filters are good for trapping exceptions that occur within MVC actions, but they're not as flexible as error handling middleware. Prefer middleware for the general case, and use filters only where you need to do error handling *differently* based on which MVC action was chosen.
 
-Handling Model State Errors
+모델 상태 오류 처리하기
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 :doc:`Model validation </mvc/models/validation>` occurs prior to each controller action being invoked, and it is the action method’s responsibility to inspect ``ModelState.IsValid`` and react appropriately. In many cases, the appropriate reaction is to return some kind of error response, ideally detailing the reason why model validation failed. 
