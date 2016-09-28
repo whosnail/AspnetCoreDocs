@@ -17,7 +17,7 @@ When errors occur in your ASP.NET app, you can handle them in a variety of ways,
 예외 처리 페이지 설정하기
 --------------------------------------
 
-You configure the pipeline for each request in the ``Startup`` class's ``Configure()`` method (learn more about :doc:`startup`). You can add a simple exception page, meant only for use during development, very easily. All that's required is to add a dependency on ``Microsoft.AspNetCore.Diagnostics`` to the project and then add one line to ``Configure()`` in ``Startup.cs``:
+여러분은 ``Startup`` 클래스의 ``Configure()`` 메서드에서 각각의 요청에 대한 처리경로를 설정할 수 있습니다. 설정 과정에서 매우 쉽게 개발 용도로만 사용할 간단한 예외 페이지를 추가할 수 있습니다. ``Microsoft.AspNetCore.Diagnostics`` 에 대한 의존성을 프로젝트에 추가하고, ``Startup.cs`` 내의 ``Configure()`` 메서드에 한 줄만 추가하면 됩니다.: 
 
 .. literalinclude:: error-handling/sample/src/ErrorHandlingSample/Startup.cs
 	:language: c#
@@ -25,9 +25,9 @@ You configure the pipeline for each request in the ``Startup`` class's ``Configu
 	:dedent: 8
 	:emphasize-lines: 6,8
 
-The above code includes a check to ensure the environment is development before adding the call to ``UseDeveloperExceptionPage``. This is a good practice, since you typically do not want to share detailed exception information about your application publicly while it is in production. :doc:`Learn more about configuring environments <environments>`.
+위 코드에서는 ``UseDeveloperExceptionPage`` 메서드에 대한 호출 전에 개발 환경인지 확인하고 있습니다. 이는 적절한 습관으로, 일반적으로 상용 환경에서 공개적으로 예외에 대한 상세한 정보를 노출하지는 않기 때문입니다. :doc:`환경 설정에 대해서 더 확인해보세요. <environments>`.
 
-The sample application includes a simple mechanism for creating an exception:
+다음 예제에서는 예외를 발생시켜보는 간단한 방법을 포함하고 있습니다.
 
 .. literalinclude:: error-handling/sample/src/ErrorHandlingSample/Startup.cs
 	:language: c#
@@ -35,30 +35,32 @@ The sample application includes a simple mechanism for creating an exception:
 	:dedent: 8
 	:emphasize-lines: 5-8
 
-If a request includes a non-empty querystring parameter for the variable ``throw`` (e.g. a path of ``/?throw=true``), an exception will be thrown. If the environment is set to ``Development``, the developer exception page is displayed:
+값이 있는 ``throw`` 변수가 요청의 질의 문자열에 들어있다면, (예. ``/?throw=true``) 예외를 던질 것입니다. 개발 환경인 경우에는 개발자 예외 페이지가 보여질 것입니다.:
 
 .. image:: error-handling/_static/developer-exception-page.png
 
-When not in development, it's a good idea to configure an exception handler path using the ``UseExceptionHandler`` middleware:
+개발 환경이 아닌 경우에는, ``UseExceptionHandler`` 미들웨어를 사용하여 예외 핸들러를 설정하는 것이 좋습니다.
 
 .. code-block:: c#
 
   app.UseExceptionHandler("/Error");
 
 For the action associated with the endpoint, don't explicitly decorate the ``IActionResult`` with HTTP method attributes, such as ``HttpGet``. Using explicit verbs could prevent some requests from reaching the method.
+요청의 말단에 대한 동작을 정의할 때, ``IActionResult`` 에 ``HttpGet`` 과 같은 HTTP 메서드 특성을 명시적으로 지정하지는 마세요. HTTP 동사를 명시하는 경우 일부 요청에서 해당 메서드가 실행되지 않을 수도 있습니다.
 
 .. code-block:: c#
 
   [Route("/Error")]
   public IActionResult Index()
   {
-      // Handle error here
+      // 여기서 오류 처리
   }
 
 개발자 예외 페이지 사용하기
 ----------------------------------
 
 The developer exception page displays useful diagnostics information when an unhandled exception occurs within the web processing pipeline. The page includes several tabs with information about the exception that was triggered and the request that was made. The first tab includes a stack trace:
+개발자 예외 페이지에서는
 
 .. image:: error-handling/_static/developer-exception-page.png
 
