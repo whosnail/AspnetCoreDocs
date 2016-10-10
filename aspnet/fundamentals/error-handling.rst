@@ -5,7 +5,6 @@
 
 By `Steve Smith`_
 
-When errors occur in your ASP.NET app, you can handle them in a variety of ways, as described in this article.
 여러분의 ASP.NET 어플리케이션에서 오류가 발생할 경우, 여러가지 방법으로 처리할 수 있습니다.
 
 .. contents:: Sections
@@ -59,16 +58,15 @@ For the action associated with the endpoint, don't explicitly decorate the ``IAc
 개발자 예외 페이지 사용하기
 ----------------------------------
 
-The developer exception page displays useful diagnostics information when an unhandled exception occurs within the web processing pipeline. The page includes several tabs with information about the exception that was triggered and the request that was made. The first tab includes a stack trace:
-개발자 예외 페이지에서는
+개발자 예외 페이지에서는 요청 처리경로에서 처리하지 못한 예외가 발생한 경우 유용하게 사용할 수 있는 진단 정보를 노출합니다. 해당 페이지은 발생한 예외와 관련된 요청에 대한 정보를 포함하는 여러 개의 탭으로 구성되어 있습니다. 첫 번째 탭에서는 스택 트레이스 정보를 확인할 수 있습니다.:
 
 .. image:: error-handling/_static/developer-exception-page.png
 
-The next tab shows the query string parameters, if any:
+그 다음 탭에서는 쿼리 문자열에 매개변수가 있었다면 그에 대한 정보를 확인할 수 있습니다.:
 
 .. image:: error-handling/_static/developer-exception-page-query.png
 
-In this case, you can see the value of the ``throw`` parameter that was passed to this request. This request didn't have any cookies, but if it did, they would appear on the Cookies tab. You can see the headers that were passed in the last tab:
+위 예제에서는 요청을 통해 전달된 ``throw`` 매개변수의 값을 확인할 수 있습니다. 이 요청에는 쿠키를 포함하지 않고 있으나, 쿠키를 포함하고 있었다면 Cookies 탭에서 쿠키 정보를 확인할 수 있었을 것입니다. 마지막 탭에서는 헤더 정보를 확인할 수 있습니다.:
 
 .. image:: error-handling/_static/developer-exception-page-headers.png
 
@@ -77,17 +75,17 @@ In this case, you can see the value of the ``throw`` parameter that was passed t
 상태 코드 페이지 설정하기
 -----------------------------
 
-By default, your app will not provide a rich status code page for HTTP status codes such as 500 (Internal Server Error) or 404 (Not Found). You can configure the ``StatusCodePagesMiddleware`` adding this line to the ``Configure`` method:
+기본적으로 여러분의 앱에서는 500 (서버 내부 오류) 나 404 (찾을 수 없음) 과 같은 HTTP 상태 코드에 대한 상세한 정보를 제공하는 페이지를 제공하지는 않습니다. ``Configure`` 메서드에 아래와 같이 코드를 추가하여 ``StatusCodePagesMiddleware`` 를 설정할 수 있습니다.:
 
 .. code-block:: c#
 
   app.UseStatusCodePages();
 
-By default, this middleware adds very simple, text-only handlers for common status codes. For example, the following is the result of a 404 Not Found status code:
+기본적으로 이 미들웨어는 매우 간단하고 문자열 만 사용하는 일반적 상태 코드에 대한 핸들러를 추가합니다. 예를 들어, 다음은 404 (찾을 수 없음) 상태 코드에 대한 결과입니다.:
 
 .. image:: error-handling/_static/default-404-status-code.png
 
-The middleware supports several different extension methods. You can pass it a custom lamdba expression:
+미들웨어에서는 여러가지 확장 메서드를 지원합니다. 사용자 정의된 람다 표현식을 전달할 수도 있습니다.
 
 .. code-block:: c#
 
@@ -95,13 +93,14 @@ The middleware supports several different extension methods. You can pass it a c
     context.HttpContext.Response.SendAsync("Handler, status code: " +
     context.HttpContext.Response.StatusCode, "text/plain"));
 
-Alternately, you can simply pass it a content type and a format string:
+혹은 간단하게 콘텐트 타입과 포맷 문자열을 전달할 수도 있습니다.
 
 .. code-block:: c#
 
   app.UseStatusCodePages("text/plain", "Response, status code: {0}");
 
 The middleware can handle redirects (with either relative or absolute URL paths), passing the status code as part of the URL:
+미들웨어
 
 .. code-block:: c#
 
