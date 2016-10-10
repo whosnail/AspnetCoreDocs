@@ -99,24 +99,23 @@ For the action associated with the endpoint, don't explicitly decorate the ``IAc
 
   app.UseStatusCodePages("text/plain", "Response, status code: {0}");
 
-The middleware can handle redirects (with either relative or absolute URL paths), passing the status code as part of the URL:
-미들웨어
+미들웨어에 상태 코드 페이지로의 리다이렉트 경로 (상대 URL 경로와 절대 URL 경로 모두 지원) 를 전달하여 처리할 수도 있습니다. 이 경우, URL 의 일부로서 상태 코드를 전달하면 됩니다.
 
 .. code-block:: c#
 
   app.UseStatusCodePagesWithRedirects("~/errors/{0}");
 
-In the above case, the client browser will see a ``302 / Found`` status and will redirect to the URL provided.
+위 경우에, 클라이언트 측인 브라우저에 ``302 / 찾음`` 상태를 노출한 후, 전달한 URL 로 리다이렉트할 것입니다.
 
-Alternately, the middleware can re-execute the request from a new path format string:
+혹은, 미들웨어에서 새로운 경로 문자열을 통한 요청을 재실행하게 할 수도 있습니다.
 
 .. code-block:: c#
 
   app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
-The ``UseStatusCodePagesWithReExecute`` method will still return the original status code to the browser, but will also execute the handler given at the path specified.
+``UseStatusCodePagesWithReExecute`` 메서드는 브라우저에 원래의 상태 코드를 반환하지만, 지정된 경로 상의 요청 핸들러도 실행합니다.
 
-If you need to disable status code pages for certain requests, you can do so using the following code:
+특정 요청에 대해 상태 코드 페이지를 보이지 않도록 하기 위해서는, 다음 코드를 사용하면 됩니다.
 
 .. code-block:: c#
 
@@ -129,12 +128,12 @@ If you need to disable status code pages for certain requests, you can do so usi
 클라이언트-서버 상호작용 중의 예외 처리의 한계점
 ------------------------------------------------------------------
 
-Web apps have certain limitations to their exception handling capabilities because of the nature of disconnected HTTP requests and responses. Keep these in mind as you design your app's exception handling behavior.
+웹 어플리케이션은 예외 처리 기능에 어느 정도 한계점을 가지고 있습니다. 이는 끊어진 HTTP 요청과 응답의 특성 때문입니다. 따라서, 예외 처리 방식을 설계할 때 이를 염두에 두어야 합니다.
 
-#. Once the headers for a response have been sent, you cannot change the response's status code, nor can any exception pages or handlers run. The response must be completed or the connection aborted.
-#. If the client disconnects mid-response, you cannot send them the rest of the content of that response.
-#. There is always the possibility of an exception occuring one layer below your exception handling layer.
-#. Don't forget, exception handling pages can have exceptions, too. It's often a good idea for production error pages to consist of purely static content.
+#. 응답에 대한 헤더가 전송된 후에는, 응답 상의 상태 코드를 변경하거나 다른 예외 페이지 혹은 핸들러로 변경할 수 없습니다. 응답을 완료하거나 연결을 중지해야 합니다.
+#. 클라이언트에서 응답을 전송받는 중간에 연결을 끊은 경우, 나머지 응답 콘텐츠를 전송할 수 없습니다.
+#. 예외 처리 단계 직전에 예외가 발생할 가능성이 언제나 존재합니다.
+#. 절대 잊지 말아야 할 부분은 예외 처리 페이지 자체에서 예외를 발생할 수도 있다는 점입니다. 상용 오류 페이지를 완전한 정적 콘텐츠로 구성하는 방법은 좋은 발상입니다.
 
 Following the above recommendations will help ensure your app remains responsive and is able to gracefully handle exceptions that may occur.
 
