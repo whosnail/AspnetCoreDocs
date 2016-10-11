@@ -166,5 +166,4 @@ ASP.NET MVC 오류 처리하기
 
 :doc:`모델 검증 </mvc/models/validation>` 은 각 컨트롤러 액션이 실행되기 전에 수행됩니다. ``ModelState.IsValid`` 를 호출하고 그 결과를 적절히 처리하는 것은 액션 메서드의 몫입니다. 많은 경우, 적절히 처리하는 방법은 모델 검증에 실패한 원인에 대해 상세히 알리는 오류 응답을 반환하는 것입니다.
 
-Some apps will choose to follow a standard convention for dealing with model validation errors, in which case a :doc:`filter </mvc/controllers/filters>` may be an appropriate place to implement such a policy. You should test how your actions behave with valid and invalid model states (learn more about :doc:`testing controller logic </mvc/controllers/testing>`).
 일부 어플리케이션의 경우 모델 검증 오류를 처리할 때 표준적인 절차를 따릅니다. 이 경우 :doc:`필터 </mvc/controllers/filters>` 가 정책을 구현하기에 적절한 위치입니다. 컨트롤러의 액션이 모델의 적절한 상태와 부적절한 상태에 따라 어떤 행태를 보이는지 테스트해야 합니다. (:doc:`컨트롤러 로직 테스트하기 </mvc/controllers/testing>` 에서 더 자세히 확인할 수 있습니다.)
