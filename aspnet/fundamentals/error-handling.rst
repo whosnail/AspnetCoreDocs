@@ -135,35 +135,36 @@ For the action associated with the endpoint, don't explicitly decorate the ``IAc
 #. 예외 처리 단계 직전에 예외가 발생할 가능성이 언제나 존재합니다.
 #. 절대 잊지 말아야 할 부분은 예외 처리 페이지 자체에서 예외를 발생할 수도 있다는 점입니다. 상용 오류 페이지를 완전한 정적 콘텐츠로 구성하는 방법은 좋은 발상입니다.
 
-Following the above recommendations will help ensure your app remains responsive and is able to gracefully handle exceptions that may occur.
+위의 권장 사항을 따른다면, 여러분의 어플리케이션이 나은 반응성을 가지게 하고 발생 가능한 예외를 우아하게 처리할 수 있도록 보장할 수 있습니다.
 
 서버 예외 처리하기
 -------------------------
 
-In addition to the exception handling logic in your app, the server hosting your app will perform some exception handling. If the server catches an exception before the headers have been sent it will send a 500 Internal Server Error response with no body. If it catches an exception after the headers have been sent it must close the connection. Requests that are not handled by your app will be handled by the server, and any exception that occurs will be handled by the server's exception handling. Any custom error pages or exception handling middleware or filters you have configured for your app will not affect this behavior.
+여러분의 어플리케이션 내의 예외 처리 로직에 더해, 어플리케이션을 호스팅하는 웹 서버에서 몇 가지 예외 처리를 수행할 수 있습니다. 응답 헤더를 보내기 전에 서버에서 예외를 검출하게 되면, 서버는 응답 본문 없이 500 내부 서버 오류 만 보낼 것입니다. 헤더를 보낸 후에 서버가 예외를 검출한다면, 서버는 연결을 끊어야 합니다. 여러분의 어플리케이션에서 처리하지 않은 요청의 경우 서버에서 처리하고, 예외가 발생하게 되면 서버에서 처리할 것입니다. 어플리케이션에서 설정한 어떠한 사용자 정의된 오류 페이지든 어떠한 예외 처리 미들웨어든 어떠한 필터라도 이 행태에 영향을 줄 수 없습니다.
 
 .. _startup-error-handling:
 
 시작점의 예외 처리하기
 --------------------------
 
-One of the trickiest places to handle exceptions in your app is during its startup. Only the hosting layer can handle exceptions that take place during app startup. Exceptions that occur in your app's startup can also impact server behavior. For example, to enable SSL in Kestrel, one must configure the server with ``KestrelServerOptions.UseHttps()``. If an exception happens before this line in ``Startup``, then by default hosting will catch the exception, start the server, and display an error page on the non-SSL port. If an exception happens after that line executes, then the error page will be served over HTTPS instead.
+어플리케이션에서 예외를 처리하기 가장 까다로운 지점은 어플리케이션 시작점입니다. 호스팅 단계에서만 어플리케이션 시작점에서 발생하는 예외를 처리할 수 있습니다. 어플리케이션 시작점에서 발생하는 예외는 서버의 행태에 영향을 줄 수도 있습니다. 예를 들어, Kestrel 서버 내의 SSL 을 허용하기 위해서는, ``KestrelServerOptions.UseHttps()`` 메서드로 서버를 설정해야 합니다. 그런데 ``Startup`` 메서드에서 이 메서드가 실행되기 전에 예외가 발생한다면, 기본 호스팅에서 예외를 검출하고 서버를 시작한 뒤 SSL 이 아닌 일반 HTTP 포트를 통해 오류 페이지를 보일 것입니다. 하지만 해당 라인이 실행된 후에 예외가 발생한다면, 오류 페이지를 HTTPS 를 통해 보일 것입니다.
 
 ASP.NET MVC 오류 처리하기
 --------------------------
 
-:doc:`MVC </mvc/index>` apps have some additional options when it comes to handling errors, such as configuring exception filters and performing model validation.
+:doc:`MVC </mvc/index>` 어플리케이션에는 오류를 처리하기 위한 몇 가지 추가적인 선택지가 더 있습니다. 예외 필터나 모델 검증과 같은 것입니다.
 
 예외 필터
 ^^^^^^^^^^^^^^^^^
 
-Exception filters can be configured globally or on a per-controller or per-action basis in an :doc:`MVC </mvc/index>` app. These filters handle any unhandled exception that occurs during the execution of a controller action or another filter, and are not called otherwise. Exception filters are detailed in :doc:`filters </mvc/controllers/filters>`.
+예외 필터는 글로벌하게 혹은 컨트롤러 단위로 혹은 액션 단위로 :doc:`MVC </mvc/index>` 어플리케이션에 설정할 수 있습니다. 필터는 컨트롤러의 액션을 실행할 때 혹은 다른 필터를 실행할 때 발생하는 오류를 처리하고, 그 외의 경우에는 호출되지 않습니다. 예외 필터에 대한 자세한 내용은 :doc:`filters </mvc/controllers/filters>` 를 참고하세요.
 
-.. tip:: Exception filters are good for trapping exceptions that occur within MVC actions, but they're not as flexible as error handling middleware. Prefer middleware for the general case, and use filters only where you need to do error handling *differently* based on which MVC action was chosen.
+.. tip:: 예외 필터는 MVC 액션 내에서 발생하는 예외를 검출하기에 적절합니다. 하지만 오류 처리 미들웨어 만큼 유연하지 않습니다. 대부분의 경우 미들웨어가 적합하고, MVC 액션에 따라 *다르게* 오류를 처리해야 하는 경우에만 필터를 사용하세요.
 
 모델 상태 오류 처리하기
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:doc:`Model validation </mvc/models/validation>` occurs prior to each controller action being invoked, and it is the action method’s responsibility to inspect ``ModelState.IsValid`` and react appropriately. In many cases, the appropriate reaction is to return some kind of error response, ideally detailing the reason why model validation failed. 
+:doc:`모델 검증 </mvc/models/validation>` 은 각 컨트롤러 액션이 실행되기 전에 수행됩니다. ``ModelState.IsValid`` 를 호출하고 그 결과를 적절히 처리하는 것은 액션 메서드의 몫입니다. 많은 경우, 적절히 처리하는 방법은 모델 검증에 실패한 원인에 대해 상세히 알리는 오류 응답을 반환하는 것입니다.
 
 Some apps will choose to follow a standard convention for dealing with model validation errors, in which case a :doc:`filter </mvc/controllers/filters>` may be an appropriate place to implement such a policy. You should test how your actions behave with valid and invalid model states (learn more about :doc:`testing controller logic </mvc/controllers/testing>`).
+일부 어플리케이션의 경우 모델 검증 오류를 처리할 때 표준적인 절차를 따릅니다. 이 경우 :doc:`필터 </mvc/controllers/filters>` 가 정책을 구현하기에 적절한 위치입니다. 컨트롤러의 액션이 모델의 적절한 상태와 부적절한 상태에 따라 어떤 행태를 보이는지 테스트해야 합니다. (:doc:`컨트롤러 로직 테스트하기 </mvc/controllers/testing>` 에서 더 자세히 확인할 수 있습니다.)
