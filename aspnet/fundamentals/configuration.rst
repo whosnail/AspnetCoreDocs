@@ -1,25 +1,26 @@
 .. _fundamentals-configuration:
 
-Configuration
+설정
 =============
 `Steve Smith`_, `Daniel Roth`_
 
-ASP.NET Core supports a variety of different configuration options. Application configuration data can come from files using built-in support for JSON, XML, and INI formats, as well as from environment variables, command line arguments or an in-memory collection. You can also write your own :ref:`custom configuration provider <custom-config-providers>`.
+ASP.NET Core 에서는 다양한 설정 방법을 제공합니다. 어플리케이션 설정 데이터는 JSON 이나 XML, INI 형식의 파일이나 시스템 환경변수, 커맨드 라인 매개변수, 메모리 상의 컬렉션으로 저장할 수 있습니다. 또한 :ref:`사용자 정의 설정 제공자 <custom-config-providers>` 를 통해 여러분 만의 형식을 사용할 수도 있습니다.
 
 .. contents:: Sections:
   :local:
   :depth: 1
 
-`View or download sample code <https://github.com/aspnet/docs/tree/master/aspnet/fundamentals/configuration/sample>`__
+`샘플 코드를 확인하거나 다운로드 받으세요. <https://github.com/aspnet/docs/tree/master/aspnet/fundamentals/configuration/sample>`__
 
-Getting and setting configuration settings
+설정 상태를 얻거나 지정하기
 ------------------------------------------
 
-ASP.NET Core's configuration system has been re-architected from previous versions of ASP.NET, which relied on ``System.Configuration`` and XML configuration files like ``web.config``. The new configuration model provides streamlined access to key/value based settings that can be retrieved from a variety of sources. Applications and frameworks can then access configured settings in a strongly typed fashion using the new :ref:`Options pattern <options-config-objects>`.
+ASP.NET Core 의 설정 시스템은 이전 버전의 ASP.NET 의 시스템을 재설계하여 제작되었습니다. 이전 버전에서는 ``System.Configuration`` 과 ``web.config`` 와 같은 XML 설정 파일에 의존하였습니다. 새 설정 시스템에서는 다양한 데이터 저장 형태를 지원하고 이를 통해 얻은 키-값 형태의 데이터에 대한 스트림라인 형태의 접근 방식을 제공합니다. 어플리케이션과 프레임워크에서 새로운 :ref:`옵션 패턴 <options-config-objects>` 과 강력한 형 (strongly typed) 에 기반한 방식으로 설정에 접근할 수 있습니다.
 
-To work with settings in your ASP.NET application, it is recommended that you only instantiate a ``Configuration`` in your application's ``Startup`` class. Then, use the :ref:`Options pattern <options-config-objects>` to access individual settings.
+여러분의 ASP.NET 어플리케이션에서 설정을 사용하려 하는 경우, ``Startup`` 클래스의 ``Configuration`` 을 생성하는 방법 권장합니다. 그리고 각각의 설정에 접근할 때는 :ref:`옵션 패턴 <options-config-objects>` 을 사용하십시오.
 
 At its simplest, ``Configuration`` is just a collection of sources, which provide the ability to read and write name/value pairs. If a name/value pair is written to ``Configuration``, it is not persisted. This means that the written value will be lost when the sources are read again.
+가장 간단한 방법으로는 ``Configuration`` 
 
 You must configure at least one source in order for ``Configuration`` to function correctly. The following sample shows how to test working with ``Configuration`` as a key/value store:
 

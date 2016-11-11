@@ -1,4 +1,4 @@
-Globalization and localization   
+Globalization and localization (류지형님)
 ==============================
 
 `Rick Anderson`_, `Damien Bowden`_, `Bart Calixto`_, `Nadeem Afana`_ 
