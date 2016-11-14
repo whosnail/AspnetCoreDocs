@@ -15,14 +15,14 @@ ASP.NET Core 에서는 다양한 설정 방법을 제공합니다. 어플리케�
 설정 상태를 얻거나 지정하기
 ------------------------------------------
 
-ASP.NET Core 의 설정 시스템은 이전 버전의 ASP.NET 의 시스템을 재설계하여 제작되었습니다. 이전 버전에서는 ``System.Configuration`` 과 ``web.config`` 와 같은 XML 설정 파일에 의존하였습니다. 새 설정 시스템에서는 다양한 데이터 저장 형태를 지원하고 이를 통해 얻은 키-값 형태의 데이터에 대한 스트림라인 형태의 접근 방식을 제공합니다. 어플리케이션과 프레임워크에서 새로운 :ref:`옵션 패턴 <options-config-objects>` 과 강력한 형 (strongly typed) 에 기반한 방식으로 설정에 접근할 수 있습니다.
+ASP.NET Core 의 설정 시스템은 이전 버전의 ASP.NET 의 시스템을 재설계하여 제작되었습니다. 이전 버전에서는 ``System.Configuration`` 과 ``web.config`` 와 같은 XML 설정 파일에 의존하였습니다. 새 설정 시스템에서는 다양한 데이터 저장소를 지원하고 이를 통해 얻은 키-값 형태의 데이터에 대한 스트림라인 형태의 접근 방식을 제공합니다. 어플리케이션과 프레임워크에서 새로운 :ref:`옵션 패턴 <options-config-objects>` 과 강력한 형 (strongly typed) 에 기반한 방식으로 설정에 접근할 수 있습니다.
 
 여러분의 ASP.NET 어플리케이션에서 설정을 사용하려 하는 경우, ``Startup`` 클래스의 ``Configuration`` 을 생성하는 방법 권장합니다. 그리고 각각의 설정에 접근할 때는 :ref:`옵션 패턴 <options-config-objects>` 을 사용하십시오.
 
-At its simplest, ``Configuration`` is just a collection of sources, which provide the ability to read and write name/value pairs. If a name/value pair is written to ``Configuration``, it is not persisted. This means that the written value will be lost when the sources are read again.
-가장 간단한 방법으로는 ``Configuration`` 
+가장 간단하게 보자면 ``Configuration`` 은 단지 데이터 저장소의 모음일 뿐입니다. 이름/값 쌍을 읽고 저장하는 기능은 각각의 데이터 저장소에서 제공합니다. ``Configuration`` 에 이름/값 쌍을 저장한다고 해서 영속적으로 저장되지 않습니다. 즉, 데이터 저장소에서 다시 읽어오면 저장했던 이름/값 쌍은 사라집니다.
 
 You must configure at least one source in order for ``Configuration`` to function correctly. The following sample shows how to test working with ``Configuration`` as a key/value store:
+``Configuration`` 이 정확하게 작동하도록 하기 위해서는 최소한 하나의 데이터 저장소를 지정해야 합니다. 다음 예시에서 ``Configuration`` 의 키/값 저장소로서의 기능을 어떻게 테스트하는지 확인할 수 있습니다.
 
 .. literalinclude:: configuration/sample/src/CodeSnippets/ConfigSummarySnippet.cs
   :language: c#
@@ -30,27 +30,28 @@ You must configure at least one source in order for ``Configuration`` to functio
   :start-after: // SNIPPET-START
   :end-before: // SNIPPET-END
 
-.. note:: You must set at least one configuration source.
+.. note:: 여러분은 최소한 하나의 설정 저장소를 지정해야 합니다.
 
-It's not unusual to store configuration values in a hierarchical structure, especially when using external files (e.g. JSON, XML, INI). In this case, configuration values can be retrieved using a ``:`` separated key, starting from the root of the hierarchy. For example, consider the following *appsettings.json* file:
+보통 설정 값을 계층형 구조로 저장합니다. 외부 파일 (예. JSON, XML, INI) 을 사용할 때는 당연할 수도 있습니다. 이런 경우, 계층의 루트에서부터 ``:`` 분리 키를 사용하여 설정 값을 추출할 수 있습니다. 다음의 *appsettings.json* 파일을 확인해보세요.
 
 .. _config-json:
 
 .. literalinclude:: /../common/samples/WebApplication1/src/WebApplication1/appsettings.json
   :language: json
 
-The application uses configuration to configure the right connection string. Access to the ``DefaultConnection`` setting is achieved through this key: ``ConnectionStrings:DefaultConnection``, or by using the :dn:method:`~Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString` extension method and passing in ``"DefaultConnection"``.
+어플리케이션에서 적절한 연결 문자열을 설정할 때 ``Configuration`` 을 사용합니다. ``DefaultConnection`` 값은 ``ConnectionStrings:DefaultConnection`` 키를 통해 직접 얻거나, :dn:method:`~Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString` 확장 메서드에 ``"DefaultConnection"`` 를 매개변수로서 전달하여 얻을 수 있습니다.
 
-The settings required by your application and the mechanism used to specify those settings (configuration being one example) can be decoupled using the :ref:`options pattern <options-config-objects>`. To use the options pattern you create your own options class (probably several different classes, corresponding to different cohesive groups of settings) that you can inject into your application using an options service. You can then specify your settings using configuration or whatever mechanism you choose.
+여러분의 어플리케이션에서 필요로 하는 환경설정과 해당 환경설정을 지정하는 방식 (``Configuration`` 도 여러 방식 중 하나입니다.) 을 :ref:`옵션 패턴 <options-config-objects>` 을 사용하여 분리 (decouple) 할 수 있습니다. 옵션 패턴을 사용하기 위해 자신 만의 옵션 클래스 (서로 다른 부류의 환경설정을 구분하기 위해 여러 개의 클래스일 수 있습니다.) 를 만들고, 옵션 서비스를 사용하여 여러분의 어플리케이션에 삽입하세요. 여러분은 ``Configuration`` 혹은 본인이 선택한 방식을 통해 환경설정을 지정할 수 있습니다.
 
 .. note:: You could store your ``Configuration`` instance as a service, but this would unnecessarily couple your application to a single configuration system and specific configuration keys. Instead, you can use the :ref:`Options pattern <options-config-objects>` to avoid these issues.
+.. note:: 여러분의 ``Configuration`` 개체를 서비스로서 저장할 수도 있습니다. 하지만 이런 방식은 불필요하게 어플리케이션을 설정 시스템 및 설정 키에 의존하게 할 수 있습니다. 따라서 이런 이슈가 발생하지 않도록 하려면 :ref:`옵션 패턴 <options-config-objects>` 을 사용하면 됩니다.
 
-Using the built-in sources
+내장된 데이터 저장소 사용하기
 --------------------------
 
-The configuration framework has built-in support for JSON, XML, and INI configuration files, as well as support for in-memory configuration (directly setting values in code) and the ability to pull configuration from environment variables and command line parameters. Developers are not limited to using a single configuration source. In fact several may be set up together such that a default configuration is overridden by settings from another source if they are present.
+설정 프레임워크에는 JSON 과 XML, INI 설정 파일을 지원하는 기능을 내장하고 있습니다. 또한 메모리 저장소와 시스템 환경설정, 커맨드라인 매개변수도 지원합니다. 개발자들이 하나의 설정 저장소 만을 사용하도록 제약하지 않습니다. 여러 개의 데이터 저장소를 지정할 수 있어, 또 하나의 저장소에서 얻은 값이 기본 설정을 오버라이드하도록 할 수 있습니다.
 
-Adding support for additional configuration sources is accomplished through extension methods. These methods can be called on a :dn:class:`~Microsoft.Extensions.Configuration.ConfigurationBuilder` instance in a standalone fashion, or chained together as a fluent API. Both of these approaches are demonstrated in the sample below.
+설정 저장소를 추가하기 위해서는 확장 메서드를 사용하면 됩니다. 확장 메서드는 :dn:class:`~Microsoft.Extensions.Configuration.ConfigurationBuilder` 개체에서 하나씩 사용하거나, 이어서 여러 번 호출할 수도 있습니다. 두 가지 방법을 모두 다음 예시에서 확인할 수 있습니다.
 
 .. _custom-config:
 
